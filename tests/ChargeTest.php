@@ -16,8 +16,7 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
 
-        $result = $svc->CreateWithCard(15.5, "AUD", $this->CardProviderId, "123", "4111111111111111", "10/30", "123", "Test Cardholder")
-            ->call();
+        $result = $svc->CreateWithCard(15.5, "AUD", $this->CardProviderId, "123", "4111111111111111", "10/30", "123", "Test Cardholder");
 
         $this->assertSame('SUCCESS', $result["status"]);
     }
@@ -27,8 +26,7 @@ final class ChargeTest extends TestBase
         $svc = new Charge();
 
         $this->expectException(ResponseException::class);
-        $result = $svc->CreateWithCard(15.5, "AUD", "invalid_provider", "123", "4111111111111111", "10/30", "123", "Test Cardholder")
-            ->call();
+        $result = $svc->CreateWithCard(15.5, "AUD", "invalid_provider", "123", "4111111111111111", "10/30", "123", "Test Cardholder");
     }
 
     public function testWithShortTimeout(): void
@@ -39,8 +37,7 @@ final class ChargeTest extends TestBase
 
         $Timeout = Config::$TimeoutMilliseconds = 10;
 
-        $result = $svc->CreateWithCard(15.5, "AUD", $this->CardProviderId, "123", "4111111111111111", "10/30", "123", "Test Cardholder")
-            ->call();
+        $result = $svc->CreateWithCard(15.5, "AUD", $this->CardProviderId, "123", "4111111111111111", "10/30", "123", "Test Cardholder");
 
         Config::$TimeoutMilliseconds = $Timeout;
     }
