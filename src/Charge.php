@@ -3,6 +3,7 @@ namespace payFURL\Sdk;
 
 require_once(__DIR__ . "/tools/HttpWrapper.php");
 require_once(__DIR__ . "/tools/ArrayTools.php");
+require_once(__DIR__ . "/tools/UrlTools.php");
 
 /*
  * (c) payFurl
@@ -10,6 +11,8 @@ require_once(__DIR__ . "/tools/ArrayTools.php");
 class Charge
 {
     private $ActionMap = array("charge_card" => "POST");
+    private $ValidSearchKeys = array("Reference", "ProviderId", "AmountGreaterThan", "AmountLessThan",
+        "CustomerId", "Status", "AddedAfter", "AddedBefore", "SortBy", "Limit", "Skip");
 
     public function CreateWithCard($Amount, $Currency, $Reference, $ProviderId, $CardNumber, $ExpiryDate, $Ccv, $Cardholder)
     {
@@ -78,6 +81,22 @@ class Charge
         }
 
         return HttpWrapper::CallApi($url, "DELETE", "");
+    }
+
+    public function Search($Parameters)
+    {
+        // check keys are valid
+        foreach ($Parameters as $Key => $Value)
+        {
+            if (!array_key_exists($Key, $this->ValidSearchKeys))
+            {
+                throw new ResponseException("Invalid Parameter: " . $Key, 0);
+            }
+        }
+
+        $url = "/charge" . UrlTools::CreateQueryString($Parameters);
+         
+        return HttpWrapper::CallApi($url, "GET", "");
     }
 
     // TODO: add Search
