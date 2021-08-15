@@ -68,7 +68,19 @@ class Charge
         return HttpWrapper::CallApi($url, "GET", "");
     }
 
-    // TODO: add Search, Single, Refund
+    public function Refund($ChargeId, $Amount = NULL)
+    {
+        $url = "/charge/" . urlencode($ChargeId);
+
+        if (!is_null($Amount))
+        {
+            $url = $url . "?amount=" . urlencode($Amount);
+        }
+
+        return HttpWrapper::CallApi($url, "DELETE", "");
+    }
+
+    // TODO: add Search
 
     private function BuildCreateChargeJson($Amount, $Currency, $Reference)
     {

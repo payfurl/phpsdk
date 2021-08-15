@@ -53,6 +53,17 @@ final class ChargeTest extends TestBase
         $this->assertSame($chargeResult["chargeId"], $singleResult["chargeId"]);
     }
 
+    public function testRefund(): void
+    {
+        $svc = new Charge();
+
+        $chargeResult = $svc->CreateWithCard(15.5, "AUD", "123", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+
+        $refundResult = $svc->Refund($chargeResult["chargeId"], 5);
+        
+        $this->assertSame(5, $refundResult["refundedAmount"]);
+    }
+
     // Commented out while sorting out permissions
     // public function testCreateWithCustomer(): void
     // {
