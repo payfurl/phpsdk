@@ -7,10 +7,10 @@ use payFURL\Sdk\Config;
 
 class TestBase extends TestCase
 {
-    public $CardProviderId = "";
+    public $CardProviderId = "<CardProviderId>";
 
     protected function setUp(): void
     {
-        Config::initialise("SANDBOX", "", 60000);
+        Config::initialise("SANDBOX", "<PrivateKey>", 60000);
     }
 }
