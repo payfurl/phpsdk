@@ -16,17 +16,45 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
 
-        $result = $svc->CreateWithCard(15.5, "AUD", $this->CardProviderId, "123", "4111111111111111", "10/30", "123", "Test Cardholder");
+        $result = $svc->CreateWithCard(15.5, "AUD", "123", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
 
         $this->assertSame('SUCCESS', $result["status"]);
     }
+
+    // Commented out while sorting out permissions
+    // public function testCreateWithCustomer(): void
+    // {
+    //     $svc = new Charge();
+
+    //     $result = $svc->CreateWithCustomer(15.5, "AUD", "123", "<insert_customer>");
+
+    //     $this->assertSame('SUCCESS', $result["status"]);
+    // }
+
+    // public function testCreateWithToken(): void
+    // {
+    //     $svc = new Charge();
+
+    //     $result = $svc->CreateWithToken(15.5, "AUD", "123", "<insert_token>");
+
+    //     $this->assertSame('SUCCESS', $result["status"]);
+    // }
+
+    // public function testCreateWithPaymentMethod(): void
+    // {
+    //     $svc = new Charge();
+
+    //     $result = $svc->CreateWithPaymentMethod(15.5, "AUD", "123", "<insert_payment_method>");
+
+    //     $this->assertSame('SUCCESS', $result["status"]);
+    // }
 
     public function testWithInvalidProvider(): void
     {
         $svc = new Charge();
 
         $this->expectException(ResponseException::class);
-        $result = $svc->CreateWithCard(15.5, "AUD", "invalid_provider", "123", "4111111111111111", "10/30", "123", "Test Cardholder");
+        $result = $svc->CreateWithCard(15.5, "AUD", "123", "invalid_provider", "4111111111111111", "10/30", "123", "Test Cardholder");
     }
 
     public function testWithShortTimeout(): void
@@ -37,7 +65,7 @@ final class ChargeTest extends TestBase
 
         $Timeout = Config::$TimeoutMilliseconds = 10;
 
-        $result = $svc->CreateWithCard(15.5, "AUD", $this->CardProviderId, "123", "4111111111111111", "10/30", "123", "Test Cardholder");
+        $result = $svc->CreateWithCard(15.5, "AUD", "123", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
 
         Config::$TimeoutMilliseconds = $Timeout;
     }
