@@ -16,7 +16,7 @@ class Charge
 
     public function CreateWithCard($Amount, $Currency, $Reference, $ProviderId, $CardNumber, $ExpiryDate, $Ccv, $Cardholder)
     {
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $ProviderId, $Reference);
+        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
 
         $Data['providerId'] = $ProviderId;
         $Data['paymentInformation'] = [
@@ -33,7 +33,7 @@ class Charge
 
     public function CreateWithToken($Amount, $Currency, $ProviderId, $Reference, $Token)
     {
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $ProviderId, $Reference);
+        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
 
         $Data['token'] = $Token;
         
@@ -44,7 +44,7 @@ class Charge
 
     public function CreateWithCustomer($Amount, $Currency, $ProviderId, $Reference, $CustomerId)
     {
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $ProviderId, $Reference);
+        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
 
         $Data['customerId'] = $CustomerId;
         
@@ -55,7 +55,7 @@ class Charge
 
     public function CreateWithPaymentMethod($Amount, $Currency, $ProviderId, $Reference, $PaymentMethodId)
     {
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $ProviderId, $Reference);
+        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
 
         $Data['paymentMethodId'] = $PaymentMethodId;
         
@@ -85,21 +85,17 @@ class Charge
 
     public function Search($Parameters)
     {
-        // check keys are valid
-        foreach ($Parameters as $Key => $Value)
+        try
         {
-            if (!array_key_exists($Key, $this->ValidSearchKeys))
-            {
-                throw new ResponseException("Invalid Parameter: " . $Key, 0);
-            }
+            $url = "/charge" . UrlTools::CreateQueryString($Parameters, $this->ValidSearchKeys);
         }
-
-        $url = "/charge" . UrlTools::CreateQueryString($Parameters);
+        catch (Exception $ex)
+        {
+            throw new ResponseException($ex->message, 0);
+        }
          
         return HttpWrapper::CallApi($url, "GET", "");
     }
-
-    // TODO: add Search
 
     private function BuildCreateChargeJson($Amount, $Currency, $Reference)
     {

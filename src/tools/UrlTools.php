@@ -20,11 +20,20 @@ class UrlTools
         return $querystring . $Key . "=" . urlencode($Value);
     }
 
-    static function CreateQueryString($Array)
+    static function CreateQueryString($QueryParameters, $ValidParameters)
     {
+        // check keys are valid
+        foreach ($QueryParameters as $Key => $Value)
+        {
+            if (!in_array($Key, $ValidParameters))
+            {
+                throw new \Exception("Invalid Parameter: " . $Key);
+            }
+        }
+
         $querystring = "";
-        foreach ($Array as $Key => $Value) {
-            $querystring = $this->AddItem($querystring, $Key, $Value);
+        foreach ($QueryParameters as $Key => $Value) {
+            $querystring = UrlTools::AddItem($querystring, $Key, $Value);
         }
         return $querystring;
     }

@@ -68,11 +68,12 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
 
-        $chargeResult = $svc->CreateWithCard(15.5, "AUD", "12345", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $Reference = bin2hex(random_bytes(16));
+        $chargeResult = $svc->CreateWithCard(15.5, "AUD", $Reference, $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
 
-        $searchResult = $svc->Search(array("Reference" => "12345"));
+        $searchResult = $svc->Search(array("Reference" => $Reference));
         
-        var_dump($searchResult);
+        $this->assertSame(1, $searchResult["count"]);
     }
 
     // Commented out while sorting out permissions
