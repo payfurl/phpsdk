@@ -10,8 +10,9 @@ class Config
     public static $SecretKey;
     public static $TimeoutMilliseconds;
     public static $Environment;
+    public static $EnableDebug;
 
-    public static function initialise($Environment, $SecretKey, $TimeoutMilliseconds = 60000)
+    public static function initialise($Environment, $SecretKey, $TimeoutMilliseconds = 60000, $EnableDebug = false)
     {
         self::$Environment = strtolower($Environment);
 
@@ -25,5 +26,6 @@ class Config
 
         self::$SecretKey = $SecretKey;
         self::$TimeoutMilliseconds = $TimeoutMilliseconds;
+        self::$EnableDebug = $EnableDebug;
     }
 }

@@ -38,12 +38,28 @@ class HttpWrapper
         $Error = curl_errno($ch);
         curl_close($ch);
 
+        // hande timeout
+        if ($Info["http_code"] == 0)
+        {
+            throw new ResponseException("Request Timeout", 408);
+        }
+
         // error handling
         if ($Info["http_code"] != 200)
         {
             $ResponseJson = json_decode($Response, true);
-            var_dump($ResponseJson);
-            throw new ResponseException($ResponseJson["message"], $Info["http_code"]);
+            $Message = "";
+            if (array_key_exists("message", $ResponseJson))
+            {
+                $Message = $ResponseJson["message"];
+            }
+            if (Config::$EnableDebug)
+            {
+                var_dump($Response);
+                var_dump($Info);
+                var_dump($Error);
+            }
+            throw new ResponseException($Message, $Info["http_code"]);
         }
 
         return json_decode($Response, true);
