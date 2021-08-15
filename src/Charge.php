@@ -61,6 +61,13 @@ class Charge
         return HttpWrapper::CallApi("/charge/payment_method", "POST", json_encode($Data));
     }
 
+    public function Single($ChargeId)
+    {
+        $url = "/charge/" . urlencode($ChargeId);
+
+        return HttpWrapper::CallApi($url, "GET", "");
+    }
+
     // TODO: add Search, Single, Refund
 
     private function BuildCreateChargeJson($Amount, $Currency, $Reference)
