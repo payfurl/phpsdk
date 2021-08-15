@@ -22,6 +22,8 @@ class Charge
         return $this;
     }
 
+    // TODO: add CreateWithToken, CreateWithCustomer, CreateWithPaymentMethod, Search, Single, Refund
+
     public function Call()
     {
         $Endpoint = $this->CreateEndpoint();
