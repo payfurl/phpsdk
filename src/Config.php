@@ -13,14 +13,14 @@ class Config
 
     public static function initialise($Environment, $SecretKey, $TimeoutMilliseconds = 60000)
     {
-        self::$Environment = strtolower($environmentOrUrl);
+        self::$Environment = strtolower($Environment);
 
         if (self::$Environment == "local") {
-            self::$url = "https://localhost:5001";
+            self::$BaseUrl = "https://localhost:5001";
         } else if (self::$Environment == "sandbox") {
-            self::$url = "https://sandbox-api.payfurl.com";
+            self::$BaseUrl = "https://sandbox-api.payfurl.com";
         } else if (self::$Environment == "prod") {
-            self::$url = "https://api.payfurl.com";
+            self::$BaseUrl = "https://api.payfurl.com";
         }
 
         self::$SecretKey = $SecretKey;

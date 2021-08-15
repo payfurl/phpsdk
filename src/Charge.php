@@ -1,8 +1,8 @@
 <?php
 namespace payFURL\Sdk;
 
-require_once(__DIR__ . "/../tools/HttpWrapper.php");
-require_once(__DIR__ . "/../tools/ArrayTools.php");
+require_once(__DIR__ . "/tools/HttpWrapper.php");
+require_once(__DIR__ . "/tools/ArrayTools.php");
 
 /*
  * (c) payFurl
@@ -14,12 +14,11 @@ class Charge
     private $PaymentInformation;
     private $ActionMap = array("charge_card" => "POST");
 
-
     public function CreateWithCard($Amount, $Currency, $ProviderId, $Reference, $CardNumber, $ExpiryDate, $Ccv, $Cardholder)
     {
         $this->Action = "charge_card";
         $this->ChargeData = ["amount" => $Amount, "currency" => $Currency, "providerId" => $ProviderId, "reference" => $Reference];
-        $this->PaymentInformation = ["cardNumber" => $CardNumber, "expiryDate" => $ExpiryDate, "ccv" = $Ccv, "cardholder" = $Cardholder];
+        $this->PaymentInformation = ["cardNumber" => $CardNumber, "expiryDate" => $ExpiryDate, "ccv" => $Ccv, "cardholder" => $Cardholder];
         return $this;
     }
 
@@ -46,10 +45,10 @@ class Charge
         {
             case "charge_card":
                 $Data = [
-                    'amount'        => $this->chargeData["amount"],
-                    'currency'      => $this->chargeData["currency"],
-                    'reference'     => $this->chargeData["reference"],
-                    'description'   => $this->chargeData["description"],
+                    'amount'        => $this->ChargeData["amount"],
+                    'currency'      => $this->ChargeData["currency"],
+                    'providerId'    => $this->ChargeData["providerId"],
+                    'reference'     => $this->ChargeData["reference"],
                     'paymentInformation' => [
                         'cardNumber' => $this->PaymentInformation["cardNumber"],
                         'expiryDate' => $this->PaymentInformation["expiryDate"],
@@ -59,7 +58,7 @@ class Charge
                 ];
         }
 
-        $Data = ArrayTools->CleanEmpty($Data);
+        $Data = ArrayTools::CleanEmpty($Data);
 
         return json_encode($Data);
     }
