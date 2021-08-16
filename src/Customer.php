@@ -10,7 +10,7 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class Customer
 {
-    private $ValidSearchKeys = array();
+    private $ValidSearchKeys = array("reference", "email", "addedafter", "addedbefore", "search", "paymentmethodid", "limit", "skip");
 
     public function CreateWithCard($Reference, $FirstName, $LastName, $Email, $Phone, $ProviderId, $CardNumber, $ExpiryDate, $Ccv, $Cardholder)
     {
@@ -45,6 +45,20 @@ class Customer
     {
         $url = "/customer/" . urlencode($CustomerId);
 
+        return HttpWrapper::CallApi($url, "GET", "");
+    }
+
+    public function Search($Parameters)
+    {
+        try
+        {
+            $url = "/customer" . UrlTools::CreateQueryString($Parameters, $this->ValidSearchKeys);
+        }
+        catch (Exception $ex)
+        {
+            throw new ResponseException($ex->message, 0);
+        }
+         
         return HttpWrapper::CallApi($url, "GET", "");
     }
 

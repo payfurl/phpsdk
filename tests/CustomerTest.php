@@ -32,6 +32,18 @@ final class CustomerTest extends TestBase
         $this->assertSame($customerResult["customerId"], $singleResult["customerId"]);
     }
 
+    public function testSearch(): void
+    {
+        $svc = new Customer();
+
+        $Reference = bin2hex(random_bytes(16));
+        $result = $svc->CreateWithCard($Reference, "FirstName", "LastName", "test@test.com", "98761234", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+
+        $searchResult = $svc->Search(array("Reference" => $Reference));
+        
+        $this->assertSame(1, $searchResult["count"]);
+    }
+
     // Commented out while sorting out permissions
     // public function testCreateWithToken(): void
     // {

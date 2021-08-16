@@ -25,7 +25,7 @@ class UrlTools
         // check keys are valid
         foreach ($QueryParameters as $Key => $Value)
         {
-            if (!in_array($Key, $ValidParameters))
+            if (!in_array(strtolower($Key), $ValidParameters))
             {
                 throw new \Exception("Invalid Parameter: " . $Key);
             }
