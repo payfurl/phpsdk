@@ -16,6 +16,12 @@ class HttpWrapper
     {
         $Url = Config::$BaseUrl . $Endpoint;
 
+        if (Config::$EnableDebug)
+        {
+            print "calling URL: " . $Url . "\n";
+            print "Timeout: " . Config::$TimeoutMilliseconds . "\n";
+        }
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $Method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $Body);
@@ -24,6 +30,13 @@ class HttpWrapper
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
         curl_setopt($ch, CURLOPT_TIMEOUT_MS, Config::$TimeoutMilliseconds);
+
+        if (strtolower(Config::$Environment) == "local")
+        {
+            print "Setting SSL verify off\n";
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
 
         $Headers = [
             "Content-Type: application/json",
@@ -41,6 +54,12 @@ class HttpWrapper
         // hande timeout
         if ($Info["http_code"] == 0)
         {
+            if (Config::$EnableDebug)
+            {
+                var_dump($Response);
+                var_dump($Info);
+                var_dump($Error);
+            }
             throw new ResponseException("Request Timeout", 408);
         }
 
