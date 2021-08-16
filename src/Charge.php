@@ -10,7 +10,6 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class Charge
 {
-    private $ActionMap = array("charge_card" => "POST");
     private $ValidSearchKeys = array("Reference", "ProviderId", "AmountGreaterThan", "AmountLessThan",
         "CustomerId", "Status", "AddedAfter", "AddedBefore", "SortBy", "Limit", "Skip");
 
