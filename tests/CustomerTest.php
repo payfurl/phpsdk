@@ -20,4 +20,25 @@ final class CustomerTest extends TestBase
 
         $this->assertIsString($result["customerId"]);
     }
+
+    public function testSingle(): void
+    {
+        $svc = new Customer();
+
+        $customerResult = $svc->CreateWithCard("123", "FirstName", "LastName", "test@test.com", "98761234", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+
+        $singleResult = $svc->Single($customerResult["customerId"]);
+        
+        $this->assertSame($customerResult["customerId"], $singleResult["customerId"]);
+    }
+
+    // Commented out while sorting out permissions
+    // public function testCreateWithToken(): void
+    // {
+    //     $svc = new Customer();
+
+    //     $result = $svc->CreateWithCard("123", "FirstName", "LastName", "test@test.com", "98761234", "<token_here>");
+
+    //     $this->assertIsString($result["customerId"]);
+    // }
 }

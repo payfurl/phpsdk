@@ -29,6 +29,25 @@ class Customer
         return HttpWrapper::CallApi("/customer/card", "POST", json_encode($Data));
     }
 
+    public function CreateWithToken($Reference, $FirstName, $LastName, $Email, $Phone, $Token)
+    {
+        $Data = $this->BuildCreateCustomerJson($Reference, $FirstName, $LastName, $Email, $Phone);
+
+        $Data['providerId'] = $ProviderId;
+        $Data['token'] = $Token;
+        
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi("/customer/token", "POST", json_encode($Data));
+    }
+
+    public function Single($CustomerId)
+    {
+        $url = "/customer/" . urlencode($CustomerId);
+
+        return HttpWrapper::CallApi($url, "GET", "");
+    }
+
     private function BuildCreateCustomerJson($Reference, $FirstName, $LastName, $Email, $Phone)
     {
         return [
