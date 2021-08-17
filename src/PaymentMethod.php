@@ -10,7 +10,7 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class PaymentMethod
 {
-    public function Checkout($Amount, $ProviderId, $Currency, $Reference, $Options)
+    public function Checkout($Amount, $Currency, $Reference, $ProviderId, $Options)
     {
         $Data = [
             'providerId'     => $ProviderId,
@@ -19,12 +19,17 @@ class PaymentMethod
             'reference'      => $Reference
         ];
 
-        foreach ($Options as $Key => $Value)
+        if ($Options != NULL)
         {
-            $Data[$Key] = $Value;
+            foreach ($Options as $Key => $Value)
+            {
+                $Data[$Key] = $Value;
+            }
         }
         
         $Data = ArrayTools::CleanEmpty($Data);
+
+        print (json_encode($Data));
 
         return HttpWrapper::CallApi("/payment_method/checkout", "POST", json_encode($Data));
     }
