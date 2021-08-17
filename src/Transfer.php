@@ -1,0 +1,47 @@
+<?php
+namespace payFURL\Sdk;
+
+require_once(__DIR__ . "/tools/HttpWrapper.php");
+require_once(__DIR__ . "/tools/ArrayTools.php");
+require_once(__DIR__ . "/tools/UrlTools.php");
+
+/*
+ * (c) payFurl
+ */
+class Transfer
+{
+    private $ValidSearchKeys = array("reference", "providerId", "status", "addedafter", "addedbefore", "limit", "SortBy", "skip");
+
+    public function Create($GroupReference, $ProviderId, $ChargeId, $Transfers)
+    {
+        $Data['groupReference'] = $GroupReference;
+        $Data['providerId'] = $ProviderId;
+        $Data['chargeId'] = $ChargeId;
+        $Data['transfers'] = $Transfers;
+        
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi("/transfer", "POST", json_encode($Data));
+    }
+
+    public function Single($TransferId)
+    {
+        $url = "/transfer/" . urlencode($TransferId);
+
+        return HttpWrapper::CallApi($url, "GET", "");
+    }
+
+    public function Search($Parameters)
+    {
+        try
+        {
+            $url = "/transfer" . UrlTools::CreateQueryString($Parameters, $this->ValidSearchKeys);
+        }
+        catch (Exception $ex)
+        {
+            throw new ResponseException($ex->message, 0);
+        }
+         
+        return HttpWrapper::CallApi($url, "GET", "");
+    }
+}
