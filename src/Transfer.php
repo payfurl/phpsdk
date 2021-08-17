@@ -14,10 +14,12 @@ class Transfer
 
     public function Create($GroupReference, $ProviderId, $ChargeId, $Transfers)
     {
-        $Data['groupReference'] = $GroupReference;
-        $Data['providerId'] = $ProviderId;
-        $Data['chargeId'] = $ChargeId;
-        $Data['transfers'] = $Transfers;
+        $Data = [
+            'groupReference' => $GroupReference,
+            'providerId' => $ProviderId,
+            'chargeId' => $GroupReference,
+            'transfers' => $Transfers,
+        ];
         
         $Data = ArrayTools::CleanEmpty($Data);
 
