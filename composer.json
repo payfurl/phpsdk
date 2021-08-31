@@ -1,0 +1,9 @@
+{
+    "name": "payfurl/phpsdk",
+    "type": "library",
+    "description": "php SDK to provide a friendly interface to the payFURL API",
+    "require": {
+        "php": ">=7.3",
+        "another-vendor/package": "1.*"
+    }
+}
