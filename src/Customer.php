@@ -12,16 +12,18 @@ class Customer
 {
     private $ValidSearchKeys = array("reference", "email", "addedafter", "addedbefore", "search", "paymentmethodid", "limit", "skip");
 
-    public function CreateWithCard($Reference, $FirstName, $LastName, $Email, $Phone, $ProviderId, $CardNumber, $ExpiryDate, $Ccv, $Cardholder)
+    public function CreateWithCard($Params)
     {
-        $Data = $this->BuildCreateCustomerJson($Reference, $FirstName, $LastName, $Email, $Phone);
+        ArrayTools::ValidateKeys($Params, array("ProviderId", "CardNumber", "ExpiryDate", "Ccv"));
 
-        $Data['providerId'] = $ProviderId;
+        $Data = $this->BuildCreateCustomerJson($Params);
+
+        $Data['providerId'] = $Params["ProviderId"];
         $Data['paymentInformation'] = [
-            'cardNumber' => $CardNumber,
-            'expiryDate' => $ExpiryDate,
-            'ccv' => $Ccv,
-            'cardholder' => $Cardholder
+            'cardNumber' => $Params["CardNumber"],
+            'expiryDate' => $Params["ExpiryDate"],
+            'ccv' => $Params["Ccv"],
+            'cardholder' => $Params["Cardholder"]
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);
@@ -29,12 +31,14 @@ class Customer
         return HttpWrapper::CallApi("/customer/card", "POST", json_encode($Data));
     }
 
-    public function CreateWithToken($Reference, $FirstName, $LastName, $Email, $Phone, $Token)
-    {
-        $Data = $this->BuildCreateCustomerJson($Reference, $FirstName, $LastName, $Email, $Phone);
+    public function CreateWithToken($Params)
+    {   
+        ArrayTools::ValidateKeys($Params, array("Token"));
 
-        $Data['providerId'] = $ProviderId;
-        $Data['token'] = $Token;
+        $Data = $this->BuildCreateCustomerJson($Params);
+
+        $Data['providerId'] = $Params["ProviderId"];
+        $Data['token'] = $Params["Token"];
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -62,14 +66,14 @@ class Customer
         return HttpWrapper::CallApi($url, "GET", "");
     }
 
-    private function BuildCreateCustomerJson($Reference, $FirstName, $LastName, $Email, $Phone)
+    private function BuildCreateCustomerJson($Params)
     {
         return [
-            'reference'     => $Reference,
-            'firstName'     => $FirstName,
-            'lastName'      => $LastName,
-            'email'         => $Email,
-            'phone'         => $Phone,
+            'reference'     => $Params["Reference"],
+            'firstName'     => $Params["FirstName"],
+            'lastName'      => $Params["LastName"],
+            'email'         => $Params["Email"],
+            'phone'         => $Params["Phone"],
         ];
     }
 }

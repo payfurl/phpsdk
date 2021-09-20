@@ -16,7 +16,17 @@ final class CustomerTest extends TestBase
     {
         $svc = new Customer();
 
-        $result = $svc->CreateWithCard("123", "FirstName", "LastName", "test@test.com", "98761234", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $result = $svc->CreateWithCard([
+            "Reference" => "123",
+            "FirstName" => "FirstName",
+            "LastName" => "LastName",
+            "Email" => "test@test.com",
+            "Phone" => "98761234",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $this->assertIsString($result["customerId"]);
     }
@@ -25,7 +35,17 @@ final class CustomerTest extends TestBase
     {
         $svc = new Customer();
 
-        $customerResult = $svc->CreateWithCard("123", "FirstName", "LastName", "test@test.com", "98761234", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $customerResult = $svc->CreateWithCard([
+            "Reference" => "123",
+            "FirstName" => "FirstName",
+            "LastName" => "LastName",
+            "Email" => "test@test.com",
+            "Phone" => "98761234",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $singleResult = $svc->Single($customerResult["customerId"]);
         
@@ -37,20 +57,20 @@ final class CustomerTest extends TestBase
         $svc = new Customer();
 
         $Reference = bin2hex(random_bytes(16));
-        $result = $svc->CreateWithCard($Reference, "FirstName", "LastName", "test@test.com", "98761234", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $result = $svc->CreateWithCard([
+            "Reference" => $Reference,
+            "FirstName" => "FirstName",
+            "LastName" => "LastName",
+            "Email" => "test@test.com",
+            "Phone" => "98761234",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $searchResult = $svc->Search(array("Reference" => $Reference));
         
         $this->assertSame(1, $searchResult["count"]);
     }
-
-    // Commented out while sorting out permissions
-    // public function testCreateWithToken(): void
-    // {
-    //     $svc = new Customer();
-
-    //     $result = $svc->CreateWithCard("123", "FirstName", "LastName", "test@test.com", "98761234", "<token_here>");
-
-    //     $this->assertIsString($result["customerId"]);
-    // }
 }

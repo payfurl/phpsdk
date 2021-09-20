@@ -16,7 +16,15 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
 
-        $result = $svc->CreateWithCard(15.5, "AUD", "123", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $result = $svc->CreateWithCard([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => "123",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $this->assertSame('SUCCESS', $result["status"]);
     }
@@ -26,7 +34,16 @@ final class ChargeTest extends TestBase
         $svc = new Charge();
 
         $this->expectException(ResponseException::class);
-        $result = $svc->CreateWithCard(15.5, "AUD", "123", "invalid_provider", "4111111111111111", "10/30", "123", "Test Cardholder");
+
+        $result = $svc->CreateWithCard([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => "123",
+            "ProviderId" => "invalid_provider",
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
     }
 
     public function testWithShortTimeout(): void
@@ -37,16 +54,32 @@ final class ChargeTest extends TestBase
 
         $Timeout = Config::$TimeoutMilliseconds = 10;
 
-        $result = $svc->CreateWithCard(15.5, "AUD", "123", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
-
         Config::$TimeoutMilliseconds = $Timeout;
+
+        $result = $svc->CreateWithCard([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => "123",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
     }
 
     public function testSingle(): void
     {
         $svc = new Charge();
 
-        $chargeResult = $svc->CreateWithCard(15.5, "AUD", "123", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $chargeResult = $svc->CreateWithCard([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => "123",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $singleResult = $svc->Single($chargeResult["chargeId"]);
         
@@ -57,7 +90,15 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
 
-        $chargeResult = $svc->CreateWithCard(15.5, "AUD", "123", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $chargeResult = $svc->CreateWithCard([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => "123",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $refundResult = $svc->Refund($chargeResult["chargeId"], 5);
         
@@ -69,38 +110,26 @@ final class ChargeTest extends TestBase
         $svc = new Charge();
 
         $Reference = bin2hex(random_bytes(16));
-        $chargeResult = $svc->CreateWithCard(15.5, "AUD", $Reference, $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $result = $svc->CreateWithCard([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => $Reference,
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $searchResult = $svc->Search(array("Reference" => $Reference));
         
         $this->assertSame(1, $searchResult["count"]);
     }
 
-    // Commented out while sorting out permissions
-    // public function testCreateWithCustomer(): void
-    // {
-    //     $svc = new Charge();
+    public function testInvalidParameters(): void
+    {
+        $svc = new Charge();
+        $this->expectException(ResponseException::class);
 
-    //     $result = $svc->CreateWithCustomer(15.5, "AUD", "123", "<insert_customer>");
-
-    //     $this->assertSame('SUCCESS', $result["status"]);
-    // }
-
-    // public function testCreateWithToken(): void
-    // {
-    //     $svc = new Charge();
-
-    //     $result = $svc->CreateWithToken(15.5, "AUD", "123", "<insert_token>");
-
-    //     $this->assertSame('SUCCESS', $result["status"]);
-    // }
-
-    // public function testCreateWithPaymentMethod(): void
-    // {
-    //     $svc = new Charge();
-
-    //     $result = $svc->CreateWithPaymentMethod(15.5, "AUD", "123", "<insert_payment_method>");
-
-    //     $this->assertSame('SUCCESS', $result["status"]);
-    // }
+        $result = $svc->CreateWithCard(["Amount" => 15.5]);
+    }
 }

@@ -13,16 +13,18 @@ class Charge
     private $ValidSearchKeys = array("reference", "providerId", "amountgreateryhan", "amountlessthan",
         "customerid", "status", "addedafter", "addedbefore", "sortby", "limit", "skip");
 
-    public function CreateWithCard($Amount, $Currency, $Reference, $ProviderId, $CardNumber, $ExpiryDate, $Ccv, $Cardholder)
+    public function CreateWithCard($Params)
     {
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
+        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "CardNumber", "ExpiryDate", "Ccv"));
 
-        $Data['providerId'] = $ProviderId;
+        $Data = $this->BuildCreateChargeJson($Params);
+
+        $Data['providerId'] = $Params["ProviderId"];
         $Data['paymentInformation'] = [
-            'cardNumber' => $CardNumber,
-            'expiryDate' => $ExpiryDate,
-            'ccv' => $Ccv,
-            'cardholder' => $Cardholder
+            'cardNumber' => $Params["CardNumber"],
+            'expiryDate' => $Params["ExpiryDate"],
+            'ccv' => $Params["Ccv"],
+            'cardholder' => $Params["Cardholder"]
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);
@@ -30,33 +32,39 @@ class Charge
         return HttpWrapper::CallApi("/charge/card", "POST", json_encode($Data));
     }
 
-    public function CreateWithToken($Amount, $Currency, $ProviderId, $Reference, $Token)
+    public function CreateWithToken($Params)
     {
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
+        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "Token"));
 
-        $Data['token'] = $Token;
+        $Data = $this->BuildCreateChargeJson($Params);
+
+        $Data['token'] = $Params["Token"];
         
         $Data = ArrayTools::CleanEmpty($Data);
 
         return HttpWrapper::CallApi("/charge/token", "POST", json_encode($Data));
     }
 
-    public function CreateWithCustomer($Amount, $Currency, $ProviderId, $Reference, $CustomerId)
+    public function CreateWithCustomer($Params)
     {
+        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "CustomerId"));
+
         $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
 
-        $Data['customerId'] = $CustomerId;
+        $Data['customerId'] = $Params["CustomerId"];
         
         $Data = ArrayTools::CleanEmpty($Data);
 
         return HttpWrapper::CallApi("/charge/customer", "POST", json_encode($Data));
     }
 
-    public function CreateWithPaymentMethod($Amount, $Currency, $ProviderId, $Reference, $PaymentMethodId)
+    public function CreateWithPaymentMethod($Params)
     {
+        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "PaymentMethodId"));
+
         $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
 
-        $Data['paymentMethodId'] = $PaymentMethodId;
+        $Data['paymentMethodId'] = $Params["PaymentMethodId"];
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -96,12 +104,12 @@ class Charge
         return HttpWrapper::CallApi($url, "GET", "");
     }
 
-    private function BuildCreateChargeJson($Amount, $Currency, $Reference)
+    private function BuildCreateChargeJson($Params)
     {
         return [
-            'amount'        => $Amount,
-            'currency'      => $Currency,
-            'reference'     => $Reference
+            'amount'        => $Params["Amount"],
+            'currency'      => $Params["Currency"],
+            'reference'     => $Params["Reference"]
         ];
     }
 }
