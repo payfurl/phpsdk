@@ -12,13 +12,15 @@ class Transfer
 {
     private $ValidSearchKeys = array("reference", "providerId", "status", "addedafter", "addedbefore", "limit", "SortBy", "skip");
 
-    public function Create($GroupReference, $ProviderId, $ChargeId, $Transfers)
-    {
+    public function Create($Params)
+    {       
+        ArrayTools::ValidateKeys($Params, array("GroupReference", "ProviderId", "ChargeId"));
+
         $Data = [
-            'groupReference' => $GroupReference,
-            'providerId' => $ProviderId,
-            'chargeId' => $GroupReference,
-            'transfers' => $Transfers,
+            'groupReference' => $Params["GroupReference"],
+            'providerId' => $Params["ProviderId"],
+            'chargeId' => $Params["GroupReference"],
+            'transfers' => $Params["Transfers"],
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);

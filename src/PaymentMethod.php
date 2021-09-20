@@ -10,18 +10,15 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class PaymentMethod
 {
-    public function Checkout($Amount, $Currency, $Reference, $ProviderId, $Options)
+    public function Checkout($Params)
     {
-        $Data = [
-            'providerId'     => $ProviderId,
-            'amount'         => $Amount,
-            'currency'       => $Currency,
-            'reference'      => $Reference
-        ];
+        ArrayTools::ValidateKeys($Params, array("ProviderId", "Amount"));
 
-        if ($Options != NULL)
+        $Data = [];
+
+        if ($Params != NULL)
         {
-            foreach ($Options as $Key => $Value)
+            foreach ($Params as $Key => $Value)
             {
                 $Data[$Key] = $Value;
             }
