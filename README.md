@@ -8,4 +8,4 @@ To run the tests, ensure you have phpunit installed.
 
 Then:
 - modify TestBase.php to set the <CardProviderId> and the <PrivateKey>.
-- run phpunit ChargeTest.php
+- run phpunit .

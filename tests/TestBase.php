@@ -7,7 +7,8 @@ use payFURL\Sdk\Config;
 
 class TestBase extends TestCase
 {
-    public $CardProviderId = "5deae6c2d560623e10966b91";
+    public $CardProviderId = "<CardProviderId>";
+    public $PaypalProviderId = "<PaypalProviderId>";
 
     protected function setUp(): void
     {
