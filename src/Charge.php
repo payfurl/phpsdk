@@ -34,7 +34,7 @@ class Charge
 
     public function CreateWithToken($Params)
     {
-        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "Token"));
+        ArrayTools::ValidateKeys($Params, array("Token"));
 
         $Data = $this->BuildCreateChargeJson($Params);
 

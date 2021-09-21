@@ -12,6 +12,6 @@ class TestBase extends TestCase
 
     protected function setUp(): void
     {
-        Config::initialise("LOCAL", "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c", 60000, false);
+        Config::initialise("<secretKey>", "LOCAL", 60000, false);
     }
 }

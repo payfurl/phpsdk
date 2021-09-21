@@ -12,7 +12,7 @@ class Config
     public static $Environment;
     public static $EnableDebug;
 
-    public static function initialise($Environment, $SecretKey, $TimeoutMilliseconds = 60000, $EnableDebug = false)
+    public static function initialise($SecretKey, $Environment, $TimeoutMilliseconds = 60000, $EnableDebug = false)
     {
         self::$Environment = strtolower($Environment);
 
