@@ -10,12 +10,14 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class Account
 {
-    public function Register($EmailAddress, $Password, $Timezone)
+    public function Register($Params)
     {
+        ArrayTools::ValidateKeys($Params, array("EmailAddress", "Password"));
+
         $Data = [
-            'emailAddress' => $EmailAddress,
-            'password' => $Password,
-            'timezone' => $Timezone
+            'emailAddress' => $Params["EmailAddress"],
+            'password' => $Params["Password"],
+            'timezone' => $Params["Timezone"]
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);
