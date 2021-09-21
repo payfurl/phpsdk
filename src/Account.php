@@ -17,7 +17,7 @@ class Account
         $Data = [
             'emailAddress' => $Params["EmailAddress"],
             'password' => $Params["Password"],
-            'timezone' => $Params["Timezone"]
+            'timezone' => $Params["Timezone"] ?? null
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);

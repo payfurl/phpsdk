@@ -100,7 +100,7 @@ final class ChargeTest extends TestBase
             "Ccv" => "123",
             "Cardholder" => "Test Cardholder"]);
 
-        $refundResult = $svc->Refund($chargeResult["chargeId"], 5);
+        $refundResult = $svc->Refund(["ChargeId" => $chargeResult["chargeId"], "Amount" => 5]);
         
         $this->assertSame(5, $refundResult["refundedAmount"]);
     }

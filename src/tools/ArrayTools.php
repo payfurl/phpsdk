@@ -36,7 +36,6 @@ class ArrayTools
             
             if (is_null($Parameters[$value]))
             {
-                var_dump($value);
                 throw new ResponseException('"' . $value . "' is required", 0);
             }
         }        

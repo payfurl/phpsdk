@@ -24,7 +24,7 @@ class Charge
             'cardNumber' => $Params["CardNumber"],
             'expiryDate' => $Params["ExpiryDate"],
             'ccv' => $Params["Ccv"],
-            'cardholder' => $Params["Cardholder"]
+            'cardholder' => $Params["Cardholder"] ?? null
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);
@@ -49,7 +49,7 @@ class Charge
     {
         ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "CustomerId"));
 
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
+        $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['customerId'] = $Params["CustomerId"];
         
@@ -62,7 +62,7 @@ class Charge
     {
         ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "PaymentMethodId"));
 
-        $Data = $this->BuildCreateChargeJson($Amount, $Currency, $Reference);
+        $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['paymentMethodId'] = $Params["PaymentMethodId"];
         
@@ -113,7 +113,7 @@ class Charge
         return [
             'amount'        => $Params["Amount"],
             'currency'      => $Params["Currency"],
-            'reference'     => $Params["Reference"]
+            'reference'     => $Params["Reference"] ?? null
         ];
     }
 }

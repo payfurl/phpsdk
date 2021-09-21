@@ -17,7 +17,7 @@ final class AccountTest extends TestBase
         $svc = new Account();
 
         $email = bin2hex(random_bytes(16)) . "@test.com";
-        $result = $svc->Register(["EmailAddress" => $email, "Password" => "testPassword", "Timezones" => "Australia/Sydney"]);
+        $result = $svc->Register(["EmailAddress" => $email, "Password" => "testPassword", "Timezone" => "Australia/Sydney"]);
 
         $this->assertSame($email, $result["emailAddress"]);
     }

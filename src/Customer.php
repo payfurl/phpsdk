@@ -23,7 +23,7 @@ class Customer
             'cardNumber' => $Params["CardNumber"],
             'expiryDate' => $Params["ExpiryDate"],
             'ccv' => $Params["Ccv"],
-            'cardholder' => $Params["Cardholder"]
+            'cardholder' => $Params["Cardholder"] ?? null
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);
@@ -37,7 +37,6 @@ class Customer
 
         $Data = $this->BuildCreateCustomerJson($Params);
 
-        $Data['providerId'] = $Params["ProviderId"];
         $Data['token'] = $Params["Token"];
         
         $Data = ArrayTools::CleanEmpty($Data);
@@ -71,11 +70,11 @@ class Customer
     private function BuildCreateCustomerJson($Params)
     {
         return [
-            'reference'     => $Params["Reference"],
-            'firstName'     => $Params["FirstName"],
-            'lastName'      => $Params["LastName"],
-            'email'         => $Params["Email"],
-            'phone'         => $Params["Phone"],
+            'reference'     => $Params["Reference"] ?? null,
+            'firstName'     => $Params["FirstName"] ?? null,
+            'lastName'      => $Params["LastName"] ?? null,
+            'email'         => $Params["Email"] ?? null,
+            'phone'         => $Params["Phone"] ?? null,
         ];
     }
 }

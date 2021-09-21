@@ -18,7 +18,7 @@ final class PaymentMethodTest extends TestBase
     {
         $svc = new PaymentMethod();
 
-        $result = $svc->Checkout(15.5, "AUD", "1235", $this->PaypalProviderId, NULL);
+        $result = $svc->Checkout(["Amount" => 15.5, "Currency" => "AUD", "ProviderId" => $this->PaypalProviderId]);
 
         $this->assertIsString($result["checkoutId"]);
     }
@@ -27,7 +27,17 @@ final class PaymentMethodTest extends TestBase
     {
         $customerSvc = new Customer();
 
-        $customerResult = $customerSvc->CreateWithCard("123", "FirstName", "LastName", "test@test.com", "98761234", $this->CardProviderId, "4111111111111111", "10/30", "123", "Test Cardholder");
+        $customerResult = $customerSvc->CreateWithCard([
+            "Reference" => "123",
+            "FirstName" => "FirstName",
+            "LastName" => "LastName",
+            "Email" => "test@test.com",
+            "Phone" => "98761234",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
 
         $paymentMethodSvc = new PaymentMethod();
 
