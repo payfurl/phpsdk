@@ -7,5 +7,5 @@ This is the php SDK for payFURL. This provides a friendly way to call the payFUR
 To run the tests, ensure you have phpunit installed.
 
 Then:
-- modify TestBase.php to set the "<CardProviderId>", "<PaypalProviderId>" and the "<secretKey>".
+- modify TestBase.php to set the "CardProviderId", "PaypalProviderId" and the "secretKey".
 - run phpunit tests
