@@ -81,7 +81,7 @@ final class ChargeTest extends TestBase
             "Ccv" => "123",
             "Cardholder" => "Test Cardholder"]);
 
-        $singleResult = $svc->Single($chargeResult["chargeId"]);
+        $singleResult = $svc->Single(["ChargeId" => $chargeResult["chargeId"]]);
         
         $this->assertSame($chargeResult["chargeId"], $singleResult["chargeId"]);
     }

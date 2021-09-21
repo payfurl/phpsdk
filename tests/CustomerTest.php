@@ -47,7 +47,7 @@ final class CustomerTest extends TestBase
             "Ccv" => "123",
             "Cardholder" => "Test Cardholder"]);
 
-        $singleResult = $svc->Single($customerResult["customerId"]);
+        $singleResult = $svc->Single(["CustomerId" => $customerResult["customerId"]]);
         
         $this->assertSame($customerResult["customerId"], $singleResult["customerId"]);
     }

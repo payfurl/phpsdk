@@ -45,18 +45,20 @@ class Customer
         return HttpWrapper::CallApi("/customer/token", "POST", json_encode($Data));
     }
 
-    public function Single($CustomerId)
+    public function Single($Params)
     {
-        $url = "/customer/" . urlencode($CustomerId);
+        ArrayTools::ValidateKeys($Params, array("CustomerId"));
+
+        $url = "/customer/" . urlencode($Params["CustomerId"]);
 
         return HttpWrapper::CallApi($url, "GET", "");
     }
 
-    public function Search($Parameters)
+    public function Search($Params)
     {
         try
         {
-            $url = "/customer" . UrlTools::CreateQueryString($Parameters, $this->ValidSearchKeys);
+            $url = "/customer" . UrlTools::CreateQueryString($Params, $this->ValidSearchKeys);
         }
         catch (Exception $ex)
         {

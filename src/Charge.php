@@ -71,30 +71,34 @@ class Charge
         return HttpWrapper::CallApi("/charge/payment_method", "POST", json_encode($Data));
     }
 
-    public function Single($ChargeId)
+    public function Single($Params)
     {
-        $url = "/charge/" . urlencode($ChargeId);
+        ArrayTools::ValidateKeys($Params, array("ChargeId"));
+
+        $url = "/charge/" . urlencode($Params["ChargeId"]);
 
         return HttpWrapper::CallApi($url, "GET", "");
     }
 
-    public function Refund($ChargeId, $Amount = NULL)
+    public function Refund($Params)
     {
-        $url = "/charge/" . urlencode($ChargeId);
+        ArrayTools::ValidateKeys($Params, array("ChargeId"));
 
-        if (!is_null($Amount))
+        $url = "/charge/" . urlencode($Params["ChargeId"]);
+
+        if (!is_null($Params["Amount"]))
         {
-            $url = $url . "?amount=" . urlencode($Amount);
+            $url = $url . "?amount=" . urlencode($Params["Amount"]);
         }
 
         return HttpWrapper::CallApi($url, "DELETE", "");
     }
 
-    public function Search($Parameters)
+    public function Search($Params)
     {
         try
         {
-            $url = "/charge" . UrlTools::CreateQueryString($Parameters, $this->ValidSearchKeys);
+            $url = "/charge" . UrlTools::CreateQueryString($Params, $this->ValidSearchKeys);
         }
         catch (Exception $ex)
         {
