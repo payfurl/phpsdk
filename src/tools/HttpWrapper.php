@@ -33,7 +33,6 @@ class HttpWrapper
 
         if (strtolower(Config::$Environment) == "local")
         {
-            print "Setting SSL verify off\n";
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         }

@@ -29,6 +29,22 @@ final class ChargeTest extends TestBase
         $this->assertSame('SUCCESS', $result["status"]);
     }
 
+    public function testCreateWithCardLeastCost(): void
+    {
+        $svc = new Charge();
+
+        $result = $svc->CreateWithCardLeastCost([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => "123",
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
+
+        $this->assertSame('SUCCESS', $result["status"]);
+    }
+
     public function testWithInvalidProvider(): void
     {
         $svc = new Charge();

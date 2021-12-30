@@ -32,6 +32,24 @@ class Charge
         return HttpWrapper::CallApi("/charge/card", "POST", json_encode($Data));
     }
 
+    public function CreateWithCardLeastCost($Params)
+    {
+        ArrayTools::ValidateKeys($Params, array("Amount", "CardNumber", "ExpiryDate", "Ccv"));
+
+        $Data = $this->BuildCreateChargeJson($Params);
+
+        $Data['paymentInformation'] = [
+            'cardNumber' => $Params["CardNumber"],
+            'expiryDate' => $Params["ExpiryDate"],
+            'ccv' => $Params["Ccv"],
+            'cardholder' => $Params["Cardholder"] ?? null
+        ];
+        
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi("/charge/card/least_cost", "POST", json_encode($Data));
+    }
+
     public function CreateWithToken($Params)
     {
         ArrayTools::ValidateKeys($Params, array("Token"));
