@@ -1,6 +1,7 @@
 {
     "name": "payfurl/phpsdk",
     "type": "library",
+    "license": "MIT",
     "description": "php SDK to provide a friendly interface to the payFURL API",
     "require": {
         "php": ">=7.3",
