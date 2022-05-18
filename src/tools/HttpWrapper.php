@@ -63,7 +63,7 @@ class HttpWrapper
         }
 
         // error handling
-        if ($Info["http_code"] != 200)
+        if ($Info["http_code"] != 200 && $Info["http_code"] != 201)
         {
             $ResponseJson = json_decode($Response, true);
             $Message = "";

@@ -26,8 +26,6 @@ class PaymentMethod
         
         $Data = ArrayTools::CleanEmpty($Data);
 
-        print (json_encode($Data));
-
         return HttpWrapper::CallApi("/payment_method/checkout", "POST", json_encode($Data));
     }
 

@@ -67,6 +67,13 @@ class Customer
         return HttpWrapper::CallApi($url, "GET", "");
     }
 
+    public function CustomerPaymentMethods($CustomerId)
+    {
+        $url = "/customer/" . urlencode($CustomerId) . "/payment_method";
+
+        return HttpWrapper::CallApi($url, "GET", "");
+    }
+
     private function BuildCreateCustomerJson($Params)
     {
         return [
