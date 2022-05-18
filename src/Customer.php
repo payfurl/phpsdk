@@ -44,6 +44,40 @@ class Customer
         return HttpWrapper::CallApi("/customer/token", "POST", json_encode($Data));
     }
 
+    public function CreatePaymentMethodWithCard($Params)
+    {
+        ArrayTools::ValidateKeys($Params, array("CustomerId", "ProviderId", "CardNumber", "ExpiryDate", "Ccv"));
+
+        $Data = [
+            'providerId' => $Params["ProviderId"],
+            'paymentInformation' => [
+                'cardNumber' => $Params["CardNumber"],
+                'expiryDate' => $Params["ExpiryDate"],
+                'ccv' => $Params["Ccv"],
+                'cardholder' => $Params["Cardholder"] ?? null
+            ]
+        ];
+        
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi("/customer/" . urlencode($Params["CustomerId"]) . "/payment_method/card", "POST", json_encode($Data));
+    }
+
+    public function CreatePaymentMethodWithToken($Params)
+    {
+        ArrayTools::ValidateKeys($Params, array("Token"));
+
+        $Data = $this->BuildCreateCustomerJson($Params);
+
+        $Data = [
+            'token' => $Params["Token"]
+        ];
+        
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi("/customer/" . urlencode($Params["CustomerId"]) . "/payment_method/token", "POST", json_encode($Data));
+    }
+
     public function Single($Params)
     {
         ArrayTools::ValidateKeys($Params, array("CustomerId"));
