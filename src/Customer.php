@@ -6,7 +6,7 @@ require_once(__DIR__ . "/tools/ArrayTools.php");
 require_once(__DIR__ . "/tools/UrlTools.php");
 
 /*
- * (c) payFurl
+ * (c) payFURL
  */
 class Customer
 {
