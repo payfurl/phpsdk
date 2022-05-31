@@ -10,7 +10,7 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class Customer
 {
-    private $ValidSearchKeys = array("reference", "email", "addedafter", "addedbefore", "search", "paymentmethodid", "limit", "skip");
+    private $ValidSearchKeys = array("reference", "email", "addedafter", "addedbefore", "search", "limit", "skip");
 
     public function CreateWithCard($Params)
     {
@@ -101,9 +101,9 @@ class Customer
         return HttpWrapper::CallApi($url, "GET", "");
     }
 
-    public function CustomerPaymentMethods($CustomerId)
+    public function CustomerPaymentMethods($Params)
     {
-        $url = "/customer/" . urlencode($CustomerId) . "/payment_method";
+        $url = "/customer/" . urlencode($Params["customerId"]) . "/payment_method";
 
         return HttpWrapper::CallApi($url, "GET", "");
     }

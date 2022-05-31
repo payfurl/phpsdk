@@ -10,7 +10,7 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class PaymentMethod
 {
-    private $ValidSearchKeys = array("addedafter", "addedbefore", "providerId", "customerId", "paymentType",
+    private $ValidSearchKeys = array("addedafter", "addedbefore", "providerid", "customerid", "paymenttype",
         "search", "sortby", "limit");
 
     public function Checkout($Params)

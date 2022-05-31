@@ -2,7 +2,7 @@
 namespace payFURL\Sdk;
 
 /*
- * (c) payFURL
+ * (c) payFurl
  */
 class UrlTools
 {

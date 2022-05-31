@@ -89,11 +89,10 @@ final class CustomerTest extends TestBase
             "ExpiryDate" => "10/30",
             "Ccv" => "123",
             "Cardholder" => "Test Cardholder"]);
-
-        $customerSvc = new Customer();
-
-        $result = $customerSvc->CustomerPaymentMethods($customerResult["customerId"]);
-        $this->assertSame($result[0]["customerId"], $customerResult["customerId"]);
+        
+        $result = $customerSvc->CustomerPaymentMethods(["customerId" => $customerResult["customerId"]]);
+        
+        $this->assertEquals($result[0]["customerId"], $customerResult["customerId"]);
     }
 
     public function testAddCustomerPaymentMethodWithCard(): void
@@ -122,6 +121,6 @@ final class CustomerTest extends TestBase
             "Ccv" => "123"
         ]);
 
-        $this->assertSame($result["customerId"], $customerResult["customerId"]);
+        $this->assertEquals($result["customerId"], $customerResult["customerId"]);
     }
 }

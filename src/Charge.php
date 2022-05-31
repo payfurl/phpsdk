@@ -10,8 +10,9 @@ require_once(__DIR__ . "/tools/UrlTools.php");
  */
 class Charge
 {
-    private $ValidSearchKeys = array("reference", "providerId", "amountgreateryhan", "amountlessthan",
-        "customerid", "status", "addedafter", "addedbefore", "sortby", "limit", "skip");
+    private $ValidSearchKeys = array("reference", "providerid", "amountgreaterthan", "amountlessthan",
+        "customerid", "status", "addedafter", "addedbefore", "paymentMethodid", "paymenttype", "sortby",
+        "limit", "skip");
 
     public function CreateWithCard($Params)
     {

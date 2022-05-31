@@ -38,7 +38,7 @@ final class PaymentMethodTest extends TestBase
 
         $result = $svc->Search(["customerId" => $customerResult["customerId"]]);
 
-        $this->assertIsString($result["checkoutId"]);
+        $this->assertEquals(1, $result["count"]);
     }
 
     public function testSingle(): void
@@ -56,6 +56,6 @@ final class PaymentMethodTest extends TestBase
 
         $result = $svc->Single(["paymentMethodId" => $customerResult["defaultPaymentMethod"]["paymentMethodId"]]);
 
-        $this->assertIsString($result["checkoutId"]);
+        $this->assertIsString($result["paymentMethodId"]);
     }
 }
