@@ -22,4 +22,40 @@ final class PaymentMethodTest extends TestBase
 
         $this->assertIsString($result["checkoutId"]);
     }
+
+    public function testSearch(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
+
+        $svc = new PaymentMethod();
+
+        $result = $svc->Search(["customerId" => $customerResult["customerId"]]);
+
+        $this->assertIsString($result["checkoutId"]);
+    }
+
+    public function testSingle(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder"]);
+
+        $svc = new PaymentMethod();
+
+        $result = $svc->Single(["paymentMethodId" => $customerResult["defaultPaymentMethod"]["paymentMethodId"]]);
+
+        $this->assertIsString($result["checkoutId"]);
+    }
 }
