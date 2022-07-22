@@ -59,4 +59,42 @@ class PaymentMethod
          
         return HttpWrapper::CallApi($url, "GET", "");
     }
+
+    public function CreatePaymentMethodWithCard($Params)
+    {
+        ArrayTools::ValidateKeys($Params, array("ProviderId", "CardNumber", "ExpiryDate", "Ccv"));
+
+        $Data = [
+            'providerId' => $Params["ProviderId"],
+            'paymentInformation' => [
+                'cardNumber' => $Params["CardNumber"],
+                'expiryDate' => $Params["ExpiryDate"],
+                'ccv' => $Params["Ccv"],
+                'cardholder' => $Params["Cardholder"] ?? null
+            ],
+            'vaultCard' => $Params["VaultCard"] ?? null,
+            'VaultExpireDate' => $Params["VaultExpireDate"] ?? null,
+            'VaultExpireSeconds' => $Params["VaultExpireSeconds"] ?? null
+        ];
+        
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi("/payment_method/card", "POST", json_encode($Data));
+    }
+
+    public function CreatePaymentMethodWithVault($Params)
+    {
+        ArrayTools::ValidateKeys($Params, array("ProviderId", "VaultId", "PaymentMethodId"));
+
+        $Data = [
+            'providerId' => $Params["ProviderId"],
+            'vaultId' => $Params["VaultId"],
+            'paymentMethodId' => $Params["PaymentMethodId"],
+            'ccv' => $Params["Ccv"] ?? null,
+        ];
+        
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi("/payment_method/vault", "POST", json_encode($Data));
+    }
 }

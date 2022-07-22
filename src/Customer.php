@@ -55,7 +55,10 @@ class Customer
                 'expiryDate' => $Params["ExpiryDate"],
                 'ccv' => $Params["Ccv"],
                 'cardholder' => $Params["Cardholder"] ?? null
-            ]
+            ],
+            'vaultCard' => $Params["VaultCard"] ?? null,
+            'VaultExpireDate' => $Params["VaultExpireDate"] ?? null,
+            'VaultExpireSeconds' => $Params["VaultExpireSeconds"] ?? null
         ];
         
         $Data = ArrayTools::CleanEmpty($Data);
