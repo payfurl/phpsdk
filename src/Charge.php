@@ -27,6 +27,7 @@ class Charge
             'ccv' => $Params["Ccv"],
             'cardholder' => $Params["Cardholder"] ?? null
         ];
+        $Data['capture'] = $Params["Capture"] ?? true;
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -45,6 +46,7 @@ class Charge
             'ccv' => $Params["Ccv"],
             'cardholder' => $Params["Cardholder"] ?? null
         ];
+        $Data['capture'] = $Params["Capture"] ?? true;
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -58,6 +60,7 @@ class Charge
         $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['token'] = $Params["Token"];
+        $Data['capture'] = $Params["Capture"] ?? true;
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -71,6 +74,7 @@ class Charge
         $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['customerId'] = $Params["CustomerId"];
+        $Data['capture'] = $Params["Capture"] ?? true;
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -84,7 +88,8 @@ class Charge
         $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['paymentMethodId'] = $Params["PaymentMethodId"];
-        
+        $Data['capture'] = $Params["Capture"] ?? true;
+
         $Data = ArrayTools::CleanEmpty($Data);
 
         return HttpWrapper::CallApi("/charge/payment_method", "POST", json_encode($Data));
@@ -125,6 +130,27 @@ class Charge
         }
          
         return HttpWrapper::CallApi($url, "GET", "");
+    }
+
+    public function Capture($Params)
+    {
+        ArrayTools::ValidateKeys($Params, array("ChargeId"));
+
+        $url = "/charge/" . urlencode($Params["ChargeId"]);
+
+        $Data = $this->BuildCreateChargeJson($Params);
+        $Data = ArrayTools::CleanEmpty($Data);
+
+        return HttpWrapper::CallApi($url, "POST", json_encode($Data));
+    }
+
+    public function Void($Params)
+    {
+        ArrayTools::ValidateKeys($Params, array("ChargeId"));
+
+        $url = "/charge/" . urlencode($Params["ChargeId"]);
+
+        return HttpWrapper::CallApi($url, "DELETE", "");
     }
 
     private function BuildCreateChargeJson($Params)
