@@ -87,7 +87,7 @@ class Customer
     /**
      * @throws ResponseException
      */
-    public function CreateWithCustomerToken($params)
+    public function CreateWithProviderToken($params)
     {
         ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
 
