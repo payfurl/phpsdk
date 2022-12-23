@@ -20,7 +20,7 @@ class Customer
      */
     public function CreateWithCard($params)
     {
-        ArrayTools::ValidateKeys($params, array('ProviderId', 'CardNumber', 'ExpiryDate', 'Ccv'));
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'CardNumber', 'ExpiryDate', 'Ccv']);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data = array_merge($data, $this->BuildVaultInformationJson($params));
@@ -38,7 +38,7 @@ class Customer
      */
     public function CreateWithToken($params)
     {
-        ArrayTools::ValidateKeys($params, array('Token'));
+        ArrayTools::ValidateKeys($params, ['Token']);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data = array_merge($data, $this->BuildVaultInformationJson($params));
@@ -55,7 +55,7 @@ class Customer
      */
     public function CreatePaymentMethodWithCard($params)
     {
-        ArrayTools::ValidateKeys($params, array('CustomerId', 'ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']));
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = [];
         $data = array_merge($data, $this->BuildVaultInformationJson($params));
@@ -73,7 +73,7 @@ class Customer
      */
     public function CreatePaymentMethodWithToken($params)
     {
-        ArrayTools::ValidateKeys($params, array('CustomerId', 'Token'));
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'Token']);
 
         $data = [];
         $data = array_merge($data, $this->BuildIpInformationJson($params));
@@ -89,7 +89,7 @@ class Customer
      */
     public function CreateWithCustomerToken($params)
     {
-        ArrayTools::ValidateKeys($params, array('ProviderId', 'ProviderToken'));
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data = array_merge($data, $this->BuildIpInformationJson($params));
@@ -106,7 +106,7 @@ class Customer
      */
     public function Single($params)
     {
-        ArrayTools::ValidateKeys($params, array('CustomerId'));
+        ArrayTools::ValidateKeys($params, ['CustomerId']);
 
         $url = '/customer/' . urlencode($params['CustomerId']);
 
@@ -132,7 +132,9 @@ class Customer
      */
     public function CustomerPaymentMethods($params)
     {
-        $url = '/customer/' . urlencode($params['customerId']) . '/payment_method';
+        ArrayTools::ValidateKeys($params, ['CustomerId']);
+
+        $url = '/customer/' . urlencode($params['CustomerId']) . '/payment_method';
 
         return HttpWrapper::CallApi($url, 'GET', '');
     }
@@ -142,7 +144,7 @@ class Customer
      */
     public function CreateWithPayTo($params)
     {
-        ArrayTools::ValidateKeys($params, array('PayToAgreement'));
+        ArrayTools::ValidateKeys($params, ['PayToAgreement']);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data['PayToAgreement'] = $this->BuildPayToAgreementJson($params);
@@ -157,7 +159,7 @@ class Customer
      */
     public function CreatePaymentMethodWithPayTo($params)
     {
-        ArrayTools::ValidateKeys($params, array('CustomerId', 'PayToAgreement'));
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'PayToAgreement']);
 
         $data = $this->BuildPayToAgreementJson($params);
 
@@ -171,7 +173,9 @@ class Customer
      */
     public function RemoveCustomerWithRelatedData($params)
     {
-        $url = '/customer/' . urlencode($params['customerId']);
+        ArrayTools::ValidateKeys($params, ['CustomerId']);
+
+        $url = '/customer/' . urlencode($params['CustomerId']);
 
         return HttpWrapper::CallApi($url, 'DELETE', '');
     }
@@ -181,13 +185,13 @@ class Customer
      */
     public function UpdateCustomer($params)
     {
-        ArrayTools::ValidateKeys($params, array('Email', 'Phone', 'Address'));
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'Email', 'Phone', 'Address']);
 
         $data = $this->BuildCreateCustomerJson($params);
 
         $data = ArrayTools::CleanEmpty($data);
 
-        return HttpWrapper::CallApi('/customer/' . urlencode($params['customerId']), 'PUT', json_encode($data));
+        return HttpWrapper::CallApi('/customer/' . urlencode($params['CustomerId']), 'PUT', json_encode($data));
     }
 
     private function BuildCreateCustomerJson($params): array

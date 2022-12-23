@@ -18,7 +18,7 @@ class Token
      */
     public function TokeniseCard($params)
     {
-        ArrayTools::ValidateKeys($params, ['ProviderId']);
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = [];
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
@@ -32,7 +32,7 @@ class Token
 
     public function TokeniseCardLeastCost($params)
     {
-        $sourceParams = ['Amount' => 1, 'Currency' => 1];
+        $sourceParams = ['Amount' => 1, 'Currency' => 1, 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']];
         $data = array_intersect_key($params, $sourceParams);
 
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);

@@ -88,8 +88,10 @@ class PaymentMethod
      */
     public function Single($params)
     {
+        ArrayTools::ValidateKeys($params, ['PaymentMethodId']);
+
         try {
-            $url = '/payment_method/' . urlencode($params['paymentMethodId']);
+            $url = '/payment_method/' . urlencode($params['PaymentMethodId']);
         } catch (\Exception $ex) {
             throw new ResponseException($ex->getMessage(), 0);
         }

@@ -42,7 +42,7 @@ class Charge
     public function CreateWithCardLeastCost($params)
     {
 
-        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
+        ArrayTools::ValidateKeys($params, ['Amount', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = $this->BuildCreateChargeJson($params);
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
@@ -57,7 +57,7 @@ class Charge
      */
     public function CreateWithCustomer($params)
     {
-        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'CustomerId']);
+        ArrayTools::ValidateKeys($params, ['Amount', 'CustomerId']);
 
         $data = $this->BuildCreateChargeJson($params);
         $data['CustomerId'] = $params['CustomerId'];
@@ -72,7 +72,7 @@ class Charge
      */
     public function CreateWithPaymentMethod($params)
     {
-        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'PaymentMethodId']);
+        ArrayTools::ValidateKeys($params, ['Amount', 'PaymentMethodId']);
 
         $data = $this->BuildCreateChargeJson($params);
         $data['PaymentMethodId'] = $params['PaymentMethodId'];

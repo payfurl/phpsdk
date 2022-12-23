@@ -66,7 +66,7 @@ final class PaymentMethodTest extends TestBase
 
         $svc = new PaymentMethod();
 
-        $result = $svc->Single(['paymentMethodId' => $customerResult['defaultPaymentMethod']['paymentMethodId']]);
+        $result = $svc->Single(['PaymentMethodId' => $customerResult['defaultPaymentMethod']['paymentMethodId']]);
 
         $this->assertIsString($result['paymentMethodId']);
     }

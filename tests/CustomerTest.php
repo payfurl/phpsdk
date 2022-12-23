@@ -56,9 +56,9 @@ final class CustomerTest extends TestBase
                                                        'Ccv' => '123',
                                                        'Cardholder' => 'Test Cardholder']]);
 
-        $singleResult = $svc->Single(['CustomerId' => $customerResult['customerId']]);
+        $singleResult = $svc->Single(['CustomerId' => $customerResult['CustomerId']]);
 
-        $this->assertSame($customerResult['customerId'], $singleResult['customerId']);
+        $this->assertSame($customerResult['CustomerId'], $singleResult['customerId']);
     }
 
     /**
@@ -108,9 +108,9 @@ final class CustomerTest extends TestBase
                                                                'Ccv' => '123',
                                                                'Cardholder' => 'Test Cardholder']]);
 
-        $result = $customerSvc->CustomerPaymentMethods(['customerId' => $customerResult['customerId']]);
+        $result = $customerSvc->CustomerPaymentMethods(['CustomerId' => $customerResult['customerId']]);
 
-        $this->assertEquals($result[0]['customerId'], $customerResult['customerId']);
+        $this->assertEquals($result[0]['customerId'], $customerResult['CustomerId']);
     }
 
     /**
@@ -144,6 +144,6 @@ final class CustomerTest extends TestBase
                                                                     'Ccv' => '123'
                                                                 ]]);
 
-        $this->assertEquals($result['customerId'], $customerResult['customerId']);
+        $this->assertEquals($result['customerId'], $customerResult['CustomerId']);
     }
 }
