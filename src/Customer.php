@@ -185,7 +185,7 @@ class Customer
      */
     public function UpdateCustomer($params)
     {
-        ArrayTools::ValidateKeys($params, ['CustomerId', 'Email', 'Phone', 'Address']);
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'Email']);
 
         $data = $this->BuildCreateCustomerJson($params);
 
