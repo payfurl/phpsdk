@@ -1,43 +1,45 @@
 <?php
+
 namespace payFURL\Sdk;
 
-/*
- * (c) payFURL
+/**
+ * @copyright PayFURL
  */
 class ArrayTools
 {
-    static function CleanEmpty($Array)
+    static function CleanEmpty($array)
     {
-        foreach ($Array as $key => $value)
-        {
-            if (is_array($value))
-            {
-                $Array[$key] = ArrayTools::CleanEmpty($value);
+        foreach ($array as $key => $value) {
+            if (!isset($value)) {
+                unset($array[$key]);
+                continue;
             }
-            else
-            {
-                if (empty($value))
-                {
-                    unset($Array[$key]);
-                }
+            if (is_array($value)) {
+                $array[$key] = ArrayTools::CleanEmpty($value);
             }
         }
-        return $Array;
+        return $array;
     }
 
-    static function ValidateKeys($Parameters, $RequiredParameters)
+    /**
+     * @throws ResponseException
+     */
+    static function ValidateKeys($parameters, $requiredParameters)
     {
-        foreach ($RequiredParameters as $i => $value)
-        {
-            if (!array_key_exists($value, $Parameters))
-            {
+        foreach ($requiredParameters as $key => $value) {
+            if (is_array($value)) {
+                if (!array_key_exists($key, $parameters)) {
+                    throw new ResponseException('"' . $key . "' is required", 0);
+                }
+                self::ValidateKeys($parameters[$key], $value);
+            }
+            if (!array_key_exists($value, $parameters)) {
                 throw new ResponseException('"' . $value . "' is required", 0);
             }
-            
-            if (is_null($Parameters[$value]))
-            {
+
+            if (is_null($parameters[$value])) {
                 throw new ResponseException('"' . $value . "' is required", 0);
             }
-        }        
+        }
     }
 }
