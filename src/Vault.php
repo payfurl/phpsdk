@@ -1,43 +1,48 @@
 <?php
 namespace payFURL\Sdk;
 
-require_once(__DIR__ . "/tools/HttpWrapper.php");
-require_once(__DIR__ . "/tools/ArrayTools.php");
-require_once(__DIR__ . "/tools/UrlTools.php");
+require_once(__DIR__ . '/tools/HttpWrapper.php');
+require_once(__DIR__ . '/tools/ArrayTools.php');
+require_once(__DIR__ . '/tools/UrlTools.php');
 
-/*
- * (c) payFURL
+/**
+ * @copyright PayFURL
  */
 class Vault
 {
-    public function Create($Params)
-    {       
-        ArrayTools::ValidateKeys($Params, array("CardNumber"));
+    /**
+     * @throws ResponseException
+     */
+    public function Create($params)
+    {
+        ArrayTools::ValidateKeys($params, array('CardNumber'));
 
-        $Data = [
-            'CardNumber' => $Params["CardNumber"],
-            'Ccv' => $Params["Ccv"] ?? null,
-            'ExpireDate' => $Params["ExpireDate"] ?? null,
-            'ExpireSeconds' => $Params["ExpireSeconds"] ?? null,
-        ];
-        
-        $Data = ArrayTools::CleanEmpty($Data);
+        $sourceParams = ['CardNumber' => 1, 'Ccv' => 1, 'ExpireDate' => 1, 'ExpireSeconds' => 1];
+        $data = array_intersect_key($params, $sourceParams);
 
-        return HttpWrapper::CallApi("/vault", "POST", json_encode($Data));
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/vault', 'POST', json_encode($data));
     }
 
-    public function Single($VaultId)
+    /**
+     * @throws ResponseException
+     */
+    public function Single($vaultId)
     {
-        $url = "/vault/" . urlencode($VaultId);
+        $url = '/vault/' . urlencode($vaultId);
 
-        return HttpWrapper::CallApi($url, "GET", "");
+        return HttpWrapper::CallApi($url, 'GET', '');
     }
 
-    public function Delete($VaultId)
+    /**
+     * @throws ResponseException
+     */
+    public function Delete($vaultId)
     {
-        $url = "/vault/" . urlencode($VaultId);
+        $url = '/vault/' . urlencode($vaultId);
 
-        return HttpWrapper::CallApi($url, "DELETE", "");
+        return HttpWrapper::CallApi($url, 'DELETE', '');
     }
 
 }

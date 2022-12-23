@@ -1,6 +1,20 @@
-# README #
+# PayFURL PHP SDK
 
-This is the php SDK for payFURL. This provides a friendly way to call the payFURL API from php.
+Library for integrating with PayFURL payments in your app. It includes the following APIs:
+
+1. Charge API
+2. Customer API
+3. PaymentMethod API
+4. Transfer API
+5. Vault API
+6. Token API
+
+## 📄 Requirements
+
+Use of the PayFURL PHP SDK requires:
+
+* PHP 7.4 or higher
+* PHPUnit
 
 # Running tests
 

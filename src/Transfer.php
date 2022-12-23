@@ -1,51 +1,63 @@
 <?php
+
 namespace payFURL\Sdk;
 
-require_once(__DIR__ . "/tools/HttpWrapper.php");
-require_once(__DIR__ . "/tools/ArrayTools.php");
-require_once(__DIR__ . "/tools/UrlTools.php");
+require_once(__DIR__ . '/tools/HttpWrapper.php');
+require_once(__DIR__ . '/tools/ArrayTools.php');
+require_once(__DIR__ . '/tools/UrlTools.php');
 
-/*
- * (c) payFURL
+/**
+ * @copyright PayFURL
  */
 class Transfer
 {
-    private $ValidSearchKeys = array("reference", "providerId", "status", "addedafter", "addedbefore", "limit", "SortBy", "skip");
+    private array $validSearchKeys = ['Reference', 'ProviderId', 'Status', 'AddedAfter', 'AddedBefore', 'Limit', 'SortBy', 'Skip'];
 
-    public function Create($Params)
-    {       
-        ArrayTools::ValidateKeys($Params, array("GroupReference", "ProviderId", "ChargeId"));
+    /**
+     * @throws ResponseException
+     */
+    public function Create($params)
+    {
+        ArrayTools::ValidateKeys($params, ['GroupReference', 'ProviderId', 'ChargeId']);
 
-        $Data = [
-            'groupReference' => $Params["GroupReference"],
-            'providerId' => $Params["ProviderId"],
-            'chargeId' => $Params["GroupReference"],
-            'transfers' => $Params["Transfers"],
-        ];
-        
-        $Data = ArrayTools::CleanEmpty($Data);
+        $sourceParams = ['GroupReference' => 1, 'ProviderId' => 1, 'ChargeId' => 1];
+        $data = array_intersect_key($params, $sourceParams);
+        if (isset($params['Transfers'])) {
+            $data['Transfers'] = array_map(fn($value) => [
+                'Account' => $value['Account'] ?? null,
+                'Amount' => $value['Amount'] ?? null,
+                'Currency' => $value['Currency'] ?? null,
+                'Message' => $value['Message'] ?? null,
+                'Reference' => $value['Reference'] ?? null,
+            ], $params['Transfers']);
+        }
 
-        return HttpWrapper::CallApi("/transfer", "POST", json_encode($Data));
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/transfer', 'POST', json_encode($data));
     }
 
-    public function Single($TransferId)
+    /**
+     * @throws ResponseException
+     */
+    public function Single($transferId)
     {
-        $url = "/transfer/" . urlencode($TransferId);
+        $url = '/transfer/' . urlencode($transferId);
 
-        return HttpWrapper::CallApi($url, "GET", "");
+        return HttpWrapper::CallApi($url, 'GET', '');
     }
 
-    public function Search($Parameters)
+    /**
+     * @throws ResponseException
+     */
+    public function Search($parameters)
     {
-        try
-        {
-            $url = "/transfer" . UrlTools::CreateQueryString($Parameters, $this->ValidSearchKeys);
+        try {
+            $url = '/transfer' . UrlTools::CreateQueryString($parameters, $this->validSearchKeys);
+        } catch (\Exception $ex) {
+            throw new ResponseException($ex->getMessage(), 0);
         }
-        catch (Exception $ex)
-        {
-            throw new ResponseException($ex->message, 0);
-        }
-         
-        return HttpWrapper::CallApi($url, "GET", "");
+
+        return HttpWrapper::CallApi($url, 'GET', '');
     }
 }

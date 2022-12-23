@@ -1,164 +1,220 @@
 <?php
+
 namespace payFURL\Sdk;
 
-require_once(__DIR__ . "/tools/HttpWrapper.php");
-require_once(__DIR__ . "/tools/ArrayTools.php");
-require_once(__DIR__ . "/tools/UrlTools.php");
+use Exception;
 
-/*
- * (c) payFURL
+require_once(__DIR__ . '/tools/HttpWrapper.php');
+require_once(__DIR__ . '/tools/ArrayTools.php');
+require_once(__DIR__ . '/tools/UrlTools.php');
+
+/**
+ * @copyright PayFURL
  */
 class Charge
 {
-    private $ValidSearchKeys = array("reference", "providerid", "amountgreaterthan", "amountlessthan",
-        "customerid", "status", "addedafter", "addedbefore", "paymentMethodid", "paymenttype", "sortby",
-        "limit", "skip");
+    private array $validSearchKeys = [
+        'Reference', 'ProviderId', 'AmountGreaterThan', 'AmountLessThan', 'Currency',
+        'CustomerId', 'Status', 'AddedAfter', 'AddedBefore', 'PaymentMethodId', 'PaymentType',
+        'SortBy', 'Limit', 'Skip',
+    ];
 
-    public function CreateWithCard($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithCard($params)
     {
-        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "CardNumber", "ExpiryDate", "Ccv"));
+        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
-        $Data = $this->BuildCreateChargeJson($Params);
+        $data = $this->BuildCreateChargeJson($params);
 
-        $Data['providerId'] = $Params["ProviderId"];
-        $Data['paymentInformation'] = [
-            'cardNumber' => $Params["CardNumber"],
-            'expiryDate' => $Params["ExpiryDate"],
-            'ccv' => $Params["Ccv"],
-            'cardholder' => $Params["Cardholder"] ?? null
-        ];
-        $Data['capture'] = $Params["Capture"] ?? true;
-        
-        $Data = ArrayTools::CleanEmpty($Data);
+        $data['ProviderId'] = $params['ProviderId'];
+        $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
 
-        return HttpWrapper::CallApi("/charge/card", "POST", json_encode($Data));
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/charge/card', 'POST', json_encode($data));
     }
 
-    public function CreateWithCardLeastCost($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithCardLeastCost($params)
     {
-        ArrayTools::ValidateKeys($Params, array("Amount", "CardNumber", "ExpiryDate", "Ccv"));
 
-        $Data = $this->BuildCreateChargeJson($Params);
+        ArrayTools::ValidateKeys($params, ['Amount', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
-        $Data['paymentInformation'] = [
-            'cardNumber' => $Params["CardNumber"],
-            'expiryDate' => $Params["ExpiryDate"],
-            'ccv' => $Params["Ccv"],
-            'cardholder' => $Params["Cardholder"] ?? null
-        ];
-        $Data['capture'] = $Params["Capture"] ?? true;
-        
-        $Data = ArrayTools::CleanEmpty($Data);
+        $data = $this->BuildCreateChargeJson($params);
+        $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
 
-        return HttpWrapper::CallApi("/charge/card/least_cost", "POST", json_encode($Data));
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/charge/card/least_cost', 'POST', json_encode($data));
     }
 
-    public function CreateWithToken($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithCustomer($params)
     {
-        ArrayTools::ValidateKeys($Params, array("Token"));
+        ArrayTools::ValidateKeys($params, ['Amount', 'CustomerId']);
 
-        $Data = $this->BuildCreateChargeJson($Params);
+        $data = $this->BuildCreateChargeJson($params);
+        $data['CustomerId'] = $params['CustomerId'];
 
-        $Data['token'] = $Params["Token"];
-        $Data['capture'] = $Params["Capture"] ?? true;
-        
-        $Data = ArrayTools::CleanEmpty($Data);
+        $data = ArrayTools::CleanEmpty($data);
 
-        return HttpWrapper::CallApi("/charge/token", "POST", json_encode($Data));
+        return HttpWrapper::CallApi('/charge/customer', 'POST', json_encode($data));
     }
 
-    public function CreateWithCustomer($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithPaymentMethod($params)
     {
-        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "CustomerId"));
+        ArrayTools::ValidateKeys($params, ['Amount', 'PaymentMethodId']);
 
-        $Data = $this->BuildCreateChargeJson($Params);
+        $data = $this->BuildCreateChargeJson($params);
+        $data['PaymentMethodId'] = $params['PaymentMethodId'];
 
-        $Data['customerId'] = $Params["CustomerId"];
-        $Data['capture'] = $Params["Capture"] ?? true;
-        
-        $Data = ArrayTools::CleanEmpty($Data);
+        $data = ArrayTools::CleanEmpty($data);
 
-        return HttpWrapper::CallApi("/charge/customer", "POST", json_encode($Data));
+        return HttpWrapper::CallApi('/charge/payment_method', 'POST', json_encode($data));
     }
 
-    public function CreateWithPaymentMethod($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithToken($params)
     {
-        ArrayTools::ValidateKeys($Params, array("Amount", "ProviderId", "PaymentMethodId"));
+        ArrayTools::ValidateKeys($params, ['Token']);
 
-        $Data = $this->BuildCreateChargeJson($Params);
+        $data = $this->BuildCreateChargeJson($params);
+        $data['Token'] = $params['Token'];
 
-        $Data['paymentMethodId'] = $Params["PaymentMethodId"];
-        $Data['capture'] = $Params["Capture"] ?? true;
+        $data = ArrayTools::CleanEmpty($data);
 
-        $Data = ArrayTools::CleanEmpty($Data);
-
-        return HttpWrapper::CallApi("/charge/payment_method", "POST", json_encode($Data));
+        return HttpWrapper::CallApi('/charge/token', 'POST', json_encode($data));
     }
 
-    public function Single($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function Single($params)
     {
-        ArrayTools::ValidateKeys($Params, array("ChargeId"));
+        ArrayTools::ValidateKeys($params, ['ChargeId']);
 
-        $url = "/charge/" . urlencode($Params["ChargeId"]);
+        $url = '/charge/' . urlencode($params['ChargeId']);
 
-        return HttpWrapper::CallApi($url, "GET", "");
+        return HttpWrapper::CallApi($url, 'GET', '');
     }
 
-    public function Refund($Params)
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function Refund($params)
     {
-        ArrayTools::ValidateKeys($Params, array("ChargeId"));
+        ArrayTools::ValidateKeys($params, ['ChargeId']);
 
-        $url = "/charge/" . urlencode($Params["ChargeId"]);
-
-        if (!is_null($Params["Amount"]))
-        {
-            $url = $url . "?amount=" . urlencode($Params["Amount"]);
+        $queryParams = [];
+        if ($params['Amount'] > 0) {
+            $queryParams['Amount'] = $params['Amount'];
+        }
+        if (isset($params['Comment'])) {
+            $queryParams['Comment'] = $params['Comment'];
         }
 
-        return HttpWrapper::CallApi($url, "DELETE", "");
+        $url = '/charge/' . urlencode($params['ChargeId']) . UrlTools::CreateQueryString($queryParams);
+
+        return HttpWrapper::CallApi($url, 'DELETE', '');
     }
 
-    public function Search($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function Search($params)
     {
-        try
-        {
-            $url = "/charge" . UrlTools::CreateQueryString($Params, $this->ValidSearchKeys);
+        try {
+            $url = '/charge' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
+        } catch (Exception $ex) {
+            throw new ResponseException($ex->getMessage(), 0);
         }
-        catch (Exception $ex)
-        {
-            throw new ResponseException($ex->message, 0);
+
+        return HttpWrapper::CallApi($url, 'GET', '');
+    }
+
+    /**
+     * @throws ResponseException
+     */
+    public function Capture($params)
+    {
+        ArrayTools::ValidateKeys($params, ['ChargeId']);
+
+        $url = '/charge/' . urlencode($params['ChargeId']);
+
+        $data = [];
+        if ($params['Amount'] > 0) {
+            $data['Amount'] = $params['Amount'];
         }
-         
-        return HttpWrapper::CallApi($url, "GET", "");
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi($url, 'POST', json_encode($data));
     }
 
-    public function Capture($Params)
+    /**
+     * @throws ResponseException
+     */
+    public function Void($params)
     {
-        ArrayTools::ValidateKeys($Params, array("ChargeId"));
+        ArrayTools::ValidateKeys($params, ['ChargeId']);
 
-        $url = "/charge/" . urlencode($Params["ChargeId"]);
+        $url = '/charge/' . urlencode($params['ChargeId']);
 
-        $Data = $this->BuildCreateChargeJson($Params);
-        $Data = ArrayTools::CleanEmpty($Data);
-
-        return HttpWrapper::CallApi($url, "POST", json_encode($Data));
+        return HttpWrapper::CallApi($url, 'DELETE', '');
     }
 
-    public function Void($Params)
+    private function BuildCreateChargeJson($params): array
     {
-        ArrayTools::ValidateKeys($Params, array("ChargeId"));
+        $sourceParams = ['Amount' => 1, 'Currency' => 1, 'Reference' => 1, 'Capture' => 1, 'Ip' => 1];
+        $data = array_intersect_key($params, $sourceParams);
 
-        $url = "/charge/" . urlencode($Params["ChargeId"]);
+        if (array_key_exists('Address', $params)) {
+            $sourceParams = ['Line1' => 1, 'Line2' => 1, 'City' => 1, 'Country' => 1, 'PostalCode' => 1, 'State' => 1];
+            $data['Address'] = array_intersect_key($params, $sourceParams);
+        }
 
-        return HttpWrapper::CallApi($url, "DELETE", "");
+        if (array_key_exists('Order', $params)) {
+            $sourceParams = ['OrderNumber' => 1, 'FreightAmount' => 1, 'DutyAmount' => 1, 'Country' => 1, 'PostalCode' => 1, 'State' => 1];
+            $data['Order'] = array_intersect_key($params, $sourceParams);
+            if (isset($params['Order']['Items'])) {
+                $data['Order']['Items'] = array_map(fn($value) => [
+                    'ProductCode' => $value['ProductCode'] ?? null,
+                    'CommodityCode' => $value['CommodityCode'] ?? null,
+                    'Description' => $value['Description'] ?? null,
+                    'Quantity' => $value['Quantity'] ?? null,
+                    'UnitOfMeasure' => $value['UnitOfMeasure'] ?? null,
+                    'Amount' => $value['Amount'] ?? null,
+                ], $params['Order']['Items']);
+
+            }
+        }
+        if (array_key_exists('TaxAmount', $params)) {
+            $data['TaxAmount'] = $params['TaxAmount'];
+        }
+        if (array_key_exists('CustomerCode', $params)) {
+            $data['CustomerCode'] = $params['CustomerCode'];
+        }
+        if (array_key_exists('InvoiceNumber', $params)) {
+            $data['InvoiceNumber'] = $params['InvoiceNumber'];
+        }
+
+        return $data;
     }
 
-    private function BuildCreateChargeJson($Params)
+    private function BuildPaymentInformationJson($params): array
     {
-        return [
-            'amount'        => $Params["Amount"],
-            'currency'      => $Params["Currency"],
-            'reference'     => $Params["Reference"] ?? null
-        ];
+        $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1];
+        return array_intersect_key($params, $sourceParams);
     }
 }

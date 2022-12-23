@@ -1,16 +1,16 @@
 <?php
 namespace payFURL\Sdk;
 
-/*
- * (c) payFURL
+/**
+ * @copyright PayFURL
  */
 class Config
 {
-    public static $BaseUrl;
-    public static $SecretKey;
-    public static $TimeoutMilliseconds;
-    public static $Environment;
-    public static $EnableDebug;
+    public static string $BaseUrl;
+    public static string $SecretKey;
+    public static int $TimeoutMilliseconds;
+    public static string $Environment;
+    public static bool $EnableDebug;
 
     public static function initialise($SecretKey, $Environment, $TimeoutMilliseconds = 60000, $EnableDebug = false)
     {
@@ -18,6 +18,8 @@ class Config
 
         if (self::$Environment == "local") {
             self::$BaseUrl = "https://localhost:5001";
+        } else if (self::$Environment == "development") {
+            self::$BaseUrl = "https://develop-api.payfurl.com";
         } else if (self::$Environment == "sandbox") {
             self::$BaseUrl = "https://sandbox-api.payfurl.com";
         } else if (self::$Environment == "prod") {

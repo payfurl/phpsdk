@@ -1,8 +1,8 @@
 <?php
 namespace payFURL\Sdk;
 
-/*
- * (c) payFURL
+/**
+ * @copyright PayFURL
  */
 final class ResponseException extends \Exception
 {

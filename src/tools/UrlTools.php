@@ -1,39 +1,43 @@
 <?php
+
 namespace payFURL\Sdk;
 
-/*
- * (c) payFurl
+/**
+ * @copyright PayFURL
  */
+
+use Exception;
+
 class UrlTools
 {
-    static function AddItem($querystring, $Key, $Value)
+    static function AddItem($querystring, $key, $value): string
     {
-        if ($querystring == "")
-        {
+        if ($querystring == "") {
             $querystring = "?";
         }
-        else
-        {
+        else {
             $querystring = $querystring . "&";
         }
 
-        return $querystring . $Key . "=" . urlencode($Value);
+        return $querystring . $key . "=" . urlencode($value);
     }
 
-    static function CreateQueryString($QueryParameters, $ValidParameters)
+    /**
+     * @throws Exception
+     */
+    static function CreateQueryString($queryParameters, $validParameters = null): string
     {
         // check keys are valid
-        foreach ($QueryParameters as $Key => $Value)
-        {
-            if (!in_array(strtolower($Key), $ValidParameters))
-            {
-                throw new \Exception("Invalid Parameter: " . $Key);
+        if (!is_null($validParameters))
+        foreach ($queryParameters as $key => $value) {
+            if (!in_array(strtolower($key), $validParameters)) {
+                throw new Exception("Invalid Parameter: " . $key);
             }
         }
 
         $querystring = "";
-        foreach ($QueryParameters as $Key => $Value) {
-            $querystring = UrlTools::AddItem($querystring, $Key, $Value);
+        foreach ($queryParameters as $key => $value) {
+            $querystring = UrlTools::AddItem($querystring, $key, $value);
         }
         return $querystring;
     }
