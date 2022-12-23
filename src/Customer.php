@@ -171,7 +171,7 @@ class Customer
     /**
      * @throws ResponseException
      */
-    public function RemoveCustomerWithRelatedData($params)
+    public function RemoveCustomer($params)
     {
         ArrayTools::ValidateKeys($params, ['CustomerId']);
 
