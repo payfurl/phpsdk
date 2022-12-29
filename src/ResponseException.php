@@ -6,8 +6,13 @@ namespace payFURL\Sdk;
  */
 final class ResponseException extends \Exception
 {
-    function __construct($Message, $HttpCode)
+    public $httpCode;
+    public $isRetryable;
+
+    function __construct($Message, $Code, $HttpCode, $IsRetryable)
     {
-        parent::__construct($Message, $HttpCode);
+        $this->httpCode = $HttpCode;
+        $this->isRetryable = $IsRetryable;
+        parent::__construct($Message, $Code);
     }
 }

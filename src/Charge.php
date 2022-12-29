@@ -138,7 +138,7 @@ class Charge
         try {
             $url = '/charge' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (Exception $ex) {
-            throw new ResponseException($ex->getMessage(), 0);
+            throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
         return HttpWrapper::CallApi($url, 'GET', '');

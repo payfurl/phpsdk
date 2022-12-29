@@ -77,7 +77,7 @@ class PaymentMethod
         try {
             $url = '/payment_method' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (\Exception $ex) {
-            throw new ResponseException($ex->getMessage(), 0);
+            throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
         return HttpWrapper::CallApi($url, 'GET', '');
@@ -93,7 +93,7 @@ class PaymentMethod
         try {
             $url = '/payment_method/' . urlencode($params['PaymentMethodId']);
         } catch (\Exception $ex) {
-            throw new ResponseException($ex->getMessage(), 0);
+            throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
         return HttpWrapper::CallApi($url, 'GET', '');

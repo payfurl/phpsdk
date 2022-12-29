@@ -121,7 +121,7 @@ class Customer
         try {
             $url = '/customer' . UrlTools::CreateQueryString($params, $this->ValidSearchKeys);
         } catch (Exception $ex) {
-            throw new ResponseException($ex->getMessage(), 0);
+            throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
         return HttpWrapper::CallApi($url, 'GET', '');
