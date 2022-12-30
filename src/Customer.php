@@ -20,7 +20,7 @@ class Customer
      */
     public function CreateWithCard($params)
     {
-        ArrayTools::ValidateKeys($params, ['ProviderId', 'CardNumber', 'ExpiryDate', 'Ccv']);
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data = array_merge($data, $this->BuildVaultInformationJson($params));

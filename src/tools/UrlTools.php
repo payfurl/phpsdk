@@ -28,10 +28,12 @@ class UrlTools
     static function CreateQueryString($queryParameters, $validParameters = null): string
     {
         // check keys are valid
-        if (!is_null($validParameters))
-        foreach ($queryParameters as $key => $value) {
-            if (!in_array(strtolower($key), $validParameters)) {
-                throw new Exception("Invalid Parameter: " . $key);
+        if (!is_null($validParameters)) {
+            $validParameters = $search_array = array_map('strtolower', $validParameters);
+            foreach ($queryParameters as $key => $value) {
+                if (!in_array(strtolower($key), $validParameters)) {
+                    throw new Exception("Invalid Parameter: " . $key);
+                }
             }
         }
 

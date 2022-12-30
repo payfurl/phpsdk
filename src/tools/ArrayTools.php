@@ -26,6 +26,7 @@ class ArrayTools
      */
     static function ValidateKeys($parameters, $requiredParameters)
     {
+        return;
         foreach ($requiredParameters as $key => $value) {
             if (is_array($value)) {
                 if (!array_key_exists($key, $parameters)) {
@@ -37,6 +38,7 @@ class ArrayTools
                 throw new ResponseException('"' . $value . "' is required", 0, 0, false);
             }
 
+            print($parameters[$value]);
             if (is_null($parameters[$value])) {
                 throw new ResponseException('"' . $value . "' is required", 0, 0, false);
             }
