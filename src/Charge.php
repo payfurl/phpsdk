@@ -41,7 +41,6 @@ class Charge
      */
     public function CreateWithCardLeastCost($params)
     {
-
         ArrayTools::ValidateKeys($params, ['Amount', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = $this->BuildCreateChargeJson($params);
