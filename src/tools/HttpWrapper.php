@@ -62,22 +62,33 @@ class HttpWrapper
                 var_dump($info);
                 var_dump($error);
             }
-            throw new ResponseException("Request Timeout", 408);
+            throw new ResponseException("Request Timeout", 408, 0, false);
         }
 
         // error handling
         if ($info["http_code"] != 200 && $info["http_code"] != 201) {
             $responseJson = json_decode($response, true);
-            $message = "";
-            if (array_key_exists("message", $responseJson)) {
-                $message = $responseJson["message"];
-            }
             if (Config::$EnableDebug) {
                 var_dump($response);
                 var_dump($info);
                 var_dump($error);
             }
-            throw new ResponseException($message, $info["http_code"]);
+            $message = "";
+            if (array_key_exists("message", $responseJson)) {
+                $message = $responseJson["message"];
+            }
+            $errorCode = 0;
+            if (array_key_exists("code", $responseJson)) {
+                $code = $responseJson["code"];
+                if (is_int($code)) {
+                    $errorCode = (int) $code;
+                }
+            }
+            $isRetryable = "";
+            if (array_key_exists("isRetryable", $responseJson)) {
+                $message = $responseJson["isRetryable"];
+            }
+            throw new ResponseException($message, $errorCode, $info["http_code"], $isRetryable);
         }
 
         return json_decode($response, true);

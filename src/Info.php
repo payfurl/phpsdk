@@ -27,7 +27,7 @@ class Info
         try {
             $url = '/info/providers' . UrlTools::CreateQueryString($params, ['Amount', 'Currency']);
         } catch (\Exception $ex) {
-            throw new ResponseException($ex->getMessage(), 0);
+            throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
         return HttpWrapper::CallApi($url, 'GET', '');

@@ -20,7 +20,7 @@ class Customer
      */
     public function CreateWithCard($params)
     {
-        ArrayTools::ValidateKeys($params, ['ProviderId', 'CardNumber', 'ExpiryDate', 'Ccv']);
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data = array_merge($data, $this->BuildVaultInformationJson($params));
@@ -121,7 +121,7 @@ class Customer
         try {
             $url = '/customer' . UrlTools::CreateQueryString($params, $this->ValidSearchKeys);
         } catch (Exception $ex) {
-            throw new ResponseException($ex->getMessage(), 0);
+            throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
         return HttpWrapper::CallApi($url, 'GET', '');

@@ -83,7 +83,7 @@ class Token
         try {
             $url = '/token' . UrlTools::CreateQueryString($parameters, $this->validSearchKeys);
         } catch (\Exception $ex) {
-            throw new ResponseException($ex->getMessage(), 0);
+            throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
         return HttpWrapper::CallApi($url, 'GET', '');

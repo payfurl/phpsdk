@@ -29,16 +29,15 @@ class ArrayTools
         foreach ($requiredParameters as $key => $value) {
             if (is_array($value)) {
                 if (!array_key_exists($key, $parameters)) {
-                    throw new ResponseException('"' . $key . "' is required", 0);
+                    throw new ResponseException('"' . $key . "' is required", 0, 0, false);
                 }
                 self::ValidateKeys($parameters[$key], $value);
             }
-            if (!array_key_exists($value, $parameters)) {
-                throw new ResponseException('"' . $value . "' is required", 0);
+            else if (!array_key_exists($value, $parameters)) {
+                throw new ResponseException('"' . $value . "' is required", 0, 0, false);
             }
-
-            if (is_null($parameters[$value])) {
-                throw new ResponseException('"' . $value . "' is required", 0);
+            else if (is_null($parameters[$value])) {
+                throw new ResponseException('"' . $value . "' is required", 0, 0, false);
             }
         }
     }

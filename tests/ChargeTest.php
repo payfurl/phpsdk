@@ -16,7 +16,7 @@ final class ChargeTest extends TestBase
     /**
      * @throws ResponseException
      */
-    public function testCreateWithCard(): void
+    public function testChargeWithCard(): void
     {
         $svc = new Charge();
 
@@ -179,7 +179,16 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
         $this->expectException(ResponseException::class);
+        $this->expectExceptionCode('90');
 
-        $result = $svc->CreateWithCard(['Amount' => 15.5]);
+        $result = $svc->CreateWithCard([
+            'Amount' => 15.5,
+            'Currency' => 'AUD',
+            'ProviderId' => $this->CardProviderId,
+            'PaymentInformation' => [
+                'CardNumber' => '4111111111111111',
+                'ExpiryDate' => '10/30',
+                'Ccv' => 'abcda',
+                'Cardholder' => 'Test Cardholder']]);
     }
 }

@@ -25,7 +25,6 @@ final class CustomerTest extends TestBase
                                            'FirstName' => 'FirstName',
                                            'LastName' => 'LastName',
                                            'Email' => 'test@test.com',
-                                           'Phone' => '98761234',
                                            'ProviderId' => $this->CardProviderId,
                                            'PaymentInformation' => [
                                                'CardNumber' => '4111111111111111',
@@ -48,7 +47,6 @@ final class CustomerTest extends TestBase
                                                    'FirstName' => 'FirstName',
                                                    'LastName' => 'LastName',
                                                    'Email' => 'test@test.com',
-                                                   'Phone' => '98761234',
                                                    'ProviderId' => $this->CardProviderId,
                                                    'PaymentInformation' => [
                                                        'CardNumber' => '4111111111111111',
@@ -56,9 +54,9 @@ final class CustomerTest extends TestBase
                                                        'Ccv' => '123',
                                                        'Cardholder' => 'Test Cardholder']]);
 
-        $singleResult = $svc->Single(['CustomerId' => $customerResult['CustomerId']]);
+        $singleResult = $svc->Single(['CustomerId' => $customerResult['customerId']]);
 
-        $this->assertSame($customerResult['CustomerId'], $singleResult['customerId']);
+        $this->assertSame($customerResult['customerId'], $singleResult['customerId']);
     }
 
     /**
@@ -75,7 +73,6 @@ final class CustomerTest extends TestBase
                                            'FirstName' => 'FirstName',
                                            'LastName' => 'LastName',
                                            'Email' => 'test@test.com',
-                                           'Phone' => '98761234',
                                            'ProviderId' => $this->CardProviderId,
                                            'PaymentInformation' => [
                                                'CardNumber' => '4111111111111111',
@@ -100,7 +97,6 @@ final class CustomerTest extends TestBase
                                                            'FirstName' => 'FirstName',
                                                            'LastName' => 'LastName',
                                                            'Email' => 'test@test.com',
-                                                           'Phone' => '98761234',
                                                            'ProviderId' => $this->CardProviderId,
                                                            'PaymentInformation' => [
                                                                'CardNumber' => '4111111111111111',
@@ -110,7 +106,7 @@ final class CustomerTest extends TestBase
 
         $result = $customerSvc->CustomerPaymentMethods(['CustomerId' => $customerResult['customerId']]);
 
-        $this->assertEquals($result[0]['customerId'], $customerResult['CustomerId']);
+        $this->assertEquals($result[0]['customerId'], $customerResult['customerId']);
     }
 
     /**
@@ -125,7 +121,6 @@ final class CustomerTest extends TestBase
                                                            'FirstName' => 'FirstName',
                                                            'LastName' => 'LastName',
                                                            'Email' => 'test@test.com',
-                                                           'Phone' => '98761234',
                                                            'ProviderId' => $this->CardProviderId,
                                                            'PaymentInformation' => [
                                                                'CardNumber' => '4111111111111111',
@@ -144,6 +139,6 @@ final class CustomerTest extends TestBase
                                                                     'Ccv' => '123'
                                                                 ]]);
 
-        $this->assertEquals($result['customerId'], $customerResult['CustomerId']);
+        $this->assertEquals($result['customerId'], $customerResult['customerId']);
     }
 }
