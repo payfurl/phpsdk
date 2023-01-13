@@ -95,6 +95,7 @@ class Customer
         $data = array_merge($data, $this->BuildIpInformationJson($params));
         $data['ProviderId'] = $params['ProviderId'];
         $data['ProviderToken'] = $params['ProviderToken'];
+        $data['Verify'] = $params['Verify'] ?? false;
 
         $data = ArrayTools::CleanEmpty($data);
 
