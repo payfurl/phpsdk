@@ -194,12 +194,10 @@ class Charge
                     'Quantity' => $value['Quantity'] ?? null,
                     'UnitOfMeasure' => $value['UnitOfMeasure'] ?? null,
                     'Amount' => $value['Amount'] ?? null,
+                    'TaxAmount' => $value['TaxAmount'] ?? null,
                 ], $params['Order']['Items']);
 
             }
-        }
-        if (array_key_exists('TaxAmount', $params)) {
-            $data['TaxAmount'] = $params['TaxAmount'];
         }
         if (array_key_exists('CustomerCode', $params)) {
             $data['CustomerCode'] = $params['CustomerCode'];
