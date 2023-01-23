@@ -16,6 +16,8 @@ class Config
     {
         self::$Environment = strtolower($Environment);
 
+//        if (self::$Environment == "local") {
+//            self::$BaseUrl = "https://host.docker.internal:5001";
         if (self::$Environment == "local") {
             self::$BaseUrl = "https://localhost:5001";
         } else if (self::$Environment == "development") {
