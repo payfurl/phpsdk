@@ -27,6 +27,7 @@ class Charge
             'ccv' => $Params["Ccv"],
             'cardholder' => $Params["Cardholder"] ?? null
         ];
+        $Data['webhook'] = $this->BuildWebhookConfigurationPart($Params);
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -45,6 +46,7 @@ class Charge
             'ccv' => $Params["Ccv"],
             'cardholder' => $Params["Cardholder"] ?? null
         ];
+        $Data['webhook'] = $this->BuildWebhookConfigurationPart($Params);
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -58,6 +60,7 @@ class Charge
         $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['token'] = $Params["Token"];
+        $Data['webhook'] = $this->BuildWebhookConfigurationPart($Params);
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -71,6 +74,7 @@ class Charge
         $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['customerId'] = $Params["CustomerId"];
+        $Data['webhook'] = $this->BuildWebhookConfigurationPart($Params);
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -84,6 +88,7 @@ class Charge
         $Data = $this->BuildCreateChargeJson($Params);
 
         $Data['paymentMethodId'] = $Params["PaymentMethodId"];
+        $Data['webhook'] = $this->BuildWebhookConfigurationPart($Params);
         
         $Data = ArrayTools::CleanEmpty($Data);
 
@@ -133,6 +138,22 @@ class Charge
             'amount'        => $Params["Amount"],
             'currency'      => $Params["Currency"],
             'reference'     => $Params["Reference"] ?? null
+        ];
+    }
+
+    private function BuildWebhookConfigurationPart($Params): ?array
+    {
+        $url = $Params["WebhookConfigUrl"];
+        $authorization = $Params["WebhookConfigAuthorization"];
+
+        if (is_null($url) || is_null($authorization))
+        {
+            return null;
+        }
+
+        return [
+            'url' => $url,
+            'authorization' => $authorization
         ];
     }
 }

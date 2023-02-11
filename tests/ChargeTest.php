@@ -29,6 +29,26 @@ final class ChargeTest extends TestBase
         $this->assertSame('SUCCESS', $result["status"]);
     }
 
+    public function testCreateWithCardWithWebhook(): void
+    {
+        $svc = new Charge();
+
+        $result = $svc->CreateWithCard([
+            "Amount" => 15.5,
+            "Currency" => "AUD",
+            "Reference" => "123",
+            "ProviderId" => $this->CardProviderId,
+            "CardNumber" => "4111111111111111",
+            "ExpiryDate" => "10/30",
+            "Ccv" => "123",
+            "Cardholder" => "Test Cardholder",
+            "WebhookConfigUrl" => "https://webhook.site/1da8cac9-fef5-47bf-a276-81856f73d7ca",
+            "WebhookConfigAuthorization" => "Basic user:password"
+        ]);
+
+        $this->assertSame('SUCCESS', $result["status"]);
+    }
+
     public function testCreateWithCardLeastCost(): void
     {
         $svc = new Charge();
