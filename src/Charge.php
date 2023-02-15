@@ -30,6 +30,7 @@ class Charge
 
         $data['ProviderId'] = $params['ProviderId'];
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
+        $data['Webhook'] = $this->BuildWebhookConfiguration($params);
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -45,6 +46,7 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
+        $data['Webhook'] = $this->BuildWebhookConfiguration($params);
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -60,6 +62,7 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['CustomerId'] = $params['CustomerId'];
+        $data['Webhook'] = $this->BuildWebhookConfiguration($params);
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -75,6 +78,7 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['PaymentMethodId'] = $params['PaymentMethodId'];
+        $data['Webhook'] = $this->BuildWebhookConfiguration($params);
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -90,6 +94,7 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['Token'] = $params['Token'];
+        $data['Webhook'] = $this->BuildWebhookConfiguration($params);
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -213,5 +218,21 @@ class Charge
     {
         $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1];
         return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildWebhookConfiguration($params): ?array
+    {
+        $url = $params["WebhookConfigUrl"];
+        $authorization = $params["WebhookConfigAuthorization"];
+
+        if (is_null($url) || is_null($authorization))
+        {
+            return null;
+        }
+
+        return [
+            'Url' => $url,
+            'Authorization' => $authorization
+        ];
     }
 }
