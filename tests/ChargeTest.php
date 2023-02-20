@@ -191,4 +191,30 @@ final class ChargeTest extends TestBase
                 'Ccv' => 'abcda',
                 'Cardholder' => 'Test Cardholder']]);
     }
+
+    /**
+     * @throws ResponseException
+     */
+    public function testCreateWithCardWithWebhook(): void
+    {
+        $svc = new Charge();
+
+        $result = $svc->CreateWithCard([
+            'Amount' => 15.5,
+            'Currency' => 'AUD',
+            'Reference' => '123',
+            'ProviderId' => $this->CardProviderId,
+            'PaymentInformation' => [
+                'CardNumber' => '4111111111111111',
+                'ExpiryDate' => '10/30',
+                'Ccv' => '123',
+                'Cardholder' => 'Test Cardholder'
+            ],
+            'Webhook' => [
+                'Url' => 'https://webhook.site/1da8cac9-fef5-47bf-a276-81856f73d7ca',
+                'Authorization' => "Basic user:password"
+            ]]);
+
+        $this->assertSame('SUCCESS', $result['status']);
+    }
 }
