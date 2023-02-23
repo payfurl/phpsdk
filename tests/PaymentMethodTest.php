@@ -112,4 +112,24 @@ final class PaymentMethodTest extends TestBase
 
         $this->assertIsString($paymentMethodResult['paymentMethodId']);
     }
+
+    /**
+     * @throws ResponseException
+     */
+    public function testCreatePaymentMethodWithPayTo(): void
+    {
+        $paymentMethodSvc = new PaymentMethod();
+
+        $paymentMethodResult = $paymentMethodSvc->CreateWithPayTo([
+            'ProviderId' => $this->CardProviderId,
+            'PayerName' => 'This is a name',
+            'Description' => 'This is a description',
+            'MaximumAmount' => 500,
+            'PayerPayIdDetails' => [
+                'PayId' => 'david_jones@email.com',
+                'PayIdType' => 'EMAIL'
+            ]]);
+
+        $this->assertIsString($paymentMethodResult['paymentMethodId']);
+    }
 }
