@@ -162,9 +162,7 @@ class Customer
      */
     public function CreatePaymentMethodWithPayTo($params)
     {
-        ArrayTools::ValidateKeys($params, ['CustomerId', 'PayerName', 'PayerPayIdDetails', 'Description', 'MaximumAmount', 'ProviderId']);
-        $payerPayIdDetails = $params['PayerPayIdDetails'];
-        ArrayTools::ValidateKeys($payerPayIdDetails, ['PayId', 'PayIdType']);
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'PayerName', 'PayerPayIdDetails' => ['PayId', 'PayIdType'], 'Description', 'MaximumAmount', 'ProviderId']);
 
         $data = $this->BuildPayToAgreementJson($params);
 
