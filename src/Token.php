@@ -56,7 +56,9 @@ class Token
 
     public function TokenisePayTo($params)
     {
-        ArrayTools::ValidateKeys($params, ['PayerName', 'Description', 'MaximumAmount', 'ProviderId']);
+        ArrayTools::ValidateKeys($params, ['PayerName', 'PayerPayIdDetails', 'Description', 'MaximumAmount', 'ProviderId']);
+        $payerPayIdDetails = $params['PayerPayIdDetails'];
+        ArrayTools::ValidateKeys($payerPayIdDetails, ['PayId', 'PayIdType']);
 
         $data = $this->BuildPayToAgreementJson($params);
 

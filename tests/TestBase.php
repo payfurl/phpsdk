@@ -7,11 +7,12 @@ use payFURL\Sdk\Config;
 
 class TestBase extends TestCase
 {
-    public string $CardProviderId = 'a26c371f-94f6-40da-add2-28ec8e9da8ed';
-    public string $PaypalProviderId = '1cf5deda-28cc-4214-adb5-1e597a37228c';
+    public string $CardProviderId = 'ec422274fe6d4a6e9f54157381603740';
+    public string $PaypalProviderId = 'a9f965efaa914a098d1a3402881599fd';
+    public string $TokenId = '7a486ffcfaa24d99ac562858f599168b';
 
     protected function setUp(): void
     {
-        Config::initialise('SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c', 'LOCAL', 60000, false);
+        Config::initialise('secteste760dc4185ba394e6148e2612b644de493cd068aa6', 'LOCAL', 60000, false);
     }
 }

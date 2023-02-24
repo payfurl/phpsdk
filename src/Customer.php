@@ -62,6 +62,7 @@ class Customer
         $data = array_merge($data, $this->BuildIpInformationJson($params));
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
         $data['ProviderId'] = $params['ProviderId'];
+        $data['SetDefault'] = $params['SetDefault'];
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -78,6 +79,7 @@ class Customer
         $data = [];
         $data = array_merge($data, $this->BuildIpInformationJson($params));
         $data['Token'] = $params['Token'];
+        $data['SetDefault'] = $params['SetDefault'];
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -160,7 +162,9 @@ class Customer
      */
     public function CreatePaymentMethodWithPayTo($params)
     {
-        ArrayTools::ValidateKeys($params, ['CustomerId', 'PayToAgreement']);
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'PayerName', 'PayerPayIdDetails', 'Description', 'MaximumAmount', 'ProviderId']);
+        $payerPayIdDetails = $params['PayerPayIdDetails'];
+        ArrayTools::ValidateKeys($payerPayIdDetails, ['PayId', 'PayIdType']);
 
         $data = $this->BuildPayToAgreementJson($params);
 
@@ -203,6 +207,7 @@ class Customer
             'LastName' => 1,
             'Email' => 1,
             'Phone' => 1,
+            'DefaultPaymentMethodId' => 1,
         ];
         $data = array_intersect_key($params, $sourceParams);
 
@@ -234,7 +239,7 @@ class Customer
 
     private function BuildPayToAgreementJson($params)
     {
-        $sourceParams = ['PayerName' => 1, 'Description' => 1, 'MaximumAmount' => 1, 'ProviderId' => 1, 'Ip' => 1];
+        $sourceParams = ['PayerName' => 1, 'Description' => 1, 'MaximumAmount' => 1, 'ProviderId' => 1, 'Ip' => 1, 'SetDefault' => 1];
         $data = array_intersect_key($params, $sourceParams);
         if (isset($params['PayerPayIdDetails'])) {
             $detailsParams = ['PayId' => 1, 'PayIdType' => 1];
