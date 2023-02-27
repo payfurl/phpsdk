@@ -121,7 +121,7 @@ final class PaymentMethodTest extends TestBase
         $paymentMethodSvc = new PaymentMethod();
 
         $paymentMethodResult = $paymentMethodSvc->CreateWithPayTo([
-            'ProviderId' => $this->CardProviderId,
+            'ProviderId' => $this->PayToProviderId,
             'PayerName' => 'This is a name',
             'Description' => 'This is a description',
             'MaximumAmount' => 500,
