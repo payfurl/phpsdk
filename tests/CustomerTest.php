@@ -295,7 +295,7 @@ final class CustomerTest extends TestBase
 
         $result = $customerSvc->CreatePaymentMethodWithPayTo([
             'CustomerId' => $customerResult['customerId'],
-            'ProviderId' => $this->CardProviderId,
+            'ProviderId' => $this->PayToProviderId,
             'PayerName' => 'This is a name',
             'Description' => 'This is a description',
             'MaximumAmount' => 500,
@@ -332,7 +332,7 @@ final class CustomerTest extends TestBase
 
         $result = $customerSvc->CreatePaymentMethodWithPayTo([
             'CustomerId' => $customerResult['customerId'],
-            'ProviderId' => $this->CardProviderId,
+            'ProviderId' => $this->PayToProviderId,
             'PayerName' => 'This is a name',
             'Description' => 'This is a description',
             'MaximumAmount' => 500,

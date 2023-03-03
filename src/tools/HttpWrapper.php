@@ -19,8 +19,8 @@ class HttpWrapper
         $url = Config::$BaseUrl . $endpoint;
 
         if (Config::$EnableDebug) {
-            print "calling URL: " . $url . "\n";
-            print "Timeout: " . Config::$TimeoutMilliseconds . "\n";
+            print("\nCalling URL: " . $url . "\n");
+            print("Timeout: " . Config::$TimeoutMilliseconds . "\n");
         }
 
         $ch = curl_init();
@@ -58,9 +58,12 @@ class HttpWrapper
         // hande timeout
         if ($info["http_code"] == 0) {
             if (Config::$EnableDebug) {
-                var_dump($response);
-                var_dump($info);
-                var_dump($error);
+                print("Response:");
+                print_r($response);
+                print("Info:");
+                print_r($info);
+                print("Error:");
+                print_r($error);
             }
             throw new ResponseException("Request Timeout", 408, 0, false);
         }
@@ -68,10 +71,19 @@ class HttpWrapper
         // error handling
         if ($info["http_code"] != 200 && $info["http_code"] != 201) {
             $responseJson = json_decode($response, true);
+            if (!$responseJson) {
+                throw new ResponseException("Unknown Error", 400, 0, false);
+            }
+
             if (Config::$EnableDebug) {
-                var_dump($response);
-                var_dump($info);
-                var_dump($error);
+                print("Request:");
+                print_r($body);
+                print("Response:");
+                print_r($response);
+                print("Info:");
+                print_r($info);
+                print("Error:");
+                print_r($error);
             }
             $message = "";
             if (array_key_exists("message", $responseJson)) {
@@ -86,8 +98,9 @@ class HttpWrapper
             }
             $isRetryable = "";
             if (array_key_exists("isRetryable", $responseJson)) {
-                $message = $responseJson["isRetryable"];
+                $isRetryable = $responseJson["isRetryable"];
             }
+
             throw new ResponseException($message, $errorCode, $info["http_code"], $isRetryable);
         }
 
