@@ -30,7 +30,10 @@ final class CustomerTest extends TestBase
                                                'CardNumber' => '4111111111111111',
                                                'ExpiryDate' => '10/30',
                                                'Ccv' => '123',
-                                               'Cardholder' => 'Test Cardholder']]);
+                                               'Cardholder' => 'Test Cardholder'],
+                                            "Metadata" => [
+                                                "merchant_id" => "12345"]
+                                            ]);
 
         $this->assertIsString($result['customerId']);
     }

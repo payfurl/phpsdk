@@ -189,7 +189,10 @@ final class ChargeTest extends TestBase
                 'CardNumber' => '4111111111111111',
                 'ExpiryDate' => '10/30',
                 'Ccv' => 'abcda',
-                'Cardholder' => 'Test Cardholder']]);
+                'Cardholder' => 'Test Cardholder'],
+            "Metadata" => [
+                "merchant_id" => "12345"]
+            ]);
     }
 
     /**
