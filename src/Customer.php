@@ -62,7 +62,9 @@ class Customer
         $data = array_merge($data, $this->BuildIpInformationJson($params));
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
         $data['ProviderId'] = $params['ProviderId'];
-        $data['SetDefault'] = $params['SetDefault'];
+        if (array_key_exists("SetDefault", $params)) {
+            $data['SetDefault'] = $params['SetDefault'];
+        }
 
         $data = ArrayTools::CleanEmpty($data);
 

@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once(__DIR__ . '/TestConfiguration.php');
 require_once(__DIR__ . '/../src/Config.php');
 require_once(__DIR__ . '/../src/Customer.php');
 require_once(__DIR__ . '/TestBase.php');
@@ -15,6 +16,7 @@ final class CustomerTest extends TestBase
 {
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testCreateWithCard(): void
     {
@@ -25,21 +27,22 @@ final class CustomerTest extends TestBase
                                            'FirstName' => 'FirstName',
                                            'LastName' => 'LastName',
                                            'Email' => 'test@test.com',
-                                           'ProviderId' => $this->CardProviderId,
+                                           'ProviderId' => TestConfiguration::getProviderId(),
                                            'PaymentInformation' => [
                                                'CardNumber' => '4111111111111111',
                                                'ExpiryDate' => '10/30',
                                                'Ccv' => '123',
                                                'Cardholder' => 'Test Cardholder'],
-                                            "Metadata" => [
-                                                "merchant_id" => "12345"]
-                                            ]);
+                                           "Metadata" => [
+                                               "merchant_id" => "12345"]
+                                       ]);
 
         $this->assertIsString($result['customerId']);
     }
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testSingle(): void
     {
@@ -50,7 +53,7 @@ final class CustomerTest extends TestBase
                                                    'FirstName' => 'FirstName',
                                                    'LastName' => 'LastName',
                                                    'Email' => 'test@test.com',
-                                                   'ProviderId' => $this->CardProviderId,
+                                                   'ProviderId' => TestConfiguration::getProviderId(),
                                                    'PaymentInformation' => [
                                                        'CardNumber' => '4111111111111111',
                                                        'ExpiryDate' => '10/30',
@@ -76,7 +79,7 @@ final class CustomerTest extends TestBase
                                            'FirstName' => 'FirstName',
                                            'LastName' => 'LastName',
                                            'Email' => 'test@test.com',
-                                           'ProviderId' => $this->CardProviderId,
+                                           'ProviderId' => TestConfiguration::getProviderId(),
                                            'PaymentInformation' => [
                                                'CardNumber' => '4111111111111111',
                                                'ExpiryDate' => '10/30',
@@ -90,6 +93,7 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testCustomerPaymentMethods(): void
     {
@@ -100,7 +104,7 @@ final class CustomerTest extends TestBase
                                                            'FirstName' => 'FirstName',
                                                            'LastName' => 'LastName',
                                                            'Email' => 'test@test.com',
-                                                           'ProviderId' => $this->CardProviderId,
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
                                                            'PaymentInformation' => [
                                                                'CardNumber' => '4111111111111111',
                                                                'ExpiryDate' => '10/30',
@@ -114,6 +118,7 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testAddCustomerPaymentMethodWithCard(): void
     {
@@ -124,7 +129,7 @@ final class CustomerTest extends TestBase
                                                            'FirstName' => 'FirstName',
                                                            'LastName' => 'LastName',
                                                            'Email' => 'test@test.com',
-                                                           'ProviderId' => $this->CardProviderId,
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
                                                            'PaymentInformation' => [
                                                                'CardNumber' => '4111111111111111',
                                                                'ExpiryDate' => '10/30',
@@ -135,7 +140,7 @@ final class CustomerTest extends TestBase
 
         $result = $customerSvc->CreatePaymentMethodWithCard([
                                                                 'CustomerId' => $customerResult['customerId'],
-                                                                'ProviderId' => $this->CardProviderId,
+                                                                'ProviderId' => TestConfiguration::getProviderId(),
                                                                 'PaymentInformation' => [
                                                                     'CardNumber' => '4111111111111111',
                                                                     'ExpiryDate' => '10/30',
@@ -153,26 +158,26 @@ final class CustomerTest extends TestBase
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-            'Reference' => '123',
-            'FirstName' => 'FirstName',
-            'LastName' => 'LastName',
-            'Email' => 'test@test.com',
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123',
-                'Cardholder' => 'Test Cardholder']]);
+                                                           'Reference' => '123',
+                                                           'FirstName' => 'FirstName',
+                                                           'LastName' => 'LastName',
+                                                           'Email' => 'test@test.com',
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
 
         $result = $customerSvc->CreatePaymentMethodWithCard([
-            'CustomerId' => $customerResult['customerId'],
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123'
-            ],
-            'SetDefault' => true]);
+                                                                'CustomerId' => $customerResult['customerId'],
+                                                                'ProviderId' => TestConfiguration::getProviderId(),
+                                                                'PaymentInformation' => [
+                                                                    'CardNumber' => '4111111111111111',
+                                                                    'ExpiryDate' => '10/30',
+                                                                    'Ccv' => '123'
+                                                                ],
+                                                                'SetDefault' => true]);
 
         $this->assertEquals($result['customerId'], $customerResult['customerId']);
 
@@ -182,32 +187,33 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testAddCustomerPaymentMethodWithCard_NoSetDefault(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-            'Reference' => '123',
-            'FirstName' => 'FirstName',
-            'LastName' => 'LastName',
-            'Email' => 'test@test.com',
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123',
-                'Cardholder' => 'Test Cardholder']]);
+                                                           'Reference' => '123',
+                                                           'FirstName' => 'FirstName',
+                                                           'LastName' => 'LastName',
+                                                           'Email' => 'test@test.com',
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
 
         $result = $customerSvc->CreatePaymentMethodWithCard([
-            'CustomerId' => $customerResult['customerId'],
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123'
-            ],
-            'SetDefault' => false]);
+                                                                'CustomerId' => $customerResult['customerId'],
+                                                                'ProviderId' => TestConfiguration::getProviderId(),
+                                                                'PaymentInformation' => [
+                                                                    'CardNumber' => '4111111111111111',
+                                                                    'ExpiryDate' => '10/30',
+                                                                    'Ccv' => '123'
+                                                                ],
+                                                                'SetDefault' => false]);
 
         $this->assertEquals($result['customerId'], $customerResult['customerId']);
 
@@ -218,27 +224,28 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testAddCustomerPaymentMethodWithToken_SetDefault(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-            'Reference' => '123',
-            'FirstName' => 'FirstName',
-            'LastName' => 'LastName',
-            'Email' => 'test@test.com',
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123',
-                'Cardholder' => 'Test Cardholder']]);
+                                                           'Reference' => '123',
+                                                           'FirstName' => 'FirstName',
+                                                           'LastName' => 'LastName',
+                                                           'Email' => 'test@test.com',
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
 
         $result = $customerSvc->CreatePaymentMethodWithToken([
-            'CustomerId' => $customerResult['customerId'],
-            'Token' => $this->TokenId,
-            'SetDefault' => true]);
+                                                                 'CustomerId' => $customerResult['customerId'],
+                                                                 'Token' => TestConfiguration::getToken(),
+                                                                 'SetDefault' => true]);
 
         $this->assertEquals($result['customerId'], $customerResult['customerId']);
 
@@ -248,27 +255,28 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testAddCustomerPaymentMethodWithToken_NoSetDefault(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-            'Reference' => '123',
-            'FirstName' => 'FirstName',
-            'LastName' => 'LastName',
-            'Email' => 'test@test.com',
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123',
-                'Cardholder' => 'Test Cardholder']]);
+                                                           'Reference' => '123',
+                                                           'FirstName' => 'FirstName',
+                                                           'LastName' => 'LastName',
+                                                           'Email' => 'test@test.com',
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
 
         $result = $customerSvc->CreatePaymentMethodWithToken([
-            'CustomerId' => $customerResult['customerId'],
-            'Token' => $this->TokenId,
-            'SetDefault' => false]);
+                                                                 'CustomerId' => $customerResult['customerId'],
+                                                                 'Token' => TestConfiguration::getToken(),
+                                                                 'SetDefault' => false]);
 
         $this->assertEquals($result['customerId'], $customerResult['customerId']);
 
@@ -279,34 +287,35 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testAddCustomerPaymentMethodWithPayTo_SetDefault(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-            'Reference' => '123',
-            'FirstName' => 'FirstName',
-            'LastName' => 'LastName',
-            'Email' => 'test@test.com',
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123',
-                'Cardholder' => 'Test Cardholder']]);
+                                                           'Reference' => '123',
+                                                           'FirstName' => 'FirstName',
+                                                           'LastName' => 'LastName',
+                                                           'Email' => 'test@test.com',
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
 
         $result = $customerSvc->CreatePaymentMethodWithPayTo([
-            'CustomerId' => $customerResult['customerId'],
-            'ProviderId' => $this->PayToProviderId,
-            'PayerName' => 'This is a name',
-            'Description' => 'This is a description',
-            'MaximumAmount' => 500,
-            'PayerPayIdDetails' => [
-                'PayId' => 'david_jones@email.com',
-                'PayIdType' => 'EMAIL'
-            ],
-            'SetDefault' => true]);
+                                                                 'CustomerId' => $customerResult['customerId'],
+                                                                 'ProviderId' => TestConfiguration::getProviderId(),
+                                                                 'PayerName' => 'This is a name',
+                                                                 'Description' => 'This is a description',
+                                                                 'MaximumAmount' => 500,
+                                                                 'PayerPayIdDetails' => [
+                                                                     'PayId' => 'david_jones@email.com',
+                                                                     'PayIdType' => 'EMAIL'
+                                                                 ],
+                                                                 'SetDefault' => true]);
 
         $this->assertEquals($result['customerId'], $customerResult['customerId']);
 
@@ -316,34 +325,35 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testAddCustomerPaymentMethodWithPayTo_NoSetDefault(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-            'Reference' => '123',
-            'FirstName' => 'FirstName',
-            'LastName' => 'LastName',
-            'Email' => 'test@test.com',
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123',
-                'Cardholder' => 'Test Cardholder']]);
+                                                           'Reference' => '123',
+                                                           'FirstName' => 'FirstName',
+                                                           'LastName' => 'LastName',
+                                                           'Email' => 'test@test.com',
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
 
         $result = $customerSvc->CreatePaymentMethodWithPayTo([
-            'CustomerId' => $customerResult['customerId'],
-            'ProviderId' => $this->PayToProviderId,
-            'PayerName' => 'This is a name',
-            'Description' => 'This is a description',
-            'MaximumAmount' => 500,
-            'PayerPayIdDetails' => [
-                'PayId' => 'david_jones@email.com',
-                'PayIdType' => 'EMAIL'
-            ],
-            'SetDefault' => false]);
+                                                                 'CustomerId' => $customerResult['customerId'],
+                                                                 'ProviderId' => TestConfiguration::getProviderId(),
+                                                                 'PayerName' => 'This is a name',
+                                                                 'Description' => 'This is a description',
+                                                                 'MaximumAmount' => 500,
+                                                                 'PayerPayIdDetails' => [
+                                                                     'PayId' => 'david_jones@email.com',
+                                                                     'PayIdType' => 'EMAIL'
+                                                                 ],
+                                                                 'SetDefault' => false]);
 
         $this->assertEquals($result['customerId'], $customerResult['customerId']);
 
@@ -354,37 +364,38 @@ final class CustomerTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testUpdateCustomerDefaultPaymentMethodId(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-            'Reference' => '123',
-            'FirstName' => 'FirstName',
-            'LastName' => 'LastName',
-            'Email' => 'test@test.com',
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123',
-                'Cardholder' => 'Test Cardholder']]);
+                                                           'Reference' => '123',
+                                                           'FirstName' => 'FirstName',
+                                                           'LastName' => 'LastName',
+                                                           'Email' => 'test@test.com',
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
 
         $paymentMethod = $customerSvc->CreatePaymentMethodWithCard([
-            'CustomerId' => $customerResult['customerId'],
-            'ProviderId' => $this->CardProviderId,
-            'PaymentInformation' => [
-                'CardNumber' => '4111111111111111',
-                'ExpiryDate' => '10/30',
-                'Ccv' => '123'
-            ],
-            'SetDefault' => false]);
+                                                                       'CustomerId' => $customerResult['customerId'],
+                                                                       'ProviderId' => TestConfiguration::getProviderId(),
+                                                                       'PaymentInformation' => [
+                                                                           'CardNumber' => '4111111111111111',
+                                                                           'ExpiryDate' => '10/30',
+                                                                           'Ccv' => '123'
+                                                                       ],
+                                                                       'SetDefault' => false]);
 
         $result = $customerSvc->UpdateCustomer([
-            'CustomerId' => $customerResult['customerId'],
-            'Email' => $customerResult['email'],
-            'DefaultPaymentMethodId' => $paymentMethod['paymentMethodId']]);
+                                                   'CustomerId' => $customerResult['customerId'],
+                                                   'Email' => $customerResult['email'],
+                                                   'DefaultPaymentMethodId' => $paymentMethod['paymentMethodId']]);
 
         $this->assertEquals($result['customerId'], $customerResult['customerId']);
 

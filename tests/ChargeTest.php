@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once(__DIR__ . '/TestConfiguration.php');
 require_once(__DIR__ . '/../src/Config.php');
 require_once(__DIR__ . '/../src/Charge.php');
 require_once(__DIR__ . '/TestBase.php');
@@ -15,6 +16,7 @@ final class ChargeTest extends TestBase
 {
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testChargeWithCard(): void
     {
@@ -24,7 +26,7 @@ final class ChargeTest extends TestBase
                                            'Amount' => 15.5,
                                            'Currency' => 'AUD',
                                            'Reference' => '123',
-                                           'ProviderId' => $this->CardProviderId,
+                                           'ProviderId' => TestConfiguration::getProviderId(),
                                            'PaymentInformation' => [
                                                'CardNumber' => '4111111111111111',
                                                'ExpiryDate' => '10/30',
@@ -78,6 +80,7 @@ final class ChargeTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testWithShortTimeout(): void
     {
@@ -93,7 +96,7 @@ final class ChargeTest extends TestBase
                                            'Amount' => 15.5,
                                            'Currency' => 'AUD',
                                            'Reference' => '123',
-                                           'ProviderId' => $this->CardProviderId,
+                                           'ProviderId' => TestConfiguration::getProviderId(),
                                            'PaymentInformation' => [
                                                'CardNumber' => '4111111111111111',
                                                'ExpiryDate' => '10/30',
@@ -103,6 +106,7 @@ final class ChargeTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testSingle(): void
     {
@@ -112,7 +116,7 @@ final class ChargeTest extends TestBase
                                                  'Amount' => 15.5,
                                                  'Currency' => 'AUD',
                                                  'Reference' => '123',
-                                                 'ProviderId' => $this->CardProviderId,
+                                                 'ProviderId' => TestConfiguration::getProviderId(),
                                                  'PaymentInformation' => [
                                                      'CardNumber' => '4111111111111111',
                                                      'ExpiryDate' => '10/30',
@@ -126,6 +130,7 @@ final class ChargeTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testRefund(): void
     {
@@ -135,7 +140,7 @@ final class ChargeTest extends TestBase
                                                  'Amount' => 15.5,
                                                  'Currency' => 'AUD',
                                                  'Reference' => '123',
-                                                 'ProviderId' => $this->CardProviderId,
+                                                 'ProviderId' => TestConfiguration::getProviderId(),
                                                  'PaymentInformation' => [
                                                      'CardNumber' => '4111111111111111',
                                                      'ExpiryDate' => '10/30',
@@ -160,7 +165,7 @@ final class ChargeTest extends TestBase
                                            'Amount' => 15.5,
                                            'Currency' => 'AUD',
                                            'Reference' => $Reference,
-                                           'ProviderId' => $this->CardProviderId,
+                                           'ProviderId' => TestConfiguration::getProviderId(),
                                            'PaymentInformation' => [
                                                'CardNumber' => '4111111111111111',
                                                'ExpiryDate' => '10/30',
@@ -174,6 +179,7 @@ final class ChargeTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testInvalidParameters(): void
     {
@@ -184,7 +190,7 @@ final class ChargeTest extends TestBase
         $result = $svc->CreateWithCard([
             'Amount' => 15.5,
             'Currency' => 'AUD',
-            'ProviderId' => $this->CardProviderId,
+            'ProviderId' => TestConfiguration::getProviderId(),
             'PaymentInformation' => [
                 'CardNumber' => '4111111111111111',
                 'ExpiryDate' => '10/30',
@@ -197,6 +203,7 @@ final class ChargeTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testCreateWithCardWithWebhook(): void
     {
@@ -206,7 +213,7 @@ final class ChargeTest extends TestBase
             'Amount' => 15.5,
             'Currency' => 'AUD',
             'Reference' => '123',
-            'ProviderId' => $this->CardProviderId,
+            'ProviderId' => TestConfiguration::getProviderId(),
             'PaymentInformation' => [
                 'CardNumber' => '4111111111111111',
                 'ExpiryDate' => '10/30',
