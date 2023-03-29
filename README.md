@@ -32,6 +32,4 @@ Before running the tests, create `config.json` file in `tests` folder with the f
 }
 ```
 
-We recommend to have 8 payment tokens to make all tests passed.
-
 Then run `phpunit tests`

@@ -21,7 +21,6 @@ class TestConfiguration
 
         $json = file_get_contents(__DIR__ . TestConfiguration::$fileName);
         TestConfiguration::$config = json_decode($json, true);
-        print(TestConfiguration::$config);
     }
 
     /**
