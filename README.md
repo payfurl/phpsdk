@@ -21,6 +21,17 @@ Use of the PayFURL PHP SDK requires:
 
 To run the tests, ensure you have phpunit installed.
 
-Then:
-- modify TestBase.php to set the "CardProviderId", "PaypalProviderId" and the "secretKey".
-- run phpunit tests
+Before running the tests, create `config.json` file in `tests` folder with the following contents:
+
+```json
+{
+  "Environment": "Development",
+  "SecretKey": "PAYFURL_SECRET_KEY",
+  "ProviderId": "DUMMY_PROVIDER_ID",
+  "Tokens": ["PAYMENT_TOKEN1","PAYMENT_TOKEN2"]
+}
+```
+
+We recommend to have 8 payment tokens to make all tests passed.
+
+Then run `phpunit tests`
