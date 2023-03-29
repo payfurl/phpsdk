@@ -18,8 +18,8 @@ class WebhookTools
 
     private static function IsFromPayFurl($requestBody, $signatureHeader, $signatureKey): bool
     {
-        $requestBytes = utf8_encode($requestBody);
-        $secret = utf8_encode($signatureKey);
+        $requestBytes = mb_convert_encoding($requestBody, 'UTF-8');
+        $secret = mb_convert_encoding($signatureKey, 'UTF-8');
 
         try {
             $hmac = hash_hmac("sha256", $requestBytes, $secret, true);

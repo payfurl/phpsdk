@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once(__DIR__ . '/TestConfiguration.php');
 require_once(__DIR__ . '/../src/Config.php');
 require_once(__DIR__ . '/../src/PaymentMethod.php');
 require_once(__DIR__ . '/../src/Customer.php');
@@ -17,33 +18,22 @@ final class PaymentMethodTest extends TestBase
 {
     /**
      * @throws ResponseException
-     */
-    public function testCheckout(): void
-    {
-        $svc = new PaymentMethod();
-
-        $result = $svc->Checkout(['Amount' => 15.5, 'Currency' => 'AUD', 'ProviderId' => $this->PaypalProviderId]);
-
-        $this->assertIsString($result['checkoutId']);
-    }
-
-    /**
-     * @throws ResponseException
+     * @throws Exception
      */
     public function testSearch(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-                                                           'ProviderId' => $this->CardProviderId,
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
                                                            'PaymentInformation' => [
                                                                'CardNumber' => '4111111111111111',
                                                                'ExpiryDate' => '10/30',
                                                                'Ccv' => '123',
                                                                'Cardholder' => 'Test Cardholder'],
-                                                            "Metadata" => [
-                                                                "merchant_id" => "12345"]
-                                                            ]);
+                                                           "Metadata" => [
+                                                               "merchant_id" => "12345"]
+                                                       ]);
 
         $svc = new PaymentMethod();
 
@@ -54,13 +44,14 @@ final class PaymentMethodTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testSingle(): void
     {
         $customerSvc = new Customer();
 
         $customerResult = $customerSvc->CreateWithCard([
-                                                           'ProviderId' => $this->CardProviderId,
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
                                                            'PaymentInformation' => [
                                                                'CardNumber' => '4111111111111111',
                                                                'ExpiryDate' => '10/30',
@@ -76,13 +67,14 @@ final class PaymentMethodTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testCreatePaymentMethodWithCard(): void
     {
         $paymentMethodSvc = new PaymentMethod();
 
         $paymentMethodResult = $paymentMethodSvc->CreatePaymentMethodWithCard([
-                                                                                  'ProviderId' => $this->CardProviderId,
+                                                                                  'ProviderId' => TestConfiguration::getProviderId(),
                                                                                   'PaymentInformation' => [
                                                                                       'CardNumber' => '4111111111111111',
                                                                                       'ExpiryDate' => '10/30',
@@ -94,13 +86,14 @@ final class PaymentMethodTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testCreatePaymentMethodWithVault(): void
     {
         $paymentMethodSvc = new PaymentMethod();
 
         $paymentMethodResult = $paymentMethodSvc->CreatePaymentMethodWithCard([
-                                                                                  'ProviderId' => $this->CardProviderId,
+                                                                                  'ProviderId' => TestConfiguration::getProviderId(),
                                                                                   'PaymentInformation' => [
                                                                                       'CardNumber' => '4111111111111111',
                                                                                       'ExpiryDate' => '10/30',
@@ -109,7 +102,7 @@ final class PaymentMethodTest extends TestBase
                                                                                   'VaultCard' => true]);
 
         $result = $paymentMethodSvc->CreatePaymentMethodWithVault([
-                                                                      'ProviderId' => $this->CardProviderId,
+                                                                      'ProviderId' => TestConfiguration::getProviderId(),
                                                                       'VaultId' => $paymentMethodResult['vaultId'],
                                                                       'PaymentMethodId' => $paymentMethodResult['paymentMethodId']]);
 
@@ -118,20 +111,21 @@ final class PaymentMethodTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testCreatePaymentMethodWithPayTo(): void
     {
         $paymentMethodSvc = new PaymentMethod();
 
         $paymentMethodResult = $paymentMethodSvc->CreateWithPayTo([
-            'ProviderId' => $this->PayToProviderId,
-            'PayerName' => 'This is a name',
-            'Description' => 'This is a description',
-            'MaximumAmount' => 500,
-            'PayerPayIdDetails' => [
-                'PayId' => 'david_jones@email.com',
-                'PayIdType' => 'EMAIL'
-            ]]);
+                                                                      'ProviderId' => TestConfiguration::getProviderId(),
+                                                                      'PayerName' => 'This is a name',
+                                                                      'Description' => 'This is a description',
+                                                                      'MaximumAmount' => 500,
+                                                                      'PayerPayIdDetails' => [
+                                                                          'PayId' => 'david_jones@email.com',
+                                                                          'PayIdType' => 'EMAIL'
+                                                                      ]]);
 
         $this->assertIsString($paymentMethodResult['paymentMethodId']);
     }

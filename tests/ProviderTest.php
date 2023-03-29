@@ -3,6 +3,7 @@
 use payFURL\Sdk\Provider;
 use PHPUnit\Framework\TestCase;
 
+require_once(__DIR__ . '/TestConfiguration.php');
 require_once(__DIR__ . '/../src/Config.php');
 require_once(__DIR__ . '/../src/Provider.php');
 require_once(__DIR__ . '/TestBase.php');
@@ -28,6 +29,7 @@ final class ProviderTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
      */
     public function testUpdateProvider(): void
     {
@@ -47,6 +49,9 @@ final class ProviderTest extends TestBase
         $this->assertEquals($result['name'], $newName);
     }
 
+    /**
+     * @throws Exception
+     */
     private function getProvider(): array
     {
         return [
