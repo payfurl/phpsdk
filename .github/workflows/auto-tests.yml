@@ -8,11 +8,11 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v1
-      - name: Install dependencies
-        uses: php-actions/composer@v4
-        with:
-          composer_version: 1
-          php_version: 8.0
+#      - name: Install dependencies
+#        uses: php-actions/composer@v4
+#        with:
+#          composer_version: 1
+#          php_version: 8.2.3
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -22,9 +22,8 @@ jobs:
       - name: Generate appsettings
         run: docker run --rm ghcr.io/payfurl/config-build:main > ./tests/config.json
       - name: Run tests
-        uses: php-actions/phpunit@v8
+        uses: php-actions/phpunit@v3
         with:
-          bootstrap: vendor/autoload.php
           configuration: tests/phpunit.xml
 #          args: --display-incomplete --display-skipped --display-deprecations --display-errors --display-warnings
-#          php_version: "8.1"
+          php_version: "8.3.2"
