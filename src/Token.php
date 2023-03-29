@@ -44,15 +44,6 @@ class Token
         return HttpWrapper::CallApi('/token/card/least_cost', 'POST', json_encode($data));
     }
 
-    /**
-     * @throws ResponseException
-     */
-    public function TokeniseCheckout($params)
-    {
-        ArrayTools::ValidateKeys($params, ['ReferenceId']);
-
-        return HttpWrapper::CallApi('/token/checkout?' . urlencode($params['ReferenceId']), 'POST', '');
-    }
 
     public function TokenisePayTo($params)
     {

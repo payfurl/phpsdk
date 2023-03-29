@@ -18,60 +18,6 @@ class PaymentMethod
     /**
      * @throws ResponseException
      */
-    public function Checkout($params)
-    {
-        ArrayTools::ValidateKeys($params, ['ProviderId', 'Amount']);
-
-        $sourceParams = [
-            'ProviderId' => 1,
-            'Amount' => 1,
-            'Currency' => 1,
-            'Reference' => 1,
-            'Transfer' => 1,
-            'Options' => 1,
-            'Customer' => 1,
-            'ShippingAmount' => 1,
-            'TaxAmount' => 1,
-            'Items' => 1,
-            'Ip' => 1,
-        ];
-        $data = array_intersect_key($params, $sourceParams);
-
-        if (isset($params['Transfer'])) {
-            $extraParams = ['Account' => 1, 'Amount' => 1];
-            $data['Transfer'] = array_intersect_key($params, $extraParams);
-        }
-        if (isset($params['Customer'])) {
-            $extraParams = ['FirstName' => 1, 'LastName' => 1, 'Email' => 1, 'Phone' => 1];
-            $data['Customer'] = array_intersect_key($params, $extraParams);
-            if (isset($params['Customer']['ShippingAddress'])) {
-                $extraParams = ['Name' => 1, 'AddressLine1' => 1, 'AddressLine2' => 1, 'Suburb' => 1, 'State' => 1, 'Postcode' => 1, 'CountryCode' => 1];
-                $data['Customer']['ShippingAddress'] = array_intersect_key($params, $extraParams);
-            }
-            if (isset($params['Customer']['BillingAddress'])) {
-                $extraParams = ['Name' => 1, 'AddressLine1' => 1, 'AddressLine2' => 1, 'Suburb' => 1, 'State' => 1, 'Postcode' => 1, 'CountryCode' => 1];
-                $data['Customer']['BillingAddress'] = array_intersect_key($params, $extraParams);
-            }
-            if (isset($params['Items'])) {
-                $data['Items'] = array_map(fn($value) => [
-                    'Name' => $value['Name'] ?? null,
-                    'Reference' => $value['Reference'] ?? null,
-                    'Quantity' => $value['Quantity'] ?? null,
-                    'Amount' => $value['Amount'] ?? null,
-                    'ItemUrl' => $value['ItemUrl'] ?? null,
-                    'ImageUrl' => $value['ImageUrl'] ?? null,
-                ], $params['Items']);
-            }
-        }
-
-        $data = ArrayTools::CleanEmpty($data);
-
-        return HttpWrapper::CallApi('/payment_method/checkout', 'POST', json_encode($data));
-    }
-
-    /**
-     * @throws ResponseException
-     */
     public function Search($params)
     {
         try {
