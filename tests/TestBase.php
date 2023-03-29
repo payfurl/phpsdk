@@ -15,6 +15,6 @@ class TestBase extends TestCase
     protected function setUp(): void
     {
         TestConfiguration::setUp();
-        Config::initialise(TestConfiguration::getSecretKey(), TestConfiguration::getEnvironment(), 60000, true);
+        Config::initialise(TestConfiguration::getSecretKey(), TestConfiguration::getEnvironment());
     }
 }
