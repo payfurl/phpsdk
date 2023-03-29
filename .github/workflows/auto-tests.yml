@@ -22,4 +22,4 @@ jobs:
           bootstrap: vendor/autoload.php
           configuration: tests/phpunit.xml
           args: --display-incomplete --display-skipped --display-deprecations --display-errors --display-warnings
-          php_version: "7.3"
+          php_version: "8.1"
