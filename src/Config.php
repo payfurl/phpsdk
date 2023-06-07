@@ -1,4 +1,5 @@
 <?php
+
 namespace payFURL\Sdk;
 
 /**
@@ -12,22 +13,66 @@ class Config
     public static string $Environment;
     public static bool $EnableDebug;
 
+    private static array $EnvConfigToUrlMapping = [
+        'none-local' => 'https://localhost:5001',
+        'none-development' => 'https://develop-api.payfurl.com',
+        'none-sandbox' => 'https://sandbox-api.payfurl.com',
+        'none-prod' => 'https://api.payfurl.com',
+
+        'au-development' => 'https://develop-api-au.payfurl.com',
+        'us-development' => 'https://develop-api-us.payfurl.com',
+        'jp-development' => 'https://develop-api-jp.payfurl.com',
+        'au-sandbox' => 'https://sandbox-api-au.payfurl.com',
+        'us-sandbox' => 'https://sandbox-api-us.payfurl.com',
+        'au-prod' => 'https://api-au.payfurl.com',
+        'us-prod' => 'https://api-us.payfurl.com'
+    ];
+
     public static function initialise($SecretKey, $Environment, $TimeoutMilliseconds = 60000, $EnableDebug = false)
     {
         self::$Environment = strtolower($Environment);
 
-        if (self::$Environment == "local") {
-            self::$BaseUrl = "https://localhost:5001";
-        } else if (self::$Environment == "development") {
-            self::$BaseUrl = "https://develop-api.payfurl.com";
-        } else if (self::$Environment == "sandbox") {
-            self::$BaseUrl = "https://sandbox-api.payfurl.com";
-        } else if (self::$Environment == "prod") {
-            self::$BaseUrl = "https://api.payfurl.com";
-        }
+        $RawRegionPart = self::extractRegionFromKey($SecretKey);
+        $Region = $RawRegionPart !== null
+            ? Region::fromLabel(strtolower($RawRegionPart))
+            : 'none';
+
+        self::$BaseUrl = self::getBaseUri($Region, self::$Environment);
 
         self::$SecretKey = $SecretKey;
         self::$TimeoutMilliseconds = $TimeoutMilliseconds;
         self::$EnableDebug = $EnableDebug;
+    }
+
+    private static function extractRegionFromKey($key): ?string
+    {
+        if (empty($key)) {
+            return null;
+        }
+
+        $parts = explode('-', $key);
+
+        if (count($parts) < 2) {
+            return null;
+        }
+
+        return strtolower($parts[1]);
+    }
+
+    private static function getBaseUri($Region, $Environment): string
+    {
+        $baseUri = self::getBaseUriWithFallback($Region, $Environment);
+        return empty($baseUri) ? 'https://sandbox-api.payfurl.com' : $baseUri;
+    }
+
+    private static function getBaseUriWithFallback($Region, $Environment): ?string
+    {
+        $baseUri = self::$EnvConfigToUrlMapping[$Region . '-' . $Environment];
+
+        if (empty($baseUri)) {
+            return self::$EnvConfigToUrlMapping['none' . '-' . $Environment];
+        }
+
+        return $baseUri;
     }
 }
