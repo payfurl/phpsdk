@@ -2,6 +2,8 @@
 
 namespace payFURL\Sdk;
 
+require_once(__DIR__ . '/tools/Region.php');
+
 /**
  * @copyright PayFURL
  */
