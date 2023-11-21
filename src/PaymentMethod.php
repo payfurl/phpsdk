@@ -110,6 +110,28 @@ class PaymentMethod
     /**
      * @throws ResponseException
      */
+    public function CreateWithSingleUseToken($params)
+    {
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
+
+        $data = []
+        $data['ProviderId'] = $params['ProviderId'];
+        $data['ProviderToken'] = $params['ProviderToken'];
+        if (array_key_exists("ProviderTokenData", $params)) {
+            $data['ProviderTokenData'] = $params['ProviderTokenData'];
+        }
+        if (array_key_exists("Metadata", $params)) {
+            $data['Metadata'] = $params['Metadata'];
+        }
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/payment_method/provider_single_use_token', 'POST', json_encode($data));
+    }
+
+    /**
+     * @throws ResponseException
+     */
     public function RemovePaymentMethod($params)
     {
         ArrayTools::ValidateKeys($params, ['PaymentMethodId']);
