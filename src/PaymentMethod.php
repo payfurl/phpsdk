@@ -114,7 +114,7 @@ class PaymentMethod
     {
         ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
 
-        $data = []
+        $data = [];
         $data['ProviderId'] = $params['ProviderId'];
         $data['ProviderToken'] = $params['ProviderToken'];
         if (array_key_exists("ProviderTokenData", $params)) {
