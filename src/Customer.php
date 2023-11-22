@@ -50,6 +50,29 @@ class Customer
         return HttpWrapper::CallApi('/customer/token', 'POST', json_encode($data));
     }
 
+
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithSingleUseToken($params)
+    {        
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
+
+        $data = [];
+        $data['ProviderId'] = $params['ProviderId'];
+        $data['ProviderToken'] = $params['ProviderToken'];
+        if (array_key_exists("ProviderTokenData", $params)) {
+            $data['ProviderTokenData'] = $params['ProviderTokenData'];
+        }
+        if (array_key_exists("Metadata", $params)) {
+            $data['Metadata'] = $params['Metadata'];
+        }
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/customer/provider_single_use_token', 'POST', json_encode($data));
+    }
+
     /**
      * @throws ResponseException
      */
