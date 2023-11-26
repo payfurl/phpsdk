@@ -123,6 +123,9 @@ class Customer
         $data['ProviderId'] = $params['ProviderId'];
         $data['ProviderToken'] = $params['ProviderToken'];
         $data['Verify'] = $params['Verify'] ?? false;
+        if (array_key_exists("Metadata", $params)) {
+            $data['Metadata'] = $params['Metadata'];
+        }
 
         $data = ArrayTools::CleanEmpty($data);
 
