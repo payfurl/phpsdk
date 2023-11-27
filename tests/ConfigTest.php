@@ -21,13 +21,13 @@ final class ConfigTest extends TestBase
 
     public function testGetBaseUriForValidRegionAndEnvironment()
     {
-        Config::initialise(self::getSecretKeyWithRegion('au'), 'prod');
+        Config::initialise(self::getSecretKeyWithRegion('au'), 'production');
         $this->assertEquals('https://api-au.payfurl.com', Config::$BaseUrl);
     }
 
     public function testGetBaseUriForInvalidRegionAndValidEnvironment()
     {
-        Config::initialise(self::getSecretKeyWithRegion('xyz'), 'prod');
+        Config::initialise(self::getSecretKeyWithRegion('xyz'), 'production');
         $this->assertEquals('https://api.payfurl.com', Config::$BaseUrl);
     }
 
@@ -57,7 +57,7 @@ final class ConfigTest extends TestBase
 
     public function testGetBaseUriForProdEnvironment()
     {
-        Config::initialise(self::getSecretKeyWithRegion(''), 'prod');
+        Config::initialise(self::getSecretKeyWithRegion(''), 'production');
         $this->assertEquals('https://api.payfurl.com', Config::$BaseUrl);
     }
 }
