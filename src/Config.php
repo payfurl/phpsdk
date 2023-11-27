@@ -19,16 +19,16 @@ class Config
         'none-local' => 'https://localhost:5001',
         'none-development' => 'https://develop-api.payfurl.com',
         'none-sandbox' => 'https://sandbox-api.payfurl.com',
-        'none-prod' => 'https://api.payfurl.com',
+        'none-production' => 'https://api.payfurl.com',
 
         'au-development' => 'https://develop-api-au.payfurl.com',
         'us-development' => 'https://develop-api-us.payfurl.com',
         'jp-development' => 'https://develop-api-jp.payfurl.com',
         'au-sandbox' => 'https://sandbox-api-au.payfurl.com',
         'us-sandbox' => 'https://sandbox-api-us.payfurl.com',
-        'au-prod' => 'https://api-au.payfurl.com',
-        'us-prod' => 'https://api-us.payfurl.com',
-        'eu-prod' => 'https://api-eu.payfurl.com'
+        'au-production' => 'https://api-au.payfurl.com',
+        'us-production' => 'https://api-us.payfurl.com',
+        'eu-production' => 'https://api-eu.payfurl.com'
     ];
 
     public static function initialise($SecretKey, $Environment, $TimeoutMilliseconds = 60000, $EnableDebug = false)
