@@ -40,4 +40,12 @@ class Provider
 
         return HttpWrapper::CallApi('/provider/' . $providerId, 'PUT', json_encode($data));
     }
+
+    /**
+     * @throws ResponseException
+     */
+    public function Delete($providerId)
+    {
+        return HttpWrapper::CallApi('/provider/' . $providerId, 'DELETE', '');
+    }
 }
