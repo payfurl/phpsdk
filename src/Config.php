@@ -40,6 +40,10 @@ class Config
             ? Region::fromLabel(strtolower($RawRegionPart))
             : 'none';
 
+        $Region = $Region !== null
+            ? $Region
+            : 'none';
+
         self::$BaseUrl = self::getBaseUri($Region, self::$Environment);
 
         self::$SecretKey = $SecretKey;
@@ -70,10 +74,15 @@ class Config
 
     private static function getBaseUriWithFallback($Region, $Environment): ?string
     {
-        $baseUri = self::$EnvConfigToUrlMapping[$Region . '-' . $Environment];
+        $baseUri = '';
+        if (array_key_exists($Region . '-' . $Environment, self::$EnvConfigToUrlMapping)) {
+            $baseUri = self::$EnvConfigToUrlMapping[$Region . '-' . $Environment];
+        }
 
         if (empty($baseUri)) {
-            return self::$EnvConfigToUrlMapping['none' . '-' . $Environment];
+            if (array_key_exists('none-' . $Environment, self::$EnvConfigToUrlMapping)) {
+                return self::$EnvConfigToUrlMapping['none' . '-' . $Environment];
+            }
         }
 
         return $baseUri;
