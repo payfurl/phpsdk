@@ -50,6 +50,23 @@ final class ProviderTest extends TestBase
     }
 
     /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testDeleteProvider(): void
+    {
+        $svc = new Provider();
+
+        $result = $svc->Create($this->getProvider());
+
+        $this->assertIsString($result['providerId']);
+
+        $deletedProvider = $svc->Delete($result['providerId']);
+
+        $this->assertEquals($result['providerId'], $deletedProvider['providerId']);
+    }
+
+    /**
      * @throws Exception
      */
     private function getProvider(): array

@@ -34,8 +34,6 @@ class Charge
             $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
         }
 
-        $data['Descriptor'] = $params['Descriptor'];
-
         $data = ArrayTools::CleanEmpty($data);
 
         return HttpWrapper::CallApi('/charge/card', 'POST', json_encode($data));
@@ -53,8 +51,6 @@ class Charge
         if (isset($params['Webhook'])) {
             $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
         }
-
-        $data['Descriptor'] = $params['Descriptor'];
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -74,8 +70,6 @@ class Charge
             $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
         }
 
-        $data['Descriptor'] = $params['Descriptor'];
-
         $data = ArrayTools::CleanEmpty($data);
 
         return HttpWrapper::CallApi('/charge/customer', 'POST', json_encode($data));
@@ -94,8 +88,6 @@ class Charge
             $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
         }
 
-        $data['Descriptor'] = $params['Descriptor'];
-
         $data = ArrayTools::CleanEmpty($data);
 
         return HttpWrapper::CallApi('/charge/payment_method', 'POST', json_encode($data));
@@ -113,8 +105,6 @@ class Charge
         if (isset($params['Webhook'])) {
             $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
         }
-
-        $data['Descriptor'] = $params['Descriptor'];
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -229,6 +219,10 @@ class Charge
         }
         if (array_key_exists('InvoiceNumber', $params)) {
             $data['InvoiceNumber'] = $params['InvoiceNumber'];
+        }
+
+        if (array_key_exists('Descriptor', $params)) {
+            $data['Descriptor'] = $params['Descriptor'];
         }
 
         return $data;
