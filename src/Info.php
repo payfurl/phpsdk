@@ -30,7 +30,7 @@ class Info
             throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
 
-        return HttpWrapper::CallApi($url, 'GET', '', ['sdk-version' => '4.5.7']);
+        return HttpWrapper::CallApi($url, 'GET', '');
     }
 
     /**
