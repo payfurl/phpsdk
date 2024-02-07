@@ -225,6 +225,10 @@ class Charge
             $data['Descriptor'] = $params['Descriptor'];
         }
 
+        if (array_key_exists('ThreeDSNotificationUrl', $params)) {
+            $data['ThreeDSNotificationUrl'] = $params['ThreeDSNotificationUrl'];
+        }
+
         return $data;
     }
 
