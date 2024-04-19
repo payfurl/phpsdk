@@ -190,7 +190,17 @@ class Charge
 
     private function BuildCreateChargeJson($params): array
     {
-        $sourceParams = ['Amount' => 1, 'Currency' => 1, 'Reference' => 1, 'Capture' => 1, 'Ip' => 1];
+        $sourceParams = [
+            'Amount' => 1,
+            'Currency' => 1,
+            'Reference' => 1,
+            'Capture' => 1,
+            'Ip' => 1,
+            'Email' => 1,
+            'Phone' => 1,
+            'FirstName' => 1,
+            'LastName' => 1,
+        ];
         $data = array_intersect_key($params, $sourceParams);
 
         if (array_key_exists('Address', $params)) {
