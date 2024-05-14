@@ -21,9 +21,11 @@ final class BatchTest extends TestBase
     {
         $svc = new Batch();
 
-        $result = $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod());
+        $description = bin2hex(random_bytes(16));
+        $result = $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod($description));
 
-        $this->assertSame('RECEIVED', $result['status']);
+        $this->assertSame($description, $result['description']);
+        $this->assertSame(1, $result['count']);
     }
 
     /**
@@ -34,10 +36,12 @@ final class BatchTest extends TestBase
     {
         $svc = new Batch();
 
-        $batch = $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod());
+        $description = bin2hex(random_bytes(16));
+        $batch = $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod($description));
         $result = $svc->GetBatch(['BatchId' => $batch['batchId']]);
 
-        $this->assertSame('RECEIVED', $result['status']);
+        $this->assertSame($description, $result['description']);
+        $this->assertSame(1, $result['count']);
         $this->assertSame('PaymentMethodId,Amount,Currency,Reference,Status,TransactionId\r\n', $result['results']);
     }
 
@@ -49,10 +53,12 @@ final class BatchTest extends TestBase
     {
         $svc = new Batch();
 
-        $batch = $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod());
+        $description = bin2hex(random_bytes(16));
+        $batch = $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod($description));
         $result = $svc->GetBatchStatus(['BatchId' => $batch['batchId']]);
 
-        $this->assertSame('RECEIVED', $result['status']);
+        $this->assertSame($description, $result['description']);
+        $this->assertSame(1, $result['count']);
     }
 
     /**
@@ -71,7 +77,7 @@ final class BatchTest extends TestBase
         $this->assertSame($description, $result['description']);
     }
 
-    private function getNewTransactionPaymentMethod($description = "Test"): array
+    private function getNewTransactionPaymentMethod($description): array
     {
         return [
             'Count' => 1,
