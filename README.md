@@ -9,6 +9,7 @@ Library for integrating with PayFURL payments in your app. It includes the follo
 5. Vault API
 6. Token API
 7. Provider API
+8. Batch API
 
 ## 📄 Requirements
 
