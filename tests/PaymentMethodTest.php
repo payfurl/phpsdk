@@ -129,4 +129,22 @@ final class PaymentMethodTest extends TestBase
 
         $this->assertIsString($paymentMethodResult['paymentMethodId']);
     }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testCreateWithProviderToken(): void
+    {
+        $paymentMethodSvc = new PaymentMethod();
+
+        $paymentMethodResult = $paymentMethodSvc->CreateWithProviderToken([
+                                                                              'ProviderId' => TestConfiguration::getProviderId(),
+                                                                              'ProviderToken' => 'test',
+                                                                          ]);
+
+        $this->assertIsString($paymentMethodResult['paymentMethodId']);
+        $this->assertSame("CARD", $paymentMethodResult['type']);
+        $this->assertNull($paymentMethodResult['customerId']);
+    }
 }
