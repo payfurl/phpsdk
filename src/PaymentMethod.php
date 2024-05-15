@@ -132,6 +132,28 @@ class PaymentMethod
     /**
      * @throws ResponseException
      */
+    public function CreateWithProviderToken($params)
+    {
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
+
+        $sourceParams = [
+            'ProviderId' => 1,
+            'ProviderToken' => 1,
+            'ProviderTokenData' => 1,
+            'Metadata' => 1,
+            'Email' => 1,
+            'Verify' => 1,
+        ];
+        $data = array_intersect_key($params, $sourceParams);
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/payment_method/provider_token', 'POST', json_encode($data));
+    }
+
+    /**
+     * @throws ResponseException
+     */
     public function RemovePaymentMethod($params)
     {
         ArrayTools::ValidateKeys($params, ['PaymentMethodId']);
