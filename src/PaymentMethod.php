@@ -161,9 +161,37 @@ class PaymentMethod
         return HttpWrapper::CallApi('/payment_method/' . urlencode($params['PaymentMethodId']), 'DELETE', '');
     }
 
+    /**
+     * @throws ResponseException
+     */
+    public function CreatePaymentMethodWithBankAccount($params)
+    {
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+
+        $data =  $this->BuildBankPaymentInformationJson($params);
+        $data['BankPaymentInformation'] = $this->BuildBankPaymentInformationJson($params['BankPaymentInformation'] ?? []);
+        $data['ProviderId'] = $params['ProviderId'];
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/payment_method/bank_account', 'POST', json_encode($data));
+    }
+
     private function BuildPaymentInformationJson($params): array
     {
         $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1];
+        return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildBankPaymentInformationJson($params): array
+    {
+        $sourceParams = ['BankCode' => 1, 'AccountNumber' => 1, 'AccountName' => 1];
+        return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildBankPaymentInformationJson($params): array
+    {
+        $sourceParams = ['FirstName' => 1, 'LastName' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 

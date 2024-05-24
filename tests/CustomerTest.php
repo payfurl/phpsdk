@@ -404,4 +404,71 @@ final class CustomerTest extends TestBase
         $this->assertNotEquals($paymentMethod['paymentMethodId'], $customerResult['defaultPaymentMethod']['paymentMethodId']);
         $this->assertEquals($paymentMethod['paymentMethodId'], $singleResult['defaultPaymentMethod']['paymentMethodId']);
     }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testCreateWithBankAccount(): void
+    {
+        $svc = new Customer();
+
+        $result = $svc->CreateWithBankAccount([
+                                           'Reference' => '123',
+                                           'FirstName' => 'FirstName',
+                                           'LastName' => 'LastName',
+                                           'Email' => 'test@test.com',
+                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                           'BankPaymentInformation' => [
+                                              'BankCode' => '123-456',
+                                              'AccountNumber' => '123456',
+                                              'AccountName' => 'Bank Account'
+                                            ],
+                                           "Metadata" => [
+                                               "merchant_id" => "12345"]
+                                       ]);
+
+        $this->assertIsString($result['customerId']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testCreatePaymentMethodWithBankAccount(): void
+    {
+        $svc = new Customer();
+
+        $result = $svc->CreateWithBankAccount([
+                                           'Reference' => '123',
+                                           'FirstName' => 'FirstName',
+                                           'LastName' => 'LastName',
+                                           'Email' => 'test@test.com',
+                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                           'BankPaymentInformation' => [
+                                              'BankCode' => '123-456',
+                                              'AccountNumber' => '123456',
+                                              'AccountName' => 'Bank Account'
+                                            ],
+                                           "Metadata" => [
+                                               "merchant_id" => "12345"]
+                                       ]);
+
+        $this->assertIsString($result['customerId']);
+        
+        $customerSvc = new Customer();
+        
+        $result = $customerSvc->CreatePaymentMethodWithBankAccount([
+                                        'CustomerId' => $customerResult['customerId'],
+                                        'ProviderId' => TestConfiguration::getProviderId(),
+                                        'FirstName' => 'FirstName',
+                                        'LastName' => 'LastName',
+                                        'BankPaymentInformation' => [
+                                          'BankCode' => '123-456',
+                                          'AccountNumber' => '123456',
+                                          'AccountName' => 'Bank Account'
+                                        ]]);
+
+        $this->assertEquals($result['customerId'], $customerResult['customerId']);
+    }
 }

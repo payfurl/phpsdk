@@ -147,4 +147,25 @@ final class PaymentMethodTest extends TestBase
         $this->assertSame("CARD", $paymentMethodResult['type']);
         $this->assertNull($paymentMethodResult['customerId']);
     }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testCreatePaymentMethodWithCard(): void
+    {
+        $paymentMethodSvc = new PaymentMethod();
+
+        $paymentMethodResult = $paymentMethodSvc->CreatePaymentMethodWithBankPayment([
+                                                  'ProviderId' => TestConfiguration::getProviderId(),
+                                                  'FirstName' => 'FirstName',
+                                                  'LastName' => 'LastName',
+                                                  'BankPaymentInformation' => [
+                                                    'BankCode' => '123-456',
+                                                    'AccountNumber' => '123456',
+                                                    'AccountName' => 'Bank Account'
+                                                  ]]);
+
+        $this->assertIsString($paymentMethodResult['paymentMethodId']);
+    }
 }

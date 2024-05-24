@@ -225,6 +225,43 @@ class Customer
         return HttpWrapper::CallApi('/customer/' . urlencode($params['CustomerId']), 'PUT', json_encode($data));
     }
 
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithBankAccount($params)
+    {
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+
+        $data = $this->BuildCreateCustomerJson($params);
+        $data = array_merge($data, $this->BuildIpInformationJson($params));
+        $data['BankPaymentInformation'] = $this->BuildBankPaymentInformationJson($params['BankPaymentInformation'] ?? []);
+        $data['ProviderId'] = $params['ProviderId'];
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/customer/bank_account', 'POST', json_encode($data));
+    }
+
+    /**
+     * @throws ResponseException
+     */
+    public function CreatePaymentMethodWithBankAccount($params)
+    {
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+
+        $data = $this->BuildCreateCustomerJson($params);
+        $data = array_merge($data, $this->BuildIpInformationJson($params));
+        $data['BankPaymentInformation'] = $this->BuildBankPaymentInformationJson($params['BankPaymentInformation'] ?? []);
+        $data['ProviderId'] = $params['ProviderId'];
+        if (array_key_exists("SetDefault", $params)) {
+            $data['SetDefault'] = $params['SetDefault'];
+        }
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/customer/' . urlencode($params['CustomerId']) . '/bank_account', 'POST', json_encode($data));
+    }
+
     private function BuildCreateCustomerJson($params): array
     {
         $sourceParams = [
@@ -248,6 +285,12 @@ class Customer
     private function BuildPaymentInformationJson($params): array
     {
         $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1];
+        return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildBankPaymentInformationJson($params): array
+    {
+        $sourceParams = ['BankCode' => 1, 'AccountNumber' => 1, 'AccountName' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 
