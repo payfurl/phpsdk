@@ -168,7 +168,7 @@ class PaymentMethod
     {
         ArrayTools::ValidateKeys($params, ['ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
-        $data =  $this->BuildBankPaymentInformationJson($params);
+        $data =  $this->BuildBankPaymentFirstLastNameInformationJson($params);
         $data['BankPaymentInformation'] = $this->BuildBankPaymentInformationJson($params['BankPaymentInformation'] ?? []);
         $data['ProviderId'] = $params['ProviderId'];
 
@@ -189,7 +189,7 @@ class PaymentMethod
         return array_intersect_key($params, $sourceParams);
     }
 
-    private function BuildBankPaymentInformationJson($params): array
+    private function BuildBankPaymentFirstLastNameInformationJson($params): array
     {
         $sourceParams = ['FirstName' => 1, 'LastName' => 1];
         return array_intersect_key($params, $sourceParams);
