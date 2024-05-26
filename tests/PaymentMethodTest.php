@@ -158,8 +158,6 @@ final class PaymentMethodTest extends TestBase
 
         $paymentMethodResult = $paymentMethodSvc->CreatePaymentMethodWithBankPayment([
                                                   'ProviderId' => TestConfiguration::getProviderId(),
-                                                  'FirstName' => 'FirstName',
-                                                  'LastName' => 'LastName',
                                                   'BankPaymentInformation' => [
                                                     'BankCode' => '123-456',
                                                     'AccountNumber' => '123456',

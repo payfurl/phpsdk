@@ -166,9 +166,9 @@ class PaymentMethod
      */
     public function CreatePaymentMethodWithBankAccount($params)
     {
-        ArrayTools::ValidateKeys($params, ['ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
-        $data =  $this->BuildBankPaymentFirstLastNameInformationJson($params);
+        $data = [];
         $data['BankPaymentInformation'] = $this->BuildBankPaymentInformationJson($params['BankPaymentInformation'] ?? []);
         $data['ProviderId'] = $params['ProviderId'];
 
@@ -186,12 +186,6 @@ class PaymentMethod
     private function BuildBankPaymentInformationJson($params): array
     {
         $sourceParams = ['BankCode' => 1, 'AccountNumber' => 1, 'AccountName' => 1];
-        return array_intersect_key($params, $sourceParams);
-    }
-
-    private function BuildBankPaymentFirstLastNameInformationJson($params): array
-    {
-        $sourceParams = ['FirstName' => 1, 'LastName' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 

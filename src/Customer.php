@@ -230,7 +230,7 @@ class Customer
      */
     public function CreateWithBankAccount($params)
     {
-        ArrayTools::ValidateKeys($params, ['ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data = array_merge($data, $this->BuildIpInformationJson($params));
@@ -247,7 +247,7 @@ class Customer
      */
     public function CreatePaymentMethodWithBankAccount($params)
     {
-        ArrayTools::ValidateKeys($params, ['CustomerId', 'ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+        ArrayTools::ValidateKeys($params, ['CustomerId', 'ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
         $data = $this->BuildCreateCustomerJson($params);
         $data = array_merge($data, $this->BuildIpInformationJson($params));

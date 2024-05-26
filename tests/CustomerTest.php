@@ -415,8 +415,6 @@ final class CustomerTest extends TestBase
 
         $result = $svc->CreateWithBankAccount([
                                            'Reference' => '123',
-                                           'FirstName' => 'FirstName',
-                                           'LastName' => 'LastName',
                                            'Email' => 'test@test.com',
                                            'ProviderId' => TestConfiguration::getProviderId(),
                                            'BankPaymentInformation' => [
@@ -441,8 +439,6 @@ final class CustomerTest extends TestBase
 
         $result = $svc->CreateWithBankAccount([
                                            'Reference' => '123',
-                                           'FirstName' => 'FirstName',
-                                           'LastName' => 'LastName',
                                            'Email' => 'test@test.com',
                                            'ProviderId' => TestConfiguration::getProviderId(),
                                            'BankPaymentInformation' => [
@@ -461,8 +457,6 @@ final class CustomerTest extends TestBase
         $result = $customerSvc->CreatePaymentMethodWithBankAccount([
                                         'CustomerId' => $customerResult['customerId'],
                                         'ProviderId' => TestConfiguration::getProviderId(),
-                                        'FirstName' => 'FirstName',
-                                        'LastName' => 'LastName',
                                         'BankPaymentInformation' => [
                                           'BankCode' => '123-456',
                                           'AccountNumber' => '123456',

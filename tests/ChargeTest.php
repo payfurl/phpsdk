@@ -239,8 +239,6 @@ final class ChargeTest extends TestBase
         $result = $svc->CreateWithBankAccount([
                                            'Amount' => 15.5,
                                            'Currency' => 'AUD',
-                                           'FirstName' => 'test',
-                                           'LastName' => 'testl',
                                            'Reference' => '123',
                                            'ProviderId' => TestConfiguration::getProviderId(),
                                            'BankPaymentInformation' => [

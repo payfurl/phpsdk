@@ -193,7 +193,7 @@ class Charge
      */
     public function CreateWithBankAccount($params)
     {
-        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'LastName', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
         $data = $this->BuildCreateChargeJson($params);
 
