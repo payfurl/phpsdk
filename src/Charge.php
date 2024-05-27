@@ -188,6 +188,26 @@ class Charge
         return HttpWrapper::CallApi($url, 'DELETE', '');
     }
 
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithBankAccount($params)
+    {
+        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
+
+        $data = $this->BuildCreateChargeJson($params);
+
+        $data['ProviderId'] = $params['ProviderId'];
+        $data['BankPaymentInformation'] = $this->BuildBankPaymentInformationJson($params['BankPaymentInformation'] ?? []);
+        if (isset($params['Webhook'])) {
+            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
+        }
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/charge/bank_account', 'POST', json_encode($data));
+    }
+
     private function BuildCreateChargeJson($params): array
     {
         $sourceParams = ['Amount' => 1, 'Currency' => 1, 'Reference' => 1, 'Capture' => 1, 'Ip' => 1];
@@ -228,6 +248,14 @@ class Charge
         if (array_key_exists('ThreeDSNotificationUrl', $params)) {
             $data['ThreeDSNotificationUrl'] = $params['ThreeDSNotificationUrl'];
         }
+    
+        if (array_key_exists('FirstName', $params)) {
+                $data['FirstName'] = $params['FirstName'];
+        }
+    
+        if (array_key_exists('LastName', $params)) {
+                    $data['LastName'] = $params['LastName'];
+        }
 
         return $data;
     }
@@ -241,6 +269,12 @@ class Charge
     private function BuildWebhookConfiguration($params): array
     {
         $sourceParams = ['Url' => 1, 'Authorization' => 1];
+        return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildBankPaymentInformationJson($params): array
+    {
+        $sourceParams = ['BankCode' => 1, 'AccountNumber' => 1, 'AccountName' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 }

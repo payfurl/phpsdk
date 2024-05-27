@@ -227,4 +227,26 @@ final class ChargeTest extends TestBase
 
         $this->assertSame('SUCCESS', $result['status']);
     }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testChargeWithBankAccount(): void
+    {
+        $svc = new Charge();
+
+        $result = $svc->CreateWithBankAccount([
+                                           'Amount' => 15.5,
+                                           'Currency' => 'AUD',
+                                           'Reference' => '123',
+                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                           'BankPaymentInformation' => [
+                                               'BankCode' => '123-456',
+                                               'AccountNumber' => '123456',
+                                               'AccountName' => 'Bank Account'
+                                           ]]);
+
+        $this->assertSame('PENDING', $result['status']);
+    }
 }
