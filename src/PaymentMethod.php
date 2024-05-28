@@ -5,6 +5,7 @@ namespace payFURL\Sdk;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -20,6 +21,7 @@ class PaymentMethod
      */
     public function Search($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         try {
             $url = '/payment_method' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (\Exception $ex) {
@@ -34,6 +36,7 @@ class PaymentMethod
      */
     public function Single($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['PaymentMethodId']);
 
         try {
@@ -50,6 +53,7 @@ class PaymentMethod
      */
     public function CreatePaymentMethodWithCard($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = [];
@@ -68,6 +72,7 @@ class PaymentMethod
      */
     public function CreatePaymentMethodWithVault($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentMethodId']);
 
         $sourceParams = ['ProviderId' => 1, 'PaymentMethodId' => 1, 'Ccv' => 1];
@@ -83,6 +88,7 @@ class PaymentMethod
      */
     public function CreateWithPayTo($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['PayerName', 'PayerPayIdDetails' => ['PayId', 'PayIdType'], 'Description', 'MaximumAmount', 'ProviderId']);
 
         $data = $this->BuildPayToAgreementJson($params);
@@ -97,6 +103,7 @@ class PaymentMethod
      */
     public function CreateWithToken($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Token']);
 
         $sourceParams = ['Token' => 1, 'Ip' => 1];
@@ -112,6 +119,7 @@ class PaymentMethod
      */
     public function CreateWithSingleUseToken($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
 
         $data = [];
@@ -134,6 +142,7 @@ class PaymentMethod
      */
     public function CreateWithProviderToken($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
 
         $sourceParams = [
@@ -156,6 +165,7 @@ class PaymentMethod
      */
     public function RemovePaymentMethod($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['PaymentMethodId']);
 
         return HttpWrapper::CallApi('/payment_method/' . urlencode($params['PaymentMethodId']), 'DELETE', '');
@@ -166,6 +176,7 @@ class PaymentMethod
      */
     public function CreatePaymentMethodWithBankAccount($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
         $data = [];

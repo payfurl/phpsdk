@@ -5,6 +5,7 @@ namespace payFURL\Sdk;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -16,6 +17,7 @@ class Provider
      */
     public function Create($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Type', 'Name', 'Environment', 'Currency', 'AuthenticationParameters']);
 
         $sourceParams = ['Type' => 1, 'Name' => 1, 'Environment' => 1, 'Currency' => 1, 'AuthenticationParameters' => 1, 'ProviderCountry' => 1];
@@ -31,6 +33,7 @@ class Provider
      */
     public function Update($providerId, $params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, []);
 
         $sourceParams = ['Name' => 1, 'Currency' => 1, 'AuthenticationParameters' => 1, 'ProviderCountry' => 1];

@@ -5,6 +5,7 @@ namespace payFURL\Sdk;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -18,6 +19,7 @@ class Transfer
      */
     public function Create($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['GroupReference', 'ProviderId', 'ChargeId']);
 
         $sourceParams = ['GroupReference' => 1, 'ProviderId' => 1, 'ChargeId' => 1];
@@ -52,6 +54,7 @@ class Transfer
      */
     public function Search($parameters)
     {
+        $params = CaseConverter::convertKeysToPascalCase($parameters);
         try {
             $url = '/transfer' . UrlTools::CreateQueryString($parameters, $this->validSearchKeys);
         } catch (\Exception $ex) {

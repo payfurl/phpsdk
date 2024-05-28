@@ -5,6 +5,7 @@ namespace payFURL\Sdk;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -18,6 +19,7 @@ class Token
      */
     public function TokeniseCard($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = [];
@@ -32,6 +34,7 @@ class Token
 
     public function TokeniseCardLeastCost($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         $sourceParams = ['Amount' => 1, 'Currency' => 1, 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']];
         $data = array_intersect_key($params, $sourceParams);
 
@@ -47,6 +50,7 @@ class Token
 
     public function TokenisePayTo($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['PayerName', 'PayerPayIdDetails' => ['PayId', 'PayIdType'], 'Description', 'MaximumAmount', 'ProviderId']);
 
         $data = $this->BuildPayToAgreementJson($params);
@@ -71,6 +75,7 @@ class Token
      */
     public function Search($parameters)
     {
+        $params = CaseConverter::convertKeysToPascalCase($parameters);
         try {
             $url = '/token' . UrlTools::CreateQueryString($parameters, $this->validSearchKeys);
         } catch (\Exception $ex) {

@@ -7,6 +7,7 @@ use Exception;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -24,6 +25,7 @@ class Charge
      */
     public function CreateWithCard($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = $this->BuildCreateChargeJson($params);
@@ -44,6 +46,7 @@ class Charge
      */
     public function CreateWithCardLeastCost($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Amount', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = $this->BuildCreateChargeJson($params);
@@ -62,6 +65,7 @@ class Charge
      */
     public function CreateWithCustomer($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Amount', 'CustomerId']);
 
         $data = $this->BuildCreateChargeJson($params);
@@ -80,6 +84,7 @@ class Charge
      */
     public function CreateWithPaymentMethod($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Amount', 'PaymentMethodId']);
 
         $data = $this->BuildCreateChargeJson($params);
@@ -98,6 +103,7 @@ class Charge
      */
     public function CreateWithToken($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Token']);
 
         $data = $this->BuildCreateChargeJson($params);
@@ -116,6 +122,7 @@ class Charge
      */
     public function Single($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ChargeId']);
 
         $url = '/charge/' . urlencode($params['ChargeId']);
@@ -129,6 +136,7 @@ class Charge
      */
     public function Refund($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ChargeId']);
 
         $queryParams = [];
@@ -149,6 +157,7 @@ class Charge
      */
     public function Search($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         try {
             $url = '/charge' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (Exception $ex) {
@@ -163,6 +172,7 @@ class Charge
      */
     public function Capture($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ChargeId']);
 
         $url = '/charge/' . urlencode($params['ChargeId']);
@@ -181,6 +191,7 @@ class Charge
      */
     public function Void($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ChargeId']);
 
         $url = '/charge/' . urlencode($params['ChargeId']);
@@ -193,6 +204,7 @@ class Charge
      */
     public function CreateWithBankAccount($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
         $data = $this->BuildCreateChargeJson($params);
