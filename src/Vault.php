@@ -4,6 +4,7 @@ namespace payFURL\Sdk;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -15,6 +16,7 @@ class Vault
      */
     public function Create($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, array('CardNumber'));
 
         $sourceParams = ['CardNumber' => 1, 'Ccv' => 1, 'ExpireDate' => 1, 'ExpireSeconds' => 1];

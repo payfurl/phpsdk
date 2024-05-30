@@ -7,6 +7,7 @@ use Exception;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -22,6 +23,7 @@ class Batch
      */
     public function CreateTransactionWithPaymentMethod($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Count', 'Batch']);
 
         $data = $this->BuildCreateTransactionJson($params);
@@ -36,6 +38,7 @@ class Batch
      */
     public function GetBatch($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['BatchId']);
 
         $url = '/batch/' . urlencode($params['BatchId']);
@@ -48,6 +51,7 @@ class Batch
      */
     public function GetBatchStatus($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['BatchId']);
 
         $url = '/batch/' . urlencode($params['BatchId']) . '/status';
@@ -60,6 +64,7 @@ class Batch
      */
     public function Search($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         try {
             $url = '/batch' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (Exception $ex) {

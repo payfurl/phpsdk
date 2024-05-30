@@ -5,6 +5,7 @@ namespace payFURL\Sdk;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -24,6 +25,7 @@ class Info
      */
     public function Providers($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         try {
             $url = '/info/providers' . UrlTools::CreateQueryString($params, ['Amount', 'Currency']);
         } catch (\Exception $ex) {

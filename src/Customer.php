@@ -7,6 +7,7 @@ use Exception;
 require_once(__DIR__ . '/tools/HttpWrapper.php');
 require_once(__DIR__ . '/tools/ArrayTools.php');
 require_once(__DIR__ . '/tools/UrlTools.php');
+require_once(__DIR__ . '/tools/CaseConverter.php');
 
 /**
  * @copyright PayFURL
@@ -20,6 +21,7 @@ class Customer
      */
     public function CreateWithCard($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = $this->BuildCreateCustomerJson($params);
@@ -38,6 +40,7 @@ class Customer
      */
     public function CreateWithToken($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['Token']);
 
         $data = $this->BuildCreateCustomerJson($params);
@@ -55,7 +58,8 @@ class Customer
      * @throws ResponseException
      */
     public function CreateWithSingleUseToken($params)
-    {        
+    {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
 
         $data = [];
@@ -78,6 +82,7 @@ class Customer
      */
     public function CreatePaymentMethodWithCard($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId', 'ProviderId', 'PaymentInformation' => ['CardNumber', 'ExpiryDate', 'Ccv']]);
 
         $data = [];
@@ -99,6 +104,7 @@ class Customer
      */
     public function CreatePaymentMethodWithToken($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId', 'Token']);
 
         $data = [];
@@ -116,6 +122,7 @@ class Customer
      */
     public function CreateWithProviderToken($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'ProviderToken']);
 
         $data = $this->BuildCreateCustomerJson($params);
@@ -137,6 +144,7 @@ class Customer
      */
     public function Single($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId']);
 
         $url = '/customer/' . urlencode($params['CustomerId']);
@@ -149,6 +157,7 @@ class Customer
      */
     public function Search($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         try {
             $url = '/customer' . UrlTools::CreateQueryString($params, $this->ValidSearchKeys);
         } catch (Exception $ex) {
@@ -163,6 +172,7 @@ class Customer
      */
     public function CustomerPaymentMethods($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId']);
 
         $url = '/customer/' . urlencode($params['CustomerId']) . '/payment_method';
@@ -175,6 +185,7 @@ class Customer
      */
     public function CreateWithPayTo($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['PayToAgreement']);
 
         $data = $this->BuildCreateCustomerJson($params);
@@ -190,6 +201,7 @@ class Customer
      */
     public function CreatePaymentMethodWithPayTo($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId', 'PayerName', 'PayerPayIdDetails' => ['PayId', 'PayIdType'], 'Description', 'MaximumAmount', 'ProviderId']);
 
         $data = $this->BuildPayToAgreementJson($params);
@@ -204,6 +216,7 @@ class Customer
      */
     public function RemoveCustomer($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId']);
 
         $url = '/customer/' . urlencode($params['CustomerId']);
@@ -216,6 +229,7 @@ class Customer
      */
     public function UpdateCustomer($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId', 'Email']);
 
         $data = $this->BuildCreateCustomerJson($params);
@@ -230,6 +244,7 @@ class Customer
      */
     public function CreateWithBankAccount($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
         $data = $this->BuildCreateCustomerJson($params);
@@ -247,6 +262,7 @@ class Customer
      */
     public function CreatePaymentMethodWithBankAccount($params)
     {
+        $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['CustomerId', 'ProviderId', 'BankPaymentInformation' => ['BankCode', 'AccountNumber', 'AccountName']]);
 
         $data = $this->BuildCreateCustomerJson($params);
