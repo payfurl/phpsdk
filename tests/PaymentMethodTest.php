@@ -152,7 +152,7 @@ final class PaymentMethodTest extends TestBase
      * @throws ResponseException
      * @throws Exception
      */
-    public function testCreatePaymentMethodWithCard(): void
+    public function testCreatePaymentMethodWithBankAccount(): void
     {
         $paymentMethodSvc = new PaymentMethod();
 
