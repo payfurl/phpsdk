@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/TestConfiguration.php');
 require_once(__DIR__ . '/../src/Config.php');
-require_once(__DIR__ . '/../src/Charge.php');
+require_once(__DIR__ . '/../src/Batch.php');
 require_once(__DIR__ . '/TestBase.php');
 require_once(__DIR__ . '/../src/ResponseException.php');
 
