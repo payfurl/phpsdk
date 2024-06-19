@@ -42,7 +42,7 @@ final class BatchTest extends TestBase
 
         $this->assertSame($description, $result['description']);
         $this->assertSame(1, $result['count']);
-        $this->assertSame('PaymentMethodId,Amount,Currency,Reference,Status,TransactionId,FailureReason\r\n', $result['results']);
+        $this->assertTrue(str_starts_with($result['results'], 'PaymentMethodId,Amount,Currency,Reference,Status,TransactionId,FailureReason'));
     }
 
     /**

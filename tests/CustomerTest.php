@@ -451,11 +451,11 @@ final class CustomerTest extends TestBase
                                        ]);
 
         $this->assertIsString($result['customerId']);
-        
+
         $customerSvc = new Customer();
-        
-        $result = $customerSvc->CreatePaymentMethodWithBankAccount([
-                                        'CustomerId' => $customerResult['customerId'],
+
+        $result2 = $customerSvc->CreatePaymentMethodWithBankAccount([
+                                        'CustomerId' => $result['customerId'],
                                         'ProviderId' => TestConfiguration::getProviderId(),
                                         'BankPaymentInformation' => [
                                           'BankCode' => '123-456',
@@ -463,6 +463,6 @@ final class CustomerTest extends TestBase
                                           'AccountName' => 'Bank Account'
                                         ]]);
 
-        $this->assertEquals($result['customerId'], $customerResult['customerId']);
+        $this->assertEquals($result2['customerId'], $result['customerId']);
     }
 }
