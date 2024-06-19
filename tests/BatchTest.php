@@ -42,7 +42,7 @@ final class BatchTest extends TestBase
 
         $this->assertSame($description, $result['description']);
         $this->assertSame(1, $result['count']);
-        $this->assertSame('PaymentMethodId,Amount,Currency,Reference,Status,TransactionId\r\n', $result['results']);
+        $this->assertSame('PaymentMethodId,Amount,Currency,Reference,Status,TransactionId,FailureReason\r\n', $result['results']);
     }
 
     /**
@@ -74,7 +74,7 @@ final class BatchTest extends TestBase
         $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod($description));
         $result = $svc->Search(['Description' => $description]);
 
-        $this->assertSame($description, $result['description']);
+        $this->assertSame($description, $result['batches'][0]['description']);
     }
 
     private function getNewTransactionPaymentMethod($description): array

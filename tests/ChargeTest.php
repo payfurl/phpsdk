@@ -185,7 +185,8 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
         $this->expectException(ResponseException::class);
-        $this->expectExceptionCode('90');
+        // Invalid CCV
+        $this->expectExceptionCode('6');
 
         $result = $svc->CreateWithCard([
             'Amount' => 15.5,
