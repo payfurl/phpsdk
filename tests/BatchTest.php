@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/TestConfiguration.php');
 require_once(__DIR__ . '/../src/Config.php');
-require_once(__DIR__ . '/../src/Charge.php');
+require_once(__DIR__ . '/../src/Batch.php');
 require_once(__DIR__ . '/TestBase.php');
 require_once(__DIR__ . '/../src/ResponseException.php');
 
@@ -42,7 +42,7 @@ final class BatchTest extends TestBase
 
         $this->assertSame($description, $result['description']);
         $this->assertSame(1, $result['count']);
-        $this->assertSame('PaymentMethodId,Amount,Currency,Reference,Status,TransactionId\r\n', $result['results']);
+        $this->assertTrue(str_starts_with($result['results'], 'PaymentMethodId,Amount,Currency,Reference,Status,TransactionId,FailureReason'));
     }
 
     /**
@@ -74,7 +74,7 @@ final class BatchTest extends TestBase
         $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod($description));
         $result = $svc->Search(['Description' => $description]);
 
-        $this->assertSame($description, $result['description']);
+        $this->assertSame($description, $result['batches'][0]['description']);
     }
 
     private function getNewTransactionPaymentMethod($description): array

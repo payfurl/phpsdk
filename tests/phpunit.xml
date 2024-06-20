@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd" cacheDirectory=".phpunit.cache">
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals               = "false"
+         colors                      = "true"
+         processIsolation            = "false"
+         stopOnFailure               = "false">
   <coverage>
-    <include>
-      <directory suffix=".php">../src</directory>
-    </include>
     <report>
       <text outputFile="php://stdout" showUncoveredFiles="true"/>
     </report>

@@ -20,4 +20,5 @@ jobs:
         uses: php-actions/phpunit@v3
         with:
           configuration: tests/phpunit.xml
-          args: --no-coverage --migrate-configuration
+          test_suffix: Test.php
+          args: --no-coverage
