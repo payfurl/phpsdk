@@ -12,10 +12,10 @@ require_once(__DIR__ . '/tools/CaseConverter.php');
 /**
  * @copyright PayFURL
  */
-class Batch
+class Subscription
 {
     private array $validSearchKeys = [
-        'Description', 'AddedAfter', 'AddedBefore', 'Limit', 'Skip',
+        'AmountGreaterThan', 'AmountLessThan', 'AddedAfter', 'AddedBefore', 'Currency', 'Status', 'SortBy', 'Limit', 'Skip',
     ];
 
     /**
