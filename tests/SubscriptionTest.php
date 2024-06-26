@@ -61,7 +61,7 @@ final class SubscriptionTest extends TestBase
         $paymentMethodId = $customerResult['defaultPaymentMethod']['paymentMethodId'];
 
         $newSubscription = $svc->CreateSubscription($this->getNewSubscription($paymentMethodId));
-        $subscription = $svc->GetSubscription(['SubscriptionId' => $newSubscription['SubscriptionId']]);
+        $subscription = $svc->GetSubscription(['SubscriptionId' => $newSubscription['subscriptionId']]);
 
         $this->assertSame($paymentMethodId, $subscription['paymentMethodId']);
         $this->assertSame('Active', $subscription['status']);
@@ -89,7 +89,7 @@ final class SubscriptionTest extends TestBase
         $paymentMethodId = $customerResult['defaultPaymentMethod']['paymentMethodId'];
 
         $newSubscription = $svc->CreateSubscription($this->getNewSubscription($paymentMethodId));
-        $subscription = $svc->DeleteSubscription(['SubscriptionId' => $newSubscription['SubscriptionId']]);
+        $subscription = $svc->DeleteSubscription(['SubscriptionId' => $newSubscription['subscriptionId']]);
 
         $this->assertSame($paymentMethodId, $subscription['paymentMethodId']);
         $this->assertSame('Cancelled', $subscription['status']);
