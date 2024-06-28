@@ -29,6 +29,9 @@ class Customer
         $data = array_merge($data, $this->BuildIpInformationJson($params));
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
         $data['ProviderId'] = $params['ProviderId'];
+        if (array_key_exists('SkipExpiryDateValidation', $params)) {
+            $data['SkipExpiryDateValidation'] = $params['SkipExpiryDateValidation'];
+        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -92,6 +95,9 @@ class Customer
         $data['ProviderId'] = $params['ProviderId'];
         if (array_key_exists("SetDefault", $params)) {
             $data['SetDefault'] = $params['SetDefault'];
+        }
+        if (array_key_exists('SkipExpiryDateValidation', $params)) {
+            $data['SkipExpiryDateValidation'] = $params['SkipExpiryDateValidation'];
         }
 
         $data = ArrayTools::CleanEmpty($data);
