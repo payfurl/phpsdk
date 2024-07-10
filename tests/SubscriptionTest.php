@@ -19,7 +19,7 @@ final class SubscriptionTest extends TestBase
      * @throws ResponseException
      * @throws Exception
      */
-    public function testCreateTransactionWithPaymentMethod(): void
+    public function testCreateSubscription(): void
     {
         $customerSvc = new Customer();
 
