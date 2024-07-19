@@ -32,6 +32,25 @@ final class BatchTest extends TestBase
      * @throws ResponseException
      * @throws Exception
      */
+    public function testCreateTransactionWithPaymentMethodWithWebhook(): void
+    {
+        $svc = new Batch();
+
+        $description = bin2hex(random_bytes(16));
+        $webhookConfig = [
+            'Url' => 'https://example.com/webhook',
+            'Authorization' => 'Bearer your_token_here'
+        ];
+        $result = $svc->CreateTransactionWithPaymentMethod($this->getNewTransactionPaymentMethod($description, $webhookConfig));
+
+        $this->assertSame($description, $result['description']);
+        $this->assertSame(1, $result['count']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
     public function testGetBatch(): void
     {
         $svc = new Batch();
@@ -77,12 +96,18 @@ final class BatchTest extends TestBase
         $this->assertSame($description, $result['batches'][0]['description']);
     }
 
-    private function getNewTransactionPaymentMethod($description): array
+    private function getNewTransactionPaymentMethod($description, $webhookConfig = null): array
     {
-        return [
+        $transaction = [
             'Count' => 1,
             'Description' => $description,
             'Batch' => "PaymentMethodId,Amount,Currency,Reference\ntest,123.4,AUD,reference"
         ];
+    
+        if ($webhookConfig !== null) {
+            $transaction['Webhook'] = $webhookConfig;
+        }
+    
+        return $transaction;
     }
 }
