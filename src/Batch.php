@@ -27,6 +27,9 @@ class Batch
         ArrayTools::ValidateKeys($params, ['Count', 'Batch']);
 
         $data = $this->BuildCreateTransactionJson($params);
+        if (isset($params['Webhook'])) {
+            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
+        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -80,4 +83,9 @@ class Batch
         return array_intersect_key($params, $sourceParams);
     }
 
+    private function BuildWebhookConfiguration($params): array
+    {
+        $sourceParams = ['Url' => 1, 'Authorization' => 1];
+        return array_intersect_key($params, $sourceParams);
+    }
 }
