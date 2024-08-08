@@ -191,6 +191,19 @@ class PaymentMethod
         return HttpWrapper::CallApi('/payment_method/bank_account', 'POST', json_encode($data));
     }
 
+    public function UpdatePaymentMethod($params)
+    {
+        $params = CaseConverter::convertKeysToPascalCase($params);
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'Card' => ['ExpiryDate', 'Cardholder']]);
+
+        $data = [];
+        $data['Card'] = $this->BuildUpdatePaymentMethodInformationJson($params['Card'] ?? []);
+        $data['ProviderId'] = $params['ProviderId'];
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/payment_method/' . urlencode($params['PaymentMethodId']), 'PUT', json_encode($data));
+    }
+
     private function BuildPaymentInformationJson($params): array
     {
         $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1];
@@ -224,5 +237,11 @@ class PaymentMethod
             $data['PayerPayIdDetails'] = array_intersect_key($params['PayerPayIdDetails'], $detailsParams);
         }
         return $data;
+    }
+
+    private function BuildUpdatePaymentMethodInformationJson($params): array
+    {
+        $sourceParams = ['ExpiryDate' => 1, 'Cardholder' => 1];
+        return array_intersect_key($params, $sourceParams);
     }
 }

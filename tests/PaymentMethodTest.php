@@ -166,4 +166,40 @@ final class PaymentMethodTest extends TestBase
 
         $this->assertIsString($paymentMethodResult['paymentMethodId']);
     }
+
+    /**
+    * @throws ResponseException
+    * @throws Exception
+    */
+    public function testUpdatePaymentMethod(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
+
+        $svc = new PaymentMethod();
+
+        $result = $svc->Single(['PaymentMethodId' => $customerResult['defaultPaymentMethod']['paymentMethodId']]);
+
+        $this->assertIsString($result['paymentMethodId']);
+        
+        $TestExpiryDate = '10/31';
+        $TestCardholder = 'Updated Test Cardholder';
+        $updateResult = $svc->UpdatePaymentMethod([
+                                                 'ProviderId' => TestConfiguration::getProviderId(),
+                                                 'Card' => [
+                                                     'ExpiryDate' => $TestExpiryDate,
+                                                     'Cardholder' => $TestCardholder]]);
+        
+        $this->assertIsString($updateResult['paymentMethodId']);
+        $this->assertEquals($result['paymentMethodId'], $updateResult['paymentMethodId']);
+        $this->assertEquals($TestExpiryDate, $updateResult['Card']['ExpiryDate']->ExpiryDate);
+        $this->assertEquals($TestCardholder, $updateResult['Card']['Cardholder']->Cardholder);
+    }
 }
