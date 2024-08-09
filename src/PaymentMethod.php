@@ -194,10 +194,11 @@ class PaymentMethod
     public function UpdatePaymentMethod($params)
     {
         $params = CaseConverter::convertKeysToPascalCase($params);
-        ArrayTools::ValidateKeys($params, ['ProviderId', 'Card' => ['ExpiryDate', 'Cardholder']]);
+        ArrayTools::ValidateKeys($params, ['ProviderId', 'PaymentMethodId', 'Card' => ['ExpiryDate', 'Cardholder']]);
 
         $data = [];
         $data['Card'] = $this->BuildUpdatePaymentMethodInformationJson($params['Card'] ?? []);
+        $data['PaymentMethodId'] = $params['PaymentMethodId'];
         $data['ProviderId'] = $params['ProviderId'];
         $data = ArrayTools::CleanEmpty($data);
 

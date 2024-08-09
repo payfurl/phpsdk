@@ -193,13 +193,14 @@ final class PaymentMethodTest extends TestBase
         $TestCardholder = 'Updated Test Cardholder';
         $updateResult = $svc->UpdatePaymentMethod([
                                                  'ProviderId' => TestConfiguration::getProviderId(),
+                                                 'PaymentMethodId' => $result['paymentMethodId'],
                                                  'Card' => [
                                                      'ExpiryDate' => $TestExpiryDate,
                                                      'Cardholder' => $TestCardholder]]);
         
         $this->assertIsString($updateResult['paymentMethodId']);
         $this->assertEquals($result['paymentMethodId'], $updateResult['paymentMethodId']);
-        $this->assertEquals($TestExpiryDate, $updateResult['Card']['ExpiryDate']->ExpiryDate);
-        $this->assertEquals($TestCardholder, $updateResult['Card']['Cardholder']->Cardholder);
+        $this->assertEquals($TestExpiryDate, $updateResult['card']['expiryDate']);
+        $this->assertEquals($TestCardholder, $updateResult['card']['cardholder']);
     }
 }
