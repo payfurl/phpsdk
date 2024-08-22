@@ -17,6 +17,7 @@ class Charge
     private array $validSearchKeys = [
         'Reference', 'ProviderId', 'AmountGreaterThan', 'AmountLessThan', 'Currency',
         'CustomerId', 'Status', 'AddedAfter', 'AddedBefore', 'PaymentMethodId', 'PaymentType',
+        'CardType', 'CardNumber', 'Cardholder',
         'SortBy', 'Limit', 'Skip',
     ];
 
@@ -260,11 +261,11 @@ class Charge
         if (array_key_exists('ThreeDSNotificationUrl', $params)) {
             $data['ThreeDSNotificationUrl'] = $params['ThreeDSNotificationUrl'];
         }
-    
+
         if (array_key_exists('FirstName', $params)) {
                 $data['FirstName'] = $params['FirstName'];
         }
-    
+
         if (array_key_exists('LastName', $params)) {
                     $data['LastName'] = $params['LastName'];
         }
