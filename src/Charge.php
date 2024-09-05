@@ -227,12 +227,12 @@ class Charge
 
         if (array_key_exists('Address', $params)) {
             $sourceParams = ['Line1' => 1, 'Line2' => 1, 'City' => 1, 'Country' => 1, 'PostalCode' => 1, 'State' => 1];
-            $data['Address'] = array_intersect_key($params, $sourceParams);
+            $data['Address'] = array_intersect_key($params['Address'], $sourceParams);
         }
 
         if (array_key_exists('Order', $params)) {
             $sourceParams = ['OrderNumber' => 1, 'FreightAmount' => 1, 'DutyAmount' => 1, 'Country' => 1, 'PostalCode' => 1, 'State' => 1];
-            $data['Order'] = array_intersect_key($params, $sourceParams);
+            $data['Order'] = array_intersect_key($params['Order'], $sourceParams);
             if (isset($params['Order']['Items'])) {
                 $data['Order']['Items'] = array_map(fn($value) => [
                     'ProductCode' => $value['ProductCode'] ?? null,
@@ -260,11 +260,11 @@ class Charge
         if (array_key_exists('ThreeDSNotificationUrl', $params)) {
             $data['ThreeDSNotificationUrl'] = $params['ThreeDSNotificationUrl'];
         }
-    
+
         if (array_key_exists('FirstName', $params)) {
                 $data['FirstName'] = $params['FirstName'];
         }
-    
+
         if (array_key_exists('LastName', $params)) {
                     $data['LastName'] = $params['LastName'];
         }
