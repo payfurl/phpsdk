@@ -197,7 +197,7 @@ final class ChargeTest extends TestBase
                                      'Cardholder' => $test]]);
 
         $searchResult = $svc->Search([
-                                         'CardNumber' => '4111',
+                                         'CardNumber' => '411111',
                                          'CardType' => 'VISA',
                                          'Cardholder' => $test]);
 
