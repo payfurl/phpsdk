@@ -14,7 +14,7 @@ class PaymentMethod
 {
     private array $validSearchKeys = [
         'AddedAfter', 'AddedBefore', 'ProviderId', 'CustomerId', 'PaymentType',
-        'Search', 'SortBy', 'Limit'];
+        'CardType', 'Search', 'SortBy', 'Limit'];
 
     /**
      * @throws ResponseException
