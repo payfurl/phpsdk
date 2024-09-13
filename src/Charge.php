@@ -17,6 +17,7 @@ class Charge
     private array $validSearchKeys = [
         'Reference', 'ProviderId', 'AmountGreaterThan', 'AmountLessThan', 'Currency',
         'CustomerId', 'Status', 'AddedAfter', 'AddedBefore', 'PaymentMethodId', 'PaymentType',
+        'CardType', 'CardNumber', 'Cardholder',
         'SortBy', 'Limit', 'Skip',
     ];
 
