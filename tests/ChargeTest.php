@@ -181,6 +181,33 @@ final class ChargeTest extends TestBase
      * @throws ResponseException
      * @throws Exception
      */
+    public function testSearchByCard(): void
+    {
+        $svc = new Charge();
+
+        $test = bin2hex(random_bytes(16));
+        $svc->CreateWithCard([
+                                 'Amount' => 15.5,
+                                 'Currency' => 'AUD',
+                                 'ProviderId' => TestConfiguration::getProviderId(),
+                                 'PaymentInformation' => [
+                                     'CardNumber' => '4111111111111111',
+                                     'ExpiryDate' => '10/30',
+                                     'Ccv' => '123',
+                                     'Cardholder' => $test]]);
+
+        $searchResult = $svc->Search([
+                                         'CardNumber' => '411111',
+                                         'CardType' => 'VISA',
+                                         'Cardholder' => $test]);
+
+        $this->assertSame(1, $searchResult['count']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
     public function testInvalidParameters(): void
     {
         $svc = new Charge();
