@@ -298,7 +298,7 @@ class Customer
 
         if (array_key_exists('Address', $params)) {
             $sourceParams = ['Line1' => 1, 'Line2' => 1, 'City' => 1, 'Country' => 1, 'PostalCode' => 1, 'State' => 1];
-            $data['Address'] = array_intersect_key($params, $sourceParams);
+            $data['Address'] = array_intersect_key($params['Address'], $sourceParams);
         }
 
         return $data;
