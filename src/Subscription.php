@@ -42,6 +42,9 @@ class Subscription
         if (isset($params['StartDate'])) {
             $data['StartDate'] = $params['StartDate'];
         }
+        if (isset($params['Metadata'])) {
+            $data['Metadata'] = $params['Metadata'];
+        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -91,7 +94,7 @@ class Subscription
 
     private function BuildCreateSubscriptionJson($params): array
     {
-        $sourceParams = 
+        $sourceParams =
         ['PaymentMethodId' => 1,
         'Amount' => 1,
         'Currency' => 1,
