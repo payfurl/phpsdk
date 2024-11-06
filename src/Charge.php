@@ -33,9 +33,6 @@ class Charge
 
         $data['ProviderId'] = $params['ProviderId'];
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
-        if (isset($params['Webhook'])) {
-            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
-        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -52,9 +49,6 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['PaymentInformation'] = $this->BuildPaymentInformationJson($params['PaymentInformation'] ?? []);
-        if (isset($params['Webhook'])) {
-            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
-        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -71,9 +65,6 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['CustomerId'] = $params['CustomerId'];
-        if (isset($params['Webhook'])) {
-            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
-        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -90,9 +81,6 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['PaymentMethodId'] = $params['PaymentMethodId'];
-        if (isset($params['Webhook'])) {
-            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
-        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -109,9 +97,6 @@ class Charge
 
         $data = $this->BuildCreateChargeJson($params);
         $data['Token'] = $params['Token'];
-        if (isset($params['Webhook'])) {
-            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
-        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -212,9 +197,6 @@ class Charge
 
         $data['ProviderId'] = $params['ProviderId'];
         $data['BankPaymentInformation'] = $this->BuildBankPaymentInformationJson($params['BankPaymentInformation'] ?? []);
-        if (isset($params['Webhook'])) {
-            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
-        }
 
         $data = ArrayTools::CleanEmpty($data);
 
@@ -270,12 +252,25 @@ class Charge
             $data['LastName'] = $params['LastName'];
         }
 
+        if (array_key_exists('Email', $params)) {
+            $data['Email'] = $params['Email'];
+        }
+
         if (array_key_exists('Phone', $params)) {
             $data['Phone'] = $params['Phone'];
         }
 
-        if (array_key_exists('Email', $params)) {
-            $data['Email'] = $params['Email'];
+        if (isset($params['Webhook'])) {
+            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
+        }
+
+        if (isset($params['Metadata'])) {
+            $data['Metadata'] = $params['Metadata'];
+        }
+
+        if (isset($params['Geolocation'])) {
+            $sourceParams = ['Longitude' => 1, 'Latitude' => 1];
+            $data['Geolocation'] = array_intersect_key($params['Geolocation'], $sourceParams);
         }
 
         return $data;
