@@ -263,11 +263,19 @@ class Charge
         }
 
         if (array_key_exists('FirstName', $params)) {
-                $data['FirstName'] = $params['FirstName'];
+            $data['FirstName'] = $params['FirstName'];
         }
 
         if (array_key_exists('LastName', $params)) {
-                    $data['LastName'] = $params['LastName'];
+            $data['LastName'] = $params['LastName'];
+        }
+
+        if (array_key_exists('Phone', $params)) {
+            $data['Phone'] = $params['Phone'];
+        }
+
+        if (array_key_exists('Email', $params)) {
+            $data['Email'] = $params['Email'];
         }
 
         return $data;
