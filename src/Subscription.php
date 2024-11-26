@@ -95,16 +95,16 @@ class Subscription
     /**
      * @throws ResponseException
      */
-    public function UpdateSubscriptionStatus($subscriptionId, $status)
+    public function UpdateSubscriptionStatus($subscriptionId, $params)
     {
-        $status = ucfirst(strtolower($status));
-        if ($status !== 'Active' && $status !== 'Suspended') {
-            throw new ResponseException('Invalid status', 0, 0, false);
-        }
+        $params = CaseConverter::convertKeysToPascalCase($params);
+        ArrayTools::ValidateKeys($params, ['Status']);
+
+        $data = ['Status' => $params['Status']];
 
         $url = '/subscription/' . urlencode($subscriptionId) . '/status';
 
-        return HttpWrapper::CallApi($url, 'PUT', json_encode(['Status' => $status]));
+        return HttpWrapper::CallApi($url, 'PUT', json_encode($data));
     }
 
     private function BuildCreateSubscriptionJson($params): array
