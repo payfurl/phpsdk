@@ -95,7 +95,59 @@ final class SubscriptionTest extends TestBase
         $this->assertSame('Cancelled', $subscription['status']);
     }
 
-    
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testPauseSubscription(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
+
+        $svc = new Subscription();
+
+        $paymentMethodId = $customerResult['defaultPaymentMethod']['paymentMethodId'];
+        $subscription = $svc->CreateSubscription($this->getNewSubscription($paymentMethodId));
+
+        $result = $svc->UpdateSubscriptionStatus($subscription['subscriptionId'], 'Suspended');
+
+        $this->assertSame('Suspended', $result['status']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testReactivateSubscription(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
+
+        $svc = new Subscription();
+
+        $paymentMethodId = $customerResult['defaultPaymentMethod']['paymentMethodId'];
+        $subscription = $svc->CreateSubscription($this->getNewSubscription($paymentMethodId));
+
+        $svc->UpdateSubscriptionStatus($subscription['subscriptionId'], 'Suspended');
+        $result = $svc->UpdateSubscriptionStatus($subscription['subscriptionId'], 'Active');
+
+        $this->assertSame('Active', $result['status']);
+    }
+
 
     private function getNewSubscription($paymentMethodId): array
     {

@@ -92,6 +92,21 @@ class Subscription
         return HttpWrapper::CallApi($url, 'GET', '');
     }
 
+    /**
+     * @throws ResponseException
+     */
+    public function UpdateSubscriptionStatus($subscriptionId, $status)
+    {
+        $status = ucfirst(strtolower($status));
+        if ($status !== 'Active' && $status !== 'Suspended') {
+            throw new ResponseException('Invalid status', 0, 0, false);
+        }
+
+        $url = '/subscription/' . urlencode($subscriptionId) . '/status';
+
+        return HttpWrapper::CallApi($url, 'PUT', json_encode(['Status' => $status]));
+    }
+
     private function BuildCreateSubscriptionJson($params): array
     {
         $sourceParams =
