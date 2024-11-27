@@ -92,6 +92,34 @@ class Subscription
         return HttpWrapper::CallApi($url, 'GET', '');
     }
 
+    /**
+     * @throws ResponseException
+     */
+    public function UpdateSubscription($subscriptionId, $params)
+    {
+        $params = CaseConverter::convertKeysToPascalCase($params);
+
+        $data = $this->BuildUpdate($params);
+        if (isset($params['Webhook'])) {
+            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
+        }
+        if (isset($params['EndAfter'])) {
+            $data['EndAfter'] = $this->BuildEndAfter($params['EndAfter'] ?? []);
+        }
+        if (isset($params['Retry'])) {
+            $data['Retry'] = $this->BuildRetry($params['Retry'] ?? []);
+        }
+        if (isset($params['Metadata'])) {
+            $data['Metadata'] = $params['Metadata'];
+        }
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        $url = '/subscription/' . urlencode($subscriptionId);
+
+        return HttpWrapper::CallApi($url, 'PUT', json_encode($data));
+    }
+
     private function BuildCreateSubscriptionJson($params): array
     {
         $sourceParams =
@@ -118,6 +146,12 @@ class Subscription
     private function BuildRetry($params): array
     {
         $sourceParams = ['Maximum' => 1, 'Interval' => 1, 'Frequency' => 1];
+        return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildUpdate($params): array
+    {
+        $sourceParams = ['Amount' => 1, 'Currency' => 1, 'Interval' => 1, 'Frequency' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 

@@ -95,7 +95,33 @@ final class SubscriptionTest extends TestBase
         $this->assertSame('Cancelled', $subscription['status']);
     }
 
-    
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testUpdateSubscription(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
+
+        $svc = new Subscription();
+
+        $paymentMethodId = $customerResult['defaultPaymentMethod']['paymentMethodId'];
+        $result = $svc->CreateSubscription($this->getNewSubscription($paymentMethodId));
+
+        $resultUpdate = $svc->UpdateSubscription($result['subscriptionId'], $this->getUpdateSubscription());
+
+        $this->assertSame($result['subscriptionId'], $resultUpdate['subscriptionId']);
+        $this->assertSame(200, $resultUpdate['amount']);
+        $this->assertSame('AUD', $resultUpdate['currency']);
+    }
 
     private function getNewSubscription($paymentMethodId): array
     {
@@ -112,6 +138,25 @@ final class SubscriptionTest extends TestBase
             'PaymentMethodId' => $paymentMethodId,
             'Amount' => 100,
             'Currency' => 'USD',
+            'Interval' => 'Month',
+            'Frequency' => 1
+        ];
+    }
+
+    private function getUpdateSubscription(): array
+    {
+        return [
+            'EndAfter' => ['Count'=>2],
+            'Retry' => ['Maximum' => 3,
+                        'Frequency' => 1,
+                        'Interval' => 'Day'
+                        ],
+            'Webhook' => [
+                            'Url' => 'https://example.com/webhoo',
+                            'Authorization' => 'secret'
+                        ],
+            'Amount' => 200,
+            'Currency' => 'AUD',
             'Interval' => 'Month',
             'Frequency' => 1
         ];
