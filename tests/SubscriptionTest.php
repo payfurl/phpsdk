@@ -121,6 +121,14 @@ final class SubscriptionTest extends TestBase
         $this->assertSame($result['subscriptionId'], $resultUpdate['subscriptionId']);
         $this->assertSame(200, $resultUpdate['amount']);
         $this->assertSame('AUD', $resultUpdate['currency']);
+        $this->assertSame('Day', $resultUpdate['interval']);
+        $this->assertSame(2, $resultUpdate['frequency']);
+        $this->assertSame(3, $resultUpdate['endAfter']['count']);
+        $this->assertSame(4, $resultUpdate['retry']['maximum']);
+        $this->assertSame(5, $resultUpdate['retry']['frequency']);
+        $this->assertSame('Hour', $resultUpdate['retry']['interval']);
+        $this->assertSame('https://example.com/webhoo2', $resultUpdate['webhook']['url']);
+        $this->assertSame('secret2', $resultUpdate['webhook']['authorization']);        
     }
 
     private function getNewSubscription($paymentMethodId): array
@@ -146,19 +154,19 @@ final class SubscriptionTest extends TestBase
     private function getUpdateSubscription(): array
     {
         return [
-            'EndAfter' => ['Count'=>2],
-            'Retry' => ['Maximum' => 3,
-                        'Frequency' => 1,
-                        'Interval' => 'Day'
+            'EndAfter' => ['Count'=>3],
+            'Retry' => ['Maximum' => 4,
+                        'Frequency' => 5,
+                        'Interval' => 'Hour'
                         ],
             'Webhook' => [
-                            'Url' => 'https://example.com/webhoo',
-                            'Authorization' => 'secret'
+                            'Url' => 'https://example.com/webhoo2',
+                            'Authorization' => 'secret2'
                         ],
             'Amount' => 200,
             'Currency' => 'AUD',
-            'Interval' => 'Month',
-            'Frequency' => 1
+            'Interval' => 'Day',
+            'Frequency' => 2
         ];
     }
 }

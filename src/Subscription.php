@@ -101,13 +101,13 @@ class Subscription
 
         $data = $this->BuildUpdate($params);
         if (isset($params['Webhook'])) {
-            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
+            $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? null);
         }
         if (isset($params['EndAfter'])) {
-            $data['EndAfter'] = $this->BuildEndAfter($params['EndAfter'] ?? []);
+            $data['EndAfter'] = $this->BuildEndAfter($params['EndAfter'] ?? null);
         }
         if (isset($params['Retry'])) {
-            $data['Retry'] = $this->BuildRetry($params['Retry'] ?? []);
+            $data['Retry'] = $this->BuildRetry($params['Retry'] ?? null);
         }
         if (isset($params['Metadata'])) {
             $data['Metadata'] = $params['Metadata'];
