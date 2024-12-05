@@ -95,6 +95,21 @@ class Subscription
     /**
      * @throws ResponseException
      */
+    public function UpdateSubscriptionStatus($subscriptionId, $params)
+    {
+        $params = CaseConverter::convertKeysToPascalCase($params);
+        ArrayTools::ValidateKeys($params, ['Status']);
+
+        $data = ['Status' => $params['Status']];
+
+        $url = '/subscription/' . urlencode($subscriptionId) . '/status';
+
+        return HttpWrapper::CallApi($url, 'PUT', json_encode($data));
+    }
+
+    /**
+     * @throws ResponseException
+     */
     public function UpdateSubscription($subscriptionId, $params)
     {
         $params = CaseConverter::convertKeysToPascalCase($params);
