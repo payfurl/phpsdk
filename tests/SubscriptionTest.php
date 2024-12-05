@@ -95,7 +95,7 @@ final class SubscriptionTest extends TestBase
         $this->assertSame('Cancelled', $subscription['status']);
     }
 
-     /**
+    /**
      * @throws ResponseException
      * @throws Exception
      */
@@ -119,8 +119,35 @@ final class SubscriptionTest extends TestBase
         $result = $svc->UpdateSubscriptionStatus($subscription['subscriptionId'], ['Status' => 'Suspended']);
 
         $this->assertSame('Suspended', $result['status']);
-    }                                                     'CardNumber' => '4111111111111111',
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testReactivateSubscription(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
                                                                'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
+
+        $svc = new Subscription();
+
+        $paymentMethodId = $customerResult['defaultPaymentMethod']['paymentMethodId'];
+        $subscription = $svc->CreateSubscription($this->getNewSubscription($paymentMethodId));
+
+        $svc->UpdateSubscriptionStatus($subscription['subscriptionId'], ['Status' => 'Suspended']);
+        $result = $svc->UpdateSubscriptionStatus($subscription['subscriptionId'], ['Status' => 'Active']);
+
+        $this->assertSame('Active', $result['status']);
+    }
+
     /**
      * @throws ResponseException
      * @throws Exception
@@ -155,9 +182,8 @@ final class SubscriptionTest extends TestBase
         $this->assertSame('Hour', $resultUpdate['retry']['interval']);
         $this->assertSame('https://example.com/webhoo2', $resultUpdate['webhook']['url']);
         $this->assertSame('secret2', $resultUpdate['webhook']['authorization']);        
-    }                                                     'Ccv' => '123',
-                                                               'Cardholder' => 'Test Cardholder']]);
-
+    }
+     
     private function getNewSubscription($paymentMethodId): array
     {
         return [
