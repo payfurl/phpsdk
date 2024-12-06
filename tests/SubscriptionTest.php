@@ -148,7 +148,42 @@ final class SubscriptionTest extends TestBase
         $this->assertSame('Active', $result['status']);
     }
 
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testUpdateSubscription(): void
+    {
+        $customerSvc = new Customer();
 
+        $customerResult = $customerSvc->CreateWithCard([
+                                                           'ProviderId' => TestConfiguration::getProviderId(),
+                                                           'PaymentInformation' => [
+                                                               'CardNumber' => '4111111111111111',
+                                                               'ExpiryDate' => '10/30',
+                                                               'Ccv' => '123',
+                                                               'Cardholder' => 'Test Cardholder']]);
+
+        $svc = new Subscription();
+
+        $paymentMethodId = $customerResult['defaultPaymentMethod']['paymentMethodId'];
+        $result = $svc->CreateSubscription($this->getNewSubscription($paymentMethodId));
+
+        $resultUpdate = $svc->UpdateSubscription($result['subscriptionId'], $this->getUpdateSubscription());
+
+        $this->assertSame($result['subscriptionId'], $resultUpdate['subscriptionId']);
+        $this->assertSame(200, $resultUpdate['amount']);
+        $this->assertSame('AUD', $resultUpdate['currency']);
+        $this->assertSame('Day', $resultUpdate['interval']);
+        $this->assertSame(2, $resultUpdate['frequency']);
+        $this->assertSame(3, $resultUpdate['endAfter']['count']);
+        $this->assertSame(4, $resultUpdate['retry']['maximum']);
+        $this->assertSame(5, $resultUpdate['retry']['frequency']);
+        $this->assertSame('Hour', $resultUpdate['retry']['interval']);
+        $this->assertSame('https://example.com/webhoo2', $resultUpdate['webhook']['url']);
+        $this->assertSame('secret2', $resultUpdate['webhook']['authorization']);        
+    }
+     
     private function getNewSubscription($paymentMethodId): array
     {
         return [
@@ -166,6 +201,25 @@ final class SubscriptionTest extends TestBase
             'Currency' => 'USD',
             'Interval' => 'Month',
             'Frequency' => 1
+        ];
+    }
+
+    private function getUpdateSubscription(): array
+    {
+        return [
+            'EndAfter' => ['Count'=>3],
+            'Retry' => ['Maximum' => 4,
+                        'Frequency' => 5,
+                        'Interval' => 'Hour'
+                        ],
+            'Webhook' => [
+                            'Url' => 'https://example.com/webhoo2',
+                            'Authorization' => 'secret2'
+                        ],
+            'Amount' => 200,
+            'Currency' => 'AUD',
+            'Interval' => 'Day',
+            'Frequency' => 2
         ];
     }
 }
