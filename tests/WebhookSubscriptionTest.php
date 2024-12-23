@@ -15,8 +15,9 @@ final class WebhookSubscriptionTest extends TestBase
 {
     private $service;
 
-    public function __construct()
+    protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new \payFURL\Sdk\WebhookSubscription();
     }
 
