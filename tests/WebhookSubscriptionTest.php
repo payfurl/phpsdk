@@ -64,7 +64,7 @@ final class WebhookSubscriptionTest extends TestBase
         $result = $this->service->Search(['id' => $webhook['webhookSubscriptionId']]);
 
         $this->assertNotNull($result);
-        $this->assetCount(1, $result['count']);
+        $this->assetSame(1, $result['count']);
         $this->assertSame($webhook['webhookSubscriptionId'], $result['webhookSubscriptions'][0]['webhookSubscriptionId']);
     }
 
