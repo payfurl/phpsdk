@@ -22,13 +22,8 @@ class Config
         'none-production' => 'https://api.payfurl.com',
 
         'au-development' => 'https://develop-api-au.payfurl.com',
-        'us-development' => 'https://develop-api-us.payfurl.com',
-        'jp-development' => 'https://develop-api-jp.payfurl.com',
         'au-sandbox' => 'https://sandbox-api-au.payfurl.com',
-        'us-sandbox' => 'https://sandbox-api-us.payfurl.com',
         'au-production' => 'https://api-au.payfurl.com',
-        'us-production' => 'https://api-us.payfurl.com',
-        'eu-production' => 'https://api-eu.payfurl.com'
     ];
 
     public static function initialise($SecretKey, $Environment, $TimeoutMilliseconds = 60000, $EnableDebug = false)
