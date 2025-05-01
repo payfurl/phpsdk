@@ -24,4 +24,3 @@ jobs:
           php_version: 7.4
           version: 9.5
           args: --no-coverage
-          php_version: '8.3'
