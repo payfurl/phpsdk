@@ -62,7 +62,7 @@ final class BatchTest extends TestBase
         $this->assertSame($description, $result['description']);
         $this->assertSame(1, $result['count']);
         $header = "PaymentMethodId,Amount,Currency,Reference,Status,TransactionId,FailureReason";
-        $this->assertTrue(substr($result['results'], 0, strlen($header) === $header));
+        $this->assertTrue(substr($result['results'], 0, strlen($header)) === $header);
     }
 
     /**
