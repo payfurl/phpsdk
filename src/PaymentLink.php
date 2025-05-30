@@ -31,6 +31,8 @@ class PaymentLink
             'Image' => 1,
             'ConfirmationMessage' => 1,
             'RedirectUrl' => 1,
+            'CallToAction' => 1,
+            'LimitPayments' => 1,
         ];
         $data = array_intersect_key([], $sourceParams);
 
