@@ -273,6 +273,10 @@ class Charge
             $data['Geolocation'] = array_intersect_key($params['Geolocation'], $sourceParams);
         }
 
+        if (isset($params['Recurring'])) {
+            $data['Recurring'] = $params['Recurring'];
+        }
+
         return $data;
     }
 
