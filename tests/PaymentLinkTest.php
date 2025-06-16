@@ -1,5 +1,11 @@
 <?php
 
+require_once(__DIR__ . '/TestConfiguration.php');
+require_once(__DIR__ . '/../src/Config.php');
+require_once(__DIR__ . '/../src/PaymentLink.php');
+require_once(__DIR__ . '/TestBase.php');
+require_once(__DIR__ . '/../src/ResponseException.php');
+
 use PHPUnit\Framework\TestCase;
 use payFURL\Sdk\PaymentLink;
 use payFURL\Sdk\ResponseException;
