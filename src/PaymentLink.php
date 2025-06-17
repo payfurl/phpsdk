@@ -34,7 +34,7 @@ class PaymentLink
             'CallToAction' => 1,
             'LimitPayments' => 1,
         ];
-        $data = array_intersect_key([], $sourceParams);
+        $data = array_intersect_key($params, $sourceParams);
 
         $data = ArrayTools::CleanEmpty($data);
 
