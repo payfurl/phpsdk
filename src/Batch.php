@@ -79,7 +79,7 @@ class Batch
 
     private function BuildCreateTransactionJson($params): array
     {
-        $sourceParams = ['Count' => 1, 'Description' => 1, 'Batch' => 1];
+        $sourceParams = ['Count' => 1, 'Description' => 1, 'Batch' => 1, 'Metadata' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 
