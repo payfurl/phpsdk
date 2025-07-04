@@ -26,6 +26,7 @@ final class PaymentLinkTest extends TestBase
             'Title' => 'Test Payment Link',
             'Amount' => 1000,
             'Currency' => 'USD',
+            'Image' => $this->service->EncodeImage(__DIR__ . '/100x50.png')
         ];
     }
 
