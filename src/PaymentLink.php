@@ -33,6 +33,7 @@ class PaymentLink
             'RedirectUrl' => 1,
             'CallToAction' => 1,
             'LimitPayments' => 1,
+            'Metadata' => 1,
         ];
         $data = array_intersect_key($params, $sourceParams);
 
