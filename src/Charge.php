@@ -18,7 +18,7 @@ class Charge
         'Reference', 'ProviderId', 'AmountGreaterThan', 'AmountLessThan', 'Currency',
         'CustomerId', 'Status', 'AddedAfter', 'AddedBefore', 'PaymentMethodId', 'PaymentType',
         'CardType', 'CardNumber', 'Cardholder',
-        'SortBy', 'Limit', 'Skip',
+        'BatchId', 'SubscriptionId', 'SortBy', 'SortOrder', 'Limit', 'Skip',
     ];
 
     /**
@@ -106,6 +106,51 @@ class Charge
     /**
      * @throws ResponseException
      */
+    public function CreateWithApplePay($params)
+    {
+        $params = CaseConverter::convertKeysToPascalCase($params);
+        ArrayTools::ValidateKeys($params, [
+            'ProviderId',
+            'Amount',
+            'Token' => [
+                'PaymentData' => [
+                    'Data',
+                    'Signature',
+                    'Header' => ['PublicKeyHash', 'EphemeralPublicKey', 'TransactionId'],
+                    'Version',
+                ],
+                'PaymentMethod' => ['DisplayName', 'Network', 'Type'],
+            ],
+        ]);
+
+        $data = $this->BuildCreateChargeJson($params);
+        $data['Token'] = $this->BuildAppleTokenJson($params['Token'] ?? []);
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/charge/token/apple', 'POST', json_encode($data), ['ProviderId' => $params['ProviderId']]);
+    }
+
+    /**
+     * @throws ResponseException
+     */
+    public function CreateWithNetworkToken($params)
+    {
+        $params = CaseConverter::convertKeysToPascalCase($params);
+        ArrayTools::ValidateKeys($params, ['Amount', 'ProviderId', 'NetworkTokenId']);
+
+        $data = $this->BuildCreateChargeJson($params);
+        $data['ProviderId'] = $params['ProviderId'];
+        $data['NetworkTokenId'] = $params['NetworkTokenId'];
+
+        $data = ArrayTools::CleanEmpty($data);
+
+        return HttpWrapper::CallApi('/charge/network_token', 'POST', json_encode($data));
+    }
+
+    /**
+     * @throws ResponseException
+     */
     public function Single($params)
     {
         $params = CaseConverter::convertKeysToPascalCase($params);
@@ -126,7 +171,7 @@ class Charge
         ArrayTools::ValidateKeys($params, ['ChargeId']);
 
         $queryParams = [];
-        if ($params['Amount'] > 0) {
+        if (isset($params['Amount']) && $params['Amount'] > 0) {
             $queryParams['Amount'] = $params['Amount'];
         }
         if (isset($params['Comment'])) {
@@ -161,10 +206,10 @@ class Charge
         $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ChargeId']);
 
-        $url = '/charge/' . urlencode($params['ChargeId']);
+        $url = '/charge/' . urlencode($params['ChargeId']) . '/capture';
 
         $data = [];
-        if ($params['Amount'] > 0) {
+        if (isset($params['Amount']) && $params['Amount'] > 0) {
             $data['Amount'] = $params['Amount'];
         }
         $data = ArrayTools::CleanEmpty($data);
@@ -180,7 +225,7 @@ class Charge
         $params = CaseConverter::convertKeysToPascalCase($params);
         ArrayTools::ValidateKeys($params, ['ChargeId']);
 
-        $url = '/charge/' . urlencode($params['ChargeId']);
+        $url = '/charge/' . urlencode($params['ChargeId']) . '/void';
 
         return HttpWrapper::CallApi($url, 'DELETE', '');
     }
@@ -236,6 +281,10 @@ class Charge
             $data['InvoiceNumber'] = $params['InvoiceNumber'];
         }
 
+        if (array_key_exists('Initiator', $params)) {
+            $data['Initiator'] = $params['Initiator'];
+        }
+
         if (array_key_exists('Descriptor', $params)) {
             $data['Descriptor'] = $params['Descriptor'];
         }
@@ -260,6 +309,10 @@ class Charge
             $data['Phone'] = $params['Phone'];
         }
 
+        if (array_key_exists('UserAgent', $params)) {
+            $data['UserAgent'] = $params['UserAgent'];
+        }
+
         if (isset($params['Webhook'])) {
             $data['Webhook'] = $this->BuildWebhookConfiguration($params['Webhook'] ?? []);
         }
@@ -277,12 +330,16 @@ class Charge
             $data['Recurring'] = $params['Recurring'];
         }
 
+        if (isset($params['Transfer'])) {
+            $data['Transfer'] = $this->BuildTransferJson($params['Transfer'] ?? []);
+        }
+
         return $data;
     }
 
     private function BuildPaymentInformationJson($params): array
     {
-        $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1];
+        $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1, 'ThreeDSServerTransID' => 1, 'ExternalThreeDsData' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 
@@ -296,5 +353,32 @@ class Charge
     {
         $sourceParams = ['BankCode' => 1, 'AccountNumber' => 1, 'AccountName' => 1];
         return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildTransferJson($params): array
+    {
+        $sourceParams = ['Account' => 1, 'Amount' => 1];
+        return array_intersect_key($params, $sourceParams);
+    }
+
+    private function BuildAppleTokenJson($params): array
+    {
+        $data = [];
+
+        if (isset($params['PaymentData'])) {
+            $sourceParams = ['Data' => 1, 'Signature' => 1, 'Version' => 1];
+            $data['PaymentData'] = array_intersect_key($params['PaymentData'], $sourceParams);
+            if (isset($params['PaymentData']['Header'])) {
+                $headerParams = ['PublicKeyHash' => 1, 'EphemeralPublicKey' => 1, 'TransactionId' => 1];
+                $data['PaymentData']['Header'] = array_intersect_key($params['PaymentData']['Header'], $headerParams);
+            }
+        }
+
+        if (isset($params['PaymentMethod'])) {
+            $methodParams = ['DisplayName' => 1, 'Network' => 1, 'Type' => 1];
+            $data['PaymentMethod'] = array_intersect_key($params['PaymentMethod'], $methodParams);
+        }
+
+        return $data;
     }
 }
