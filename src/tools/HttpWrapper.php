@@ -55,7 +55,9 @@ class HttpWrapper
         $response = curl_exec($ch);
         $info = curl_getinfo($ch);
         $error = curl_errno($ch);
-        curl_close($ch);
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($ch);
+        }
 
         // hande timeout
         if ($info["http_code"] == 0) {
