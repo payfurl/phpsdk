@@ -66,18 +66,26 @@ final class ChargeTest extends TestBase
     {
         $svc = new Charge();
 
-        $this->expectException(ResponseException::class);
+        try {
+            $svc->CreateWithCard([
+                'Amount' => 15.5,
+                'Currency' => 'AUD',
+                'Reference' => '123',
+                'ProviderId' => 'invalid_provider',
+                'PaymentInformation' => [
+                    'CardNumber' => '4111111111111111',
+                    'ExpiryDate' => '10/30',
+                    'Ccv' => '123',
+                    'Cardholder' => 'Test Cardholder']]);
 
-        $result = $svc->CreateWithCard([
-                                           'Amount' => 15.5,
-                                           'Currency' => 'AUD',
-                                           'Reference' => '123',
-                                           'ProviderId' => 'invalid_provider',
-                                           'PaymentInformation' => [
-                                               'CardNumber' => '4111111111111111',
-                                               'ExpiryDate' => '10/30',
-                                               'Ccv' => '123',
-                                               'Cardholder' => 'Test Cardholder']]);
+            $this->fail('Expected an invalid provider response exception.');
+        } catch (ResponseException $ex) {
+            $this->assertSame(ErrorCode::InvalidProviderId, $ex->getCode());
+            $this->assertSame(400, $ex->httpCode);
+            $this->assertSame(ErrorCode::urlFor(ErrorCode::InvalidProviderId), $ex->type);
+            $this->assertSame('/charge/card', $ex->resource);
+            $this->assertNull($ex->details);
+        }
     }
 
     /**
@@ -163,6 +171,31 @@ final class ChargeTest extends TestBase
      * @throws ResponseException
      * @throws Exception
      */
+    public function testRefundWithoutAmount(): void
+    {
+        $svc = new Charge();
+
+        $chargeResult = $svc->CreateWithCard([
+            'Amount' => 15.5,
+            'Currency' => 'AUD',
+            'Reference' => bin2hex(random_bytes(16)),
+            'ProviderId' => TestConfiguration::getProviderId(),
+            'PaymentInformation' => [
+                'CardNumber' => '4111111111111111',
+                'ExpiryDate' => '10/30',
+                'Ccv' => '123',
+                'Cardholder' => 'Test Cardholder']]);
+
+        $refundResult = $svc->Refund(['ChargeId' => $chargeResult['chargeId']]);
+
+        $this->assertEquals(15.5, $refundResult['refundedAmount']);
+        $this->assertSame('REFUND', $refundResult['status']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
     public function testSearch(): void
     {
         $svc = new Charge();
@@ -182,6 +215,63 @@ final class ChargeTest extends TestBase
         $searchResult = $svc->Search(array('Reference' => $Reference));
 
         $this->assertSame(1, $searchResult['count']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testCapture(): void
+    {
+        $svc = new Charge();
+
+        $chargeResult = $svc->CreateWithCard([
+            'Amount' => 15.5,
+            'Currency' => 'AUD',
+            'Reference' => bin2hex(random_bytes(16)),
+            'Capture' => false,
+            'ProviderId' => TestConfiguration::getProviderId(),
+            'PaymentInformation' => [
+                'CardNumber' => '4111111111111111',
+                'ExpiryDate' => '10/30',
+                'Ccv' => '123',
+                'Cardholder' => 'Test Cardholder']]);
+
+        $captureResult = $svc->Capture([
+            'ChargeId' => $chargeResult['chargeId'],
+            'Amount' => 15.5,
+        ]);
+
+        $this->assertSame($chargeResult['chargeId'], $captureResult['chargeId']);
+        $this->assertSame('SUCCESS', $captureResult['status']);
+        $this->assertNotNull($captureResult['successDate']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function testVoid(): void
+    {
+        $svc = new Charge();
+
+        $chargeResult = $svc->CreateWithCard([
+            'Amount' => 15.5,
+            'Currency' => 'AUD',
+            'Reference' => bin2hex(random_bytes(16)),
+            'Capture' => false,
+            'ProviderId' => TestConfiguration::getProviderId(),
+            'PaymentInformation' => [
+                'CardNumber' => '4111111111111111',
+                'ExpiryDate' => '10/30',
+                'Ccv' => '123',
+                'Cardholder' => 'Test Cardholder']]);
+
+        $voidResult = $svc->Void(['ChargeId' => $chargeResult['chargeId']]);
+
+        $this->assertSame($chargeResult['chargeId'], $voidResult['chargeId']);
+        $this->assertSame('AUTHORISE_CANCELLED', $voidResult['status']);
+        $this->assertNotNull($voidResult['voidDate']);
     }
 
     /**

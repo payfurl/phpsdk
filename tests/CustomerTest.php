@@ -409,6 +409,43 @@ final class CustomerTest extends TestBase
      * @throws ResponseException
      * @throws Exception
      */
+    public function testUpdateCustomerPhoneAndAddress(): void
+    {
+        $customerSvc = new Customer();
+
+        $customerResult = $customerSvc->CreateWithCard([
+            'Reference' => bin2hex(random_bytes(16)),
+            'ProviderId' => TestConfiguration::getProviderId(),
+            'PaymentInformation' => [
+                'CardNumber' => '4111111111111111',
+                'ExpiryDate' => '10/30',
+                'Ccv' => '123',
+                'Cardholder' => 'Test Cardholder']]);
+
+        $updatedCustomer = $customerSvc->UpdateCustomer([
+            'CustomerId' => $customerResult['customerId'],
+            'Phone' => '123456789',
+            'Address' => [
+                'Line1' => '1 Test St',
+                'City' => 'Sydney',
+                'Country' => 'AU',
+                'PostalCode' => '2000',
+                'State' => 'NSW',
+            ]]);
+
+        $this->assertSame($customerResult['customerId'], $updatedCustomer['customerId']);
+        $this->assertSame('123456789', $updatedCustomer['phone']);
+        $this->assertSame('1 Test St', $updatedCustomer['address']['line1']);
+        $this->assertSame('Sydney', $updatedCustomer['address']['city']);
+        $this->assertSame('AU', $updatedCustomer['address']['country']);
+        $this->assertSame('2000', $updatedCustomer['address']['postalCode']);
+        $this->assertSame('NSW', $updatedCustomer['address']['state']);
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
     public function testCreateWithBankAccount(): void
     {
         $svc = new Customer();
