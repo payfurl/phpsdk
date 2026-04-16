@@ -6,10 +6,12 @@ require_once(__DIR__ . '/TestConfiguration.php');
 require_once(__DIR__ . '/../src/Config.php');
 require_once(__DIR__ . '/../src/Charge.php');
 require_once(__DIR__ . '/TestBase.php');
+require_once(__DIR__ . '/../src/ErrorCode.php');
 require_once(__DIR__ . '/../src/ResponseException.php');
 
 use payFURL\Sdk\Config;
 use payFURL\Sdk\Charge;
+use payFURL\Sdk\ErrorCode;
 use payFURL\Sdk\ResponseException;
 
 final class ChargeTest extends TestBase
@@ -85,23 +87,28 @@ final class ChargeTest extends TestBase
     public function testWithShortTimeout(): void
     {
         $svc = new Charge();
-        $this->expectException(ResponseException::class);
-        $this->expectExceptionCode(408);
+        $timeout = Config::$TimeoutMilliseconds;
+        Config::$TimeoutMilliseconds = 10;
 
-        $Timeout = Config::$TimeoutMilliseconds = 10;
+        try {
+            $svc->CreateWithCard([
+                'Amount' => 15.5,
+                'Currency' => 'AUD',
+                'Reference' => '123',
+                'ProviderId' => TestConfiguration::getProviderId(),
+                'PaymentInformation' => [
+                    'CardNumber' => '4111111111111111',
+                    'ExpiryDate' => '10/30',
+                    'Ccv' => '123',
+                    'Cardholder' => 'Test Cardholder']]);
 
-        Config::$TimeoutMilliseconds = $Timeout;
-
-        $result = $svc->CreateWithCard([
-                                           'Amount' => 15.5,
-                                           'Currency' => 'AUD',
-                                           'Reference' => '123',
-                                           'ProviderId' => TestConfiguration::getProviderId(),
-                                           'PaymentInformation' => [
-                                               'CardNumber' => '4111111111111111',
-                                               'ExpiryDate' => '10/30',
-                                               'Ccv' => '123',
-                                               'Cardholder' => 'Test Cardholder']]);
+            $this->fail('Expected a timeout response exception.');
+        } catch (ResponseException $ex) {
+            $this->assertSame(ErrorCode::Timeout, $ex->getCode());
+            $this->assertSame(408, $ex->httpCode);
+        } finally {
+            Config::$TimeoutMilliseconds = $timeout;
+        }
     }
 
     /**
