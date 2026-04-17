@@ -33,6 +33,7 @@ class PaymentLink
             'RedirectUrl' => 1,
             'CallToAction' => 1,
             'LimitPayments' => 1,
+            'InvoiceId' => 1,
             'Metadata' => 1,
         ];
         $data = array_intersect_key($params, $sourceParams);
@@ -59,7 +60,7 @@ class PaymentLink
     {
         $params = CaseConverter::convertKeysToPascalCase($parameters);
         try {
-            $url = '/payment_link' . UrlTools::CreateQueryString($parameters, $this->validSearchKeys);
+            $url = '/payment_link' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (\Exception $ex) {
             throw new ResponseException($ex->getMessage(), 0, 0, false);
         }

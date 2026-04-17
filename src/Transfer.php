@@ -56,7 +56,7 @@ class Transfer
     {
         $params = CaseConverter::convertKeysToPascalCase($parameters);
         try {
-            $url = '/transfer' . UrlTools::CreateQueryString($parameters, $this->validSearchKeys);
+            $url = '/transfer' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (\Exception $ex) {
             throw new ResponseException($ex->getMessage(), 0, 0, false);
         }

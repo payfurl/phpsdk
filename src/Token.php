@@ -77,7 +77,7 @@ class Token
     {
         $params = CaseConverter::convertKeysToPascalCase($parameters);
         try {
-            $url = '/token' . UrlTools::CreateQueryString($parameters, $this->validSearchKeys);
+            $url = '/token' . UrlTools::CreateQueryString($params, $this->validSearchKeys);
         } catch (\Exception $ex) {
             throw new ResponseException($ex->getMessage(), 0, 0, false);
         }
@@ -87,7 +87,7 @@ class Token
 
     private function BuildPaymentInformationJson($params): array
     {
-        $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1];
+        $sourceParams = ['CardNumber' => 1, 'ExpiryDate' => 1, 'Ccv' => 1, 'Cardholder' => 1, 'ThreeDSServerTransID' => 1, 'ExternalThreeDsData' => 1];
         return array_intersect_key($params, $sourceParams);
     }
 

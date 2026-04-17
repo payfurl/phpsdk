@@ -53,6 +53,22 @@ final class PaymentLinkTest extends TestBase
 
     /**
      * @throws ResponseException
+     * @throws Exception
+     */
+    public function testCreatePaymentLinkWithInvoiceId(): void
+    {
+        $invoiceId = 'INV-' . bin2hex(random_bytes(4));
+        $result = $this->service->Create(array_merge(
+            $this->generateCreatePaymentLink(),
+            ['InvoiceId' => $invoiceId]
+        ));
+        $paymentLink = $this->service->Single($result['paymentLinkId']);
+
+        $this->assertSame($invoiceId, $paymentLink['invoiceId']);
+    }
+
+    /**
+     * @throws ResponseException
      */
     public function testSearchPaymentLink(): void
     {
@@ -63,5 +79,17 @@ final class PaymentLinkTest extends TestBase
         $this->assertNotEmpty($searchResult['paymentLinks']);
         $ids = array_column($searchResult['paymentLinks'], 'paymentLinkId');
         $this->assertContains($result['paymentLinkId'], $ids);
+    }
+
+    /**
+     * @throws ResponseException
+     */
+    public function testSearchPaymentLinkAcceptsLowercaseLimit(): void
+    {
+        $this->service->Create($this->generateCreatePaymentLink());
+        $searchResult = $this->service->Search(['limit' => 1]);
+
+        $this->assertGreaterThanOrEqual(1, $searchResult['count']);
+        $this->assertCount(1, $searchResult['paymentLinks']);
     }
 }

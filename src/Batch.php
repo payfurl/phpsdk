@@ -15,7 +15,7 @@ require_once(__DIR__ . '/tools/CaseConverter.php');
 class Batch
 {
     private array $validSearchKeys = [
-        'Description', 'AddedAfter', 'AddedBefore', 'Limit', 'Skip',
+        'Description', 'AddedAfter', 'AddedBefore', 'Status', 'Limit', 'Skip',
     ];
 
     /**
@@ -24,7 +24,7 @@ class Batch
     public function CreateTransactionWithPaymentMethod($params)
     {
         $params = CaseConverter::convertKeysToPascalCase($params);
-        ArrayTools::ValidateKeys($params, ['Count', 'Batch']);
+        ArrayTools::ValidateKeys($params, ['Count', 'Description', 'Batch']);
 
         $data = $this->BuildCreateTransactionJson($params);
         if (isset($params['Webhook'])) {

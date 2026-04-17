@@ -24,7 +24,7 @@ class Subscription
     public function CreateSubscription($params)
     {
         $params = CaseConverter::convertKeysToPascalCase($params);
-        ArrayTools::ValidateKeys($params, ['PaymentMethodId', 'Amount', 'Currency', 'Interval', 'Retry']);
+        ArrayTools::ValidateKeys($params, ['PaymentMethodId', 'Amount', 'Currency', 'Interval', 'Frequency']);
 
         $data = $this->BuildCreateSubscriptionJson($params);
         if (isset($params['Webhook'])) {

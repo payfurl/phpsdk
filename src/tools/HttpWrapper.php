@@ -3,9 +3,11 @@
 namespace payFURL\Sdk;
 
 use payFURL\Sdk\Config;
+use payFURL\Sdk\ErrorCode;
 use payFURL\Sdk\ResponseException;
 
 require_once(__DIR__ . "/../Config.php");
+require_once(__DIR__ . "/../ErrorCode.php");
 require_once(__DIR__ . "/../ResponseException.php");
 
 /**
@@ -53,7 +55,9 @@ class HttpWrapper
         $response = curl_exec($ch);
         $info = curl_getinfo($ch);
         $error = curl_errno($ch);
-        curl_close($ch);
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($ch);
+        }
 
         // hande timeout
         if ($info["http_code"] == 0) {
@@ -65,14 +69,30 @@ class HttpWrapper
                 print("Error:");
                 print_r($error);
             }
-            throw new ResponseException("Request Timeout", 408, 0, false);
+            throw new ResponseException(
+                "Request Timeout",
+                ErrorCode::Timeout,
+                408,
+                true,
+                ErrorCode::urlFor(ErrorCode::Timeout),
+                "",
+                []
+            );
         }
 
         // error handling
         if ($info["http_code"] != 200 && $info["http_code"] != 201) {
             $responseJson = json_decode($response, true);
-            if (!$responseJson) {
-                throw new ResponseException("Unknown Error", 400, 0, false);
+            if (!is_array($responseJson)) {
+                throw new ResponseException(
+                    "Unknown Error",
+                    ErrorCode::UnknownError,
+                    $info["http_code"] ?: 500,
+                    false,
+                    ErrorCode::urlFor(ErrorCode::UnknownError),
+                    "",
+                    []
+                );
             }
 
             if (Config::$EnableDebug) {
@@ -85,23 +105,28 @@ class HttpWrapper
                 print("Error:");
                 print_r($error);
             }
-            $message = "";
+            $message = "Unknown Error";
             if (array_key_exists("message", $responseJson)) {
                 $message = $responseJson["message"];
             }
-            $errorCode = 0;
+            $errorCode = ErrorCode::UnknownError;
             if (array_key_exists("code", $responseJson)) {
                 $code = $responseJson["code"];
-                if (is_int($code)) {
+                if (is_int($code) || (is_string($code) && ctype_digit($code))) {
                     $errorCode = (int) $code;
                 }
             }
-            $isRetryable = "";
+            $isRetryable = false;
             if (array_key_exists("isRetryable", $responseJson)) {
-                $isRetryable = $responseJson["isRetryable"];
+                $isRetryable = (bool) $responseJson["isRetryable"];
             }
+            $type = $responseJson["type"] ?? ErrorCode::urlFor($errorCode);
+            $resource = $responseJson["resource"] ?? "";
+            $details = is_array($responseJson["details"] ?? null)
+                ? $responseJson["details"]
+                : null;
 
-            throw new ResponseException($message, $errorCode, $info["http_code"], $isRetryable);
+            throw new ResponseException($message, $errorCode, $info["http_code"], $isRetryable, $type, $resource, $details);
         }
 
         return json_decode($response, true);
