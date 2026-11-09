@@ -222,9 +222,9 @@ in the platform repository), with the same names. When the API changes a model, 
 2. Tag the merge `vX.Y.Z` and push the tag.
 
 The **Release** workflow (`.github/workflows/release.yml`) then runs CI, checks the tag against
-`PayfurlClient::VERSION`, creates the GitHub release from the changelog section, and tells Packagist to update
-(GitHub secrets `PACKAGIST_USERNAME` and `PACKAGIST_TOKEN`: the maintainer's username and API token from
-packagist.org). Packagist reads the version from the tag; `composer.json` has no `version`.
+`PayfurlClient::VERSION`, and creates the GitHub release from the changelog section. Packagist publishes the tag
+by itself, through its GitHub hook on this repository: it reads the version from the tag, and `composer.json` has
+no `version`.
 
 Versions follow semver strictly: plugins resolve `^3.0` when a merchant installs them, so every 3.x release
 reaches stores without a plugin release.
