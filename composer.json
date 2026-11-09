@@ -1,18 +1,42 @@
 {
     "name": "payfurl/phpsdk",
+    "description": "The payFURL API for PHP: charges, customers, payment methods, subscriptions and the rest of the public REST API",
     "type": "library",
     "license": "MIT",
-    "description": "php SDK to provide a friendly interface to the payFURL API",
+    "keywords": ["payfurl", "payments", "payment orchestration", "sdk"],
+    "homepage": "https://github.com/payfurl/phpsdk",
+    "support": {
+        "docs": "https://docs.payfurl.com",
+        "issues": "https://github.com/payfurl/phpsdk/issues",
+        "source": "https://github.com/payfurl/phpsdk"
+    },
     "require": {
-        "php": ">=7.4",
-        "ext-curl": "*"
+        "php": "^8.2",
+        "ext-curl": "*",
+        "ext-json": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5"
     },
     "autoload": {
         "psr-4": {
-            "payFURL\\Sdk\\": "src"
+            "payFURL\\Sdk\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "payFURL\\Sdk\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "cs": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix"
     }
 }
