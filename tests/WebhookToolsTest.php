@@ -26,4 +26,11 @@ final class WebhookToolsTest extends TestBase
 
         WebhookTools::DeserializeTransaction("", "InvalidSignature", self::TEST_WEBHOOK_SIGNATURE_KEY);
     }
+
+    public function testDeserializeTransactionWithoutSignature(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        WebhookTools::DeserializeTransaction(self::TEST_REQUEST_BODY, null, self::TEST_WEBHOOK_SIGNATURE_KEY);
+    }
 }

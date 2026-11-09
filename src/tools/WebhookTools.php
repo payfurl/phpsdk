@@ -25,7 +25,8 @@ class WebhookTools
             $hmac = hash_hmac("sha256", $requestBytes, $secret, true);
             $hashString = base64_encode($hmac);
 
-            return $hashString === $signatureHeader;
+            // Constant time, so the comparison leaks nothing about the expected signature.
+            return is_string($signatureHeader) && hash_equals($hashString, $signatureHeader);
         } catch (Exception $e) {
             return false;
         }

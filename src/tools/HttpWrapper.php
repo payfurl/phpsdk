@@ -63,7 +63,7 @@ class HttpWrapper
         if ($info["http_code"] == 0) {
             if (Config::$EnableDebug) {
                 print("Response:");
-                print_r($response);
+                print_r(self::MaskCardData($response));
                 print("Info:");
                 print_r($info);
                 print("Error:");
@@ -97,9 +97,9 @@ class HttpWrapper
 
             if (Config::$EnableDebug) {
                 print("Request:");
-                print_r($body);
+                print_r(self::MaskCardData($body));
                 print("Response:");
-                print_r($response);
+                print_r(self::MaskCardData($response));
                 print("Info:");
                 print_r($info);
                 print("Error:");
@@ -130,5 +130,23 @@ class HttpWrapper
         }
 
         return json_decode($response, true);
+    }
+
+    /**
+     * Debug output only: hides card numbers (all but the last four digits) and CVVs in a JSON request or response.
+     */
+    static function MaskCardData($json)
+    {
+        if (!is_string($json)) {
+            return $json;
+        }
+        $json = preg_replace_callback(
+            '/("cardNumber"\s*:\s*")([^"]*)(")/i',
+            function ($m) {
+                return $m[1] . str_repeat('*', max(strlen($m[2]) - 4, 0)) . substr($m[2], -4) . $m[3];
+            },
+            $json
+        );
+        return preg_replace('/("(?:ccv|cvv|cvc)"\s*:\s*")[^"]*(")/i', '$1***$2', $json);
     }
 }
