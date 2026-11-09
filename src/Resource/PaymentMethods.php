@@ -19,7 +19,7 @@ use payFURL\Sdk\Model\SingleUseToken;
 use payFURL\Sdk\Model\UpdatePaymentMethod;
 
 /**
- * Payment methods without a customer (PaymentMethodController). To save one on a customer, use `customers()`.
+ * Payment methods without a customer (PaymentMethodController). To save one on a customer, use `customers`.
  */
 final class PaymentMethods
 {

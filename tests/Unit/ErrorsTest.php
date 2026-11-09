@@ -44,7 +44,7 @@ final class ErrorsTest extends TestCase
         $this->transport->queue($status, $body);
 
         try {
-            $this->client->charges()->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
+            $this->client->charges->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
             self::fail('no exception');
         } catch (PayfurlException $e) {
             self::assertInstanceOf($expected, $e);
@@ -76,7 +76,7 @@ final class ErrorsTest extends TestCase
             'chargeId' => 'ch1', 'traceId' => 'abc123']);
 
         try {
-            $this->client->charges()->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
+            $this->client->charges->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
             self::fail('no exception');
         } catch (ApiException $e) {
             self::assertSame(103, $e->errorCode);
@@ -96,7 +96,7 @@ final class ErrorsTest extends TestCase
     {
         $this->transport->queueFailure()->queueFailure(timedOut: true)->queue(200, ['chargeId' => 'ch1']);
 
-        self::assertSame('ch1', $this->client->charges()->get('ch1')->chargeId);
+        self::assertSame('ch1', $this->client->charges->get('ch1')->chargeId);
         self::assertCount(3, $this->transport->requests);
     }
 
@@ -105,7 +105,7 @@ final class ErrorsTest extends TestCase
         $this->transport->queueFailure()->queueFailure()->queueFailure(timedOut: true);
 
         try {
-            $this->client->charges()->get('ch1');
+            $this->client->charges->get('ch1');
             self::fail('no exception');
         } catch (NetworkException $e) {
             self::assertTrue($e->timedOut);
@@ -119,7 +119,7 @@ final class ErrorsTest extends TestCase
     {
         $this->transport->queue(503, ['message' => 'Unavailable'])->queue(400, ['message' => 'Busy', 'isRetryable' => true])->queue(200, ['chargeId' => 'ch1']);
 
-        self::assertSame('ch1', $this->client->charges()->get('ch1')->chargeId);
+        self::assertSame('ch1', $this->client->charges->get('ch1')->chargeId);
         self::assertCount(3, $this->transport->requests);
     }
 
@@ -129,7 +129,7 @@ final class ErrorsTest extends TestCase
 
         $this->expectException(NotFoundException::class);
         try {
-            $this->client->charges()->get('ch1');
+            $this->client->charges->get('ch1');
         } finally {
             self::assertCount(1, $this->transport->requests);
         }
@@ -141,7 +141,7 @@ final class ErrorsTest extends TestCase
 
         $this->expectException(NetworkException::class);
         try {
-            $this->client->charges()->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
+            $this->client->charges->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
         } finally {
             self::assertCount(1, $this->transport->requests);
         }
@@ -152,7 +152,7 @@ final class ErrorsTest extends TestCase
         $this->transport->queue(500, ['message' => 'Gateway timeout', 'isRetryable' => true]);
 
         try {
-            $this->client->charges()->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
+            $this->client->charges->createWithToken(new NewChargeToken(amount: 10.0, token: 't1'));
             self::fail('no exception');
         } catch (ApiException $e) {
             self::assertTrue($e->isRetryable);
@@ -163,7 +163,7 @@ final class ErrorsTest extends TestCase
     public function testEmptyIdIsRejectedBeforeSending(): void
     {
         try {
-            $this->client->charges()->get('');
+            $this->client->charges->get('');
             self::fail('no exception');
         } catch (InvalidRequestException $e) {
             self::assertSame('chargeId is empty', $e->getMessage());
@@ -177,7 +177,7 @@ final class ErrorsTest extends TestCase
         $this->transport->queue(200, 'ok');
 
         $this->expectException(ApiException::class);
-        $this->client->charges()->get('ch1');
+        $this->client->charges->get('ch1');
     }
 
     public function testErrorCodeNamesTheCode(): void

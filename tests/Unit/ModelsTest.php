@@ -98,7 +98,7 @@ final class ModelsTest extends TestCase
         $transport = (new FakeTransport())->queue(201, []);
         $client = new PayfurlClient('sectest0-au', Environment::Sandbox, new ClientOptions(transport: $transport));
 
-        $client->paymentMethods()->createWithToken(new NewPaymentMethodToken(token: 't1', metadata: []));
+        $client->paymentMethods->createWithToken(new NewPaymentMethodToken(token: 't1', metadata: []));
 
         self::assertSame('{"token":"t1","metadata":{}}', $transport->lastRequest()->body);
     }
@@ -108,7 +108,7 @@ final class ModelsTest extends TestCase
         $transport = (new FakeTransport())->queue(201, []);
         $client = new PayfurlClient('sectest0-au', Environment::Sandbox, new ClientOptions(transport: $transport));
 
-        $client->charges()->createWithToken(new NewChargeToken(amount: 10, token: 't1'));
+        $client->charges->createWithToken(new NewChargeToken(amount: 10, token: 't1'));
 
         self::assertSame('{"amount":10.0,"token":"t1"}', $transport->lastRequest()->body);
     }

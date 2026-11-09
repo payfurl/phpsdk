@@ -10,7 +10,7 @@ namespace payFURL\Sdk\Http;
  *     $transport = new FakeTransport();
  *     $transport->queue(201, ['chargeId' => 'c1', 'status' => 'SUCCESS']);
  *     $client = new PayfurlClient('sectest...-au', Environment::Sandbox, new ClientOptions(transport: $transport));
- *     $client->charges()->createWithToken(new NewChargeToken(amount: 20, token: 't1'));
+ *     $client->charges->createWithToken(new NewChargeToken(amount: 20, token: 't1'));
  *     $transport->lastRequest()->url; // https://sandbox-api-au.payfurl.com/charge/token
  */
 final class FakeTransport implements Transport

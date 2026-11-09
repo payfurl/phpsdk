@@ -14,8 +14,8 @@ code that has not moved.
 
 ### Added
 
-- `PayfurlClient`: one client per key and environment, with a resource per part of the API (`charges()`,
-  `customers()`, `paymentMethods()`, ...). `ClientOptions` sets the base URL, timeout, retries and transport.
+- `PayfurlClient`: one client per key and environment, with a property per part of the API (`charges`,
+  `customers`, `paymentMethods`, ...). `ClientOptions` sets the base URL, timeout, retries and transport.
 - Typed requests and responses: a readonly model per API request and response (`NewChargeToken`, `ChargeData`,
   ...) under `payFURL\Sdk\Model`, with the API's own names. Responses keep the API's array in `toArray()`.
 - Enums: `TransactionStatus`, `PaymentType`, `Initiator`, `SubscriptionInterval`, `SubscriptionRetryInterval`,
@@ -26,10 +26,10 @@ code that has not moved.
 - Retries: a GET is retried, with backoff, after a network error, a timeout or a retryable API error. Nothing
   else is retried, since the API has no idempotency keys.
 - `Transport`, the HTTP seam: `CurlTransport` by default, `FakeTransport` for tests.
-- Disputes: `disputes()->search()` and `get()` (`GET /dispute`, `GET /dispute/{disputeId}`).
-- `info()->providers()` takes a public key too (sent as `x-publickey`), the card provider (`cardProviderId`)
+- Disputes: `disputes->search()` and `get()` (`GET /dispute`, `GET /dispute/{disputeId}`).
+- `info->providers()` takes a public key too (sent as `x-publickey`), the card provider (`cardProviderId`)
   and the browser SDK version the checkout runs (`sdk-version`, which decides whether PayPal is listed).
-- `gatewayDelete` on `customers()->delete()` and `paymentMethods()->delete()`.
+- `gatewayDelete` on `customers->delete()` and `paymentMethods->delete()`.
 - `Webhook::verify()` and `Webhook::parse()`.
 - Every request sends `User-Agent: payfurl-php/<version> PHP/<version>`.
 
@@ -38,12 +38,12 @@ code that has not moved.
 - PHP 8.2 or later, with `declare(strict_types=1)` and types everywhere.
 - Autoloading is PSR-4 only: the `require_once` calls are gone.
 - Method names are camelCase, and each takes its model instead of an array (`Charge::CreateWithToken($params)`
-  is `charges()->createWithToken(new NewChargeToken(...))`).
+  is `charges->createWithToken(new NewChargeToken(...))`).
 - Requests send the fields each endpoint's API model has, and only those. 2.x shared one builder for every
   charge, so it sent fields some endpoints ignore (`UserAgent` everywhere; `Recurring` and `Transfer` on card
   charges).
 - Request bodies and query strings use the API's camelCase names; the API reads either case.
-- `transfers()->create()` no longer requires a charge id: a transfer group can stand alone (PAY-4879).
+- `transfers->create()` no longer requires a charge id: a transfer group can stand alone (PAY-4879).
 - A webhook with a missing or wrong signature throws `InvalidRequestException` (was `InvalidArgumentException`).
 
 ### Removed

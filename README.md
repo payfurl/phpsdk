@@ -32,7 +32,7 @@ use payFURL\Sdk\PayfurlClient;
 $payfurl = new PayfurlClient(getenv('PAYFURL_SECRET_KEY'), Environment::Sandbox);
 
 // $token comes from the browser SDK (@payfurl/client), which collects the card on your checkout page.
-$charge = $payfurl->charges()->createWithToken(new NewChargeToken(
+$charge = $payfurl->charges->createWithToken(new NewChargeToken(
     amount: 20.0,
     token: $token,
     currency: 'AUD',
@@ -78,53 +78,53 @@ use payFURL\Sdk\Model\{CardRequestInformation, ChargeSearch, DisputeSearch, NewC
     SubscriptionStatus, TransactionStatus, WebhookType};
 
 // Charges: refund part of one, capture an authorised one, search
-$payfurl->charges()->refund($chargeId, amount: 5.0, comment: 'damaged');
-$payfurl->charges()->capture($authorisedChargeId);
-$list = $payfurl->charges()->search(new ChargeSearch(status: TransactionStatus::Success, limit: 50));
+$payfurl->charges->refund($chargeId, amount: 5.0, comment: 'damaged');
+$payfurl->charges->capture($authorisedChargeId);
+$list = $payfurl->charges->search(new ChargeSearch(status: TransactionStatus::Success, limit: 50));
 
 // Customers and saved payment methods
-$customer = $payfurl->customers()->createWithToken(new NewCustomerToken(token: $token, email: 'jo@example.com'));
-$paymentMethods = $payfurl->customers()->paymentMethods($customer->customerId);
-$payfurl->charges()->createWithPaymentMethod(new NewChargePaymentMethod(amount: 15.0, paymentMethodId: $paymentMethods[0]->paymentMethodId));
+$customer = $payfurl->customers->createWithToken(new NewCustomerToken(token: $token, email: 'jo@example.com'));
+$paymentMethods = $payfurl->customers->paymentMethods($customer->customerId);
+$payfurl->charges->createWithPaymentMethod(new NewChargePaymentMethod(amount: 15.0, paymentMethodId: $paymentMethods[0]->paymentMethodId));
 
 // A card saved without a customer, on a named gateway
-$payfurl->paymentMethods()->createWithCard(new NewPaymentMethodCard(
+$payfurl->paymentMethods->createWithCard(new NewPaymentMethodCard(
     providerId: $providerId,
     paymentInformation: new CardRequestInformation(cardNumber: '4111111111111111', expiryDate: '12/30', ccv: '123'),
 ));
 
 // Subscriptions: monthly, then paused
-$subscription = $payfurl->subscriptions()->create(new SubscriptionCreate(
+$subscription = $payfurl->subscriptions->create(new SubscriptionCreate(
     amount: 9.95, paymentMethodId: $paymentMethodId, currency: 'AUD', interval: SubscriptionInterval::Month, frequency: 1,
 ));
-$payfurl->subscriptions()->updateStatus($subscription->subscriptionId, SubscriptionStatus::Suspended);
+$payfurl->subscriptions->updateStatus($subscription->subscriptionId, SubscriptionStatus::Suspended);
 
 // Webhooks: where they go
-$payfurl->webhookSubscriptions()->create(new NewWebhookSubscription(url: 'https://shop.example/payfurl', types: [WebhookType::Transaction]));
+$payfurl->webhookSubscriptions->create(new NewWebhookSubscription(url: 'https://shop.example/payfurl', types: [WebhookType::Transaction]));
 
 // Disputes, settlements, what the checkout can show
-$disputes = $payfurl->disputes()->search(new DisputeSearch(dueBefore: new DateTimeImmutable('+7 days')));
-$settlements = $payfurl->settlements()->search(new DateTimeImmutable('first day of last month'));
-$providers = $payfurl->info()->providers(amount: 20.0, currency: 'AUD', browserSdkVersion: '4.11.0');
+$disputes = $payfurl->disputes->search(new DisputeSearch(dueBefore: new DateTimeImmutable('+7 days')));
+$settlements = $payfurl->settlements->search(new DateTimeImmutable('first day of last month'));
+$providers = $payfurl->info->providers(amount: 20.0, currency: 'AUD', browserSdkVersion: '4.11.0');
 ```
 
-| Resource | Methods |
+| Property | Methods |
 | --- | --- |
-| `charges()` | `createWithCard`, `createWithCardLeastCost`, `createWithCustomer`, `createWithPaymentMethod`, `createWithToken`, `createWithBankAccount`, `createWithNetworkToken`, `get`, `search`, `refund`, `capture`, `void` |
-| `customers()` | `createWithCard`, `createWithToken`, `createWithPayTo`, `createWithProviderToken`, `createWithSingleUseToken`, `createWithBankAccount`, `get`, `search`, `update`, `delete`, `paymentMethods`, `addPaymentMethodWithCard`, `addPaymentMethodWithToken`, `addPaymentMethodWithPayTo`, `addPaymentMethodWithBankAccount` |
-| `paymentMethods()` | `createWithCard`, `createWithVault`, `createWithPayTo`, `createWithToken`, `createWithSingleUseToken`, `createWithProviderToken`, `createWithBankAccount`, `get`, `search`, `update`, `delete` |
-| `subscriptions()` | `create`, `get`, `search`, `update`, `updateStatus`, `delete` |
-| `batches()` | `createWithPaymentMethods`, `get`, `status`, `search` |
-| `paymentLinks()` | `create`, `get`, `search`, and the static `imageDataUri` |
-| `transfers()` | `create`, `get`, `search` |
-| `vaults()` | `create`, `get`, `delete` |
-| `providers()` | `create`, `update`, `delete` |
-| `tokens()` | `get`, `search` |
-| `webhookSubscriptions()` | `create`, `get`, `search`, `delete` |
-| `settlements()` | `search` |
-| `disputes()` | `get`, `search` |
-| `info()` | `providers` (takes the public key too) |
-| the client | `root`, `version` |
+| `charges` | `createWithCard`, `createWithCardLeastCost`, `createWithCustomer`, `createWithPaymentMethod`, `createWithToken`, `createWithBankAccount`, `createWithNetworkToken`, `get`, `search`, `refund`, `capture`, `void` |
+| `customers` | `createWithCard`, `createWithToken`, `createWithPayTo`, `createWithProviderToken`, `createWithSingleUseToken`, `createWithBankAccount`, `get`, `search`, `update`, `delete`, `paymentMethods`, `addPaymentMethodWithCard`, `addPaymentMethodWithToken`, `addPaymentMethodWithPayTo`, `addPaymentMethodWithBankAccount` |
+| `paymentMethods` | `createWithCard`, `createWithVault`, `createWithPayTo`, `createWithToken`, `createWithSingleUseToken`, `createWithProviderToken`, `createWithBankAccount`, `get`, `search`, `update`, `delete` |
+| `subscriptions` | `create`, `get`, `search`, `update`, `updateStatus`, `delete` |
+| `batches` | `createWithPaymentMethods`, `get`, `status`, `search` |
+| `paymentLinks` | `create`, `get`, `search`, and the static `imageDataUri` |
+| `transfers` | `create`, `get`, `search` |
+| `vaults` | `create`, `get`, `delete` |
+| `providers` | `create`, `update`, `delete` |
+| `tokens` | `get`, `search` |
+| `webhookSubscriptions` | `create`, `get`, `search`, `delete` |
+| `settlements` | `search` |
+| `disputes` | `get`, `search` |
+| `info` | `providers` (takes the public key too) |
+| the client itself | `root()`, `version()` |
 
 Tokens are made in the browser with the public key, by the browser SDK; the server SDK charges them.
 
@@ -146,7 +146,7 @@ use payFURL\Sdk\Exception\ApiException;
 use payFURL\Sdk\Exception\NetworkException;
 
 try {
-    $charge = $payfurl->charges()->createWithToken($request);
+    $charge = $payfurl->charges->createWithToken($request);
 } catch (ApiException $e) {
     // $e->httpCode, $e->errorCode (ErrorCode::tryFrom($e->errorCode)), $e->isRetryable, $e->details,
     // $e->gatewayCode, $e->gatewayMessage, $e->chargeId (the declined charge), $e->traceId (for support)

@@ -26,9 +26,9 @@ use payFURL\Sdk\Resource\WebhookSubscriptions;
  * The payFURL API with one account's key:
  *
  *     $payfurl = new PayfurlClient('sectest...-au', Environment::Sandbox);
- *     $charge = $payfurl->charges()->createWithToken(new NewChargeToken(amount: 20.0, token: $token, currency: 'AUD'));
+ *     $charge = $payfurl->charges->createWithToken(new NewChargeToken(amount: 20.0, token: $token, currency: 'AUD'));
  *
- * A secret key (`sec...`) calls every endpoint. A public key (`pub...`) calls only `info()->providers()`. One client
+ * A secret key (`sec...`) calls every endpoint. A public key (`pub...`) calls only `info->providers()`. One client
  * per key: a store with several accounts makes one for each.
  */
 final class PayfurlClient
@@ -38,8 +38,25 @@ final class PayfurlClient
 
     private readonly ApiClient $api;
 
+    // One per part of the API: `$payfurl->charges->createWithToken(...)`. Properties, not methods, so they read as
+    // the API's parts rather than as calls that fetch charges.
+    public readonly Batches $batches;
+    public readonly Charges $charges;
+    public readonly Customers $customers;
+    public readonly Disputes $disputes;
+    public readonly Info $info;
+    public readonly PaymentLinks $paymentLinks;
+    public readonly PaymentMethods $paymentMethods;
+    public readonly Providers $providers;
+    public readonly Settlements $settlements;
+    public readonly Subscriptions $subscriptions;
+    public readonly Tokens $tokens;
+    public readonly Transfers $transfers;
+    public readonly Vaults $vaults;
+    public readonly WebhookSubscriptions $webhookSubscriptions;
+
     /**
-     * @param string $key the account's secret key, or its public key for `info()->providers()` only
+     * @param string $key the account's secret key, or its public key for `info->providers()` only
      * @param Environment|string $environment an `Environment`, or its value (`sandbox`, `production`, ...)
      *
      * @throws \InvalidArgumentException for an empty key or an unknown environment
@@ -64,76 +81,20 @@ final class PayfurlClient
         }
 
         $this->api = new ApiClient($key, $baseUrl, $options, verifyTls: $environment !== Environment::Local);
-    }
-
-    public function batches(): Batches
-    {
-        return new Batches($this->api);
-    }
-
-    public function charges(): Charges
-    {
-        return new Charges($this->api);
-    }
-
-    public function customers(): Customers
-    {
-        return new Customers($this->api);
-    }
-
-    public function disputes(): Disputes
-    {
-        return new Disputes($this->api);
-    }
-
-    public function info(): Info
-    {
-        return new Info($this->api);
-    }
-
-    public function paymentLinks(): PaymentLinks
-    {
-        return new PaymentLinks($this->api);
-    }
-
-    public function paymentMethods(): PaymentMethods
-    {
-        return new PaymentMethods($this->api);
-    }
-
-    public function providers(): Providers
-    {
-        return new Providers($this->api);
-    }
-
-    public function settlements(): Settlements
-    {
-        return new Settlements($this->api);
-    }
-
-    public function subscriptions(): Subscriptions
-    {
-        return new Subscriptions($this->api);
-    }
-
-    public function tokens(): Tokens
-    {
-        return new Tokens($this->api);
-    }
-
-    public function transfers(): Transfers
-    {
-        return new Transfers($this->api);
-    }
-
-    public function vaults(): Vaults
-    {
-        return new Vaults($this->api);
-    }
-
-    public function webhookSubscriptions(): WebhookSubscriptions
-    {
-        return new WebhookSubscriptions($this->api);
+        $this->batches = new Batches($this->api);
+        $this->charges = new Charges($this->api);
+        $this->customers = new Customers($this->api);
+        $this->disputes = new Disputes($this->api);
+        $this->info = new Info($this->api);
+        $this->paymentLinks = new PaymentLinks($this->api);
+        $this->paymentMethods = new PaymentMethods($this->api);
+        $this->providers = new Providers($this->api);
+        $this->settlements = new Settlements($this->api);
+        $this->subscriptions = new Subscriptions($this->api);
+        $this->tokens = new Tokens($this->api);
+        $this->transfers = new Transfers($this->api);
+        $this->vaults = new Vaults($this->api);
+        $this->webhookSubscriptions = new WebhookSubscriptions($this->api);
     }
 
     /**

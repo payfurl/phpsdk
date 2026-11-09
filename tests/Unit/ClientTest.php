@@ -67,7 +67,7 @@ final class ClientTest extends TestCase
         $transport = (new FakeTransport())->queue(200, ['hasCardProviders' => true]);
 
         $providers = (new PayfurlClient('pubtest0-au', Environment::Sandbox, new ClientOptions(transport: $transport)))
-            ->info()->providers(browserSdkVersion: '4.11.0');
+            ->info->providers(browserSdkVersion: '4.11.0');
 
         self::assertTrue($providers->hasCardProviders);
         self::assertSame('pubtest0-au', $transport->lastRequest()->headers['x-publickey']);

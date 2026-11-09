@@ -171,7 +171,7 @@ final class EndpointsTest extends TestCase
 
         // Charges
         yield 'charges createWithCard' => [
-            fn(PayfurlClient $c) => $c->charges()->createWithCard(new NewChargeCard(
+            fn(PayfurlClient $c) => $c->charges->createWithCard(new NewChargeCard(
                 amount: 20.5,
                 providerId: 'p1',
                 paymentInformation: $card,
@@ -186,19 +186,19 @@ final class EndpointsTest extends TestCase
             ChargeData::class,
         ];
         yield 'charges createWithCardLeastCost' => [
-            fn(PayfurlClient $c) => $c->charges()->createWithCardLeastCost(new NewChargeCardLeastCost(amount: 10.0, paymentInformation: $card)),
+            fn(PayfurlClient $c) => $c->charges->createWithCardLeastCost(new NewChargeCardLeastCost(amount: 10.0, paymentInformation: $card)),
             'POST', '/charge/card/least_cost', [], ['amount' => 10.0, 'paymentInformation' => self::CARD], ChargeData::class,
         ];
         yield 'charges createWithCustomer' => [
-            fn(PayfurlClient $c) => $c->charges()->createWithCustomer(new NewChargeCustomer(amount: 10.0, customerId: 'cu1', recurring: true)),
+            fn(PayfurlClient $c) => $c->charges->createWithCustomer(new NewChargeCustomer(amount: 10.0, customerId: 'cu1', recurring: true)),
             'POST', '/charge/customer', [], ['amount' => 10.0, 'customerId' => 'cu1', 'recurring' => true], ChargeData::class,
         ];
         yield 'charges createWithPaymentMethod' => [
-            fn(PayfurlClient $c) => $c->charges()->createWithPaymentMethod(new NewChargePaymentMethod(amount: 10.0, paymentMethodId: 'pm1', reference: 'r1')),
+            fn(PayfurlClient $c) => $c->charges->createWithPaymentMethod(new NewChargePaymentMethod(amount: 10.0, paymentMethodId: 'pm1', reference: 'r1')),
             'POST', '/charge/payment_method', [], ['amount' => 10.0, 'paymentMethodId' => 'pm1', 'reference' => 'r1'], ChargeData::class,
         ];
         yield 'charges createWithToken' => [
-            fn(PayfurlClient $c) => $c->charges()->createWithToken(new NewChargeToken(
+            fn(PayfurlClient $c) => $c->charges->createWithToken(new NewChargeToken(
                 amount: 10.0,
                 token: 't1',
                 transfer: new CheckoutTransfer(amount: 2.0, account: 'acc'),
@@ -211,16 +211,16 @@ final class EndpointsTest extends TestCase
             ChargeData::class,
         ];
         yield 'charges createWithBankAccount' => [
-            fn(PayfurlClient $c) => $c->charges()->createWithBankAccount(new NewChargeBankPayment(amount: 10.0, providerId: 'p1', bankPaymentInformation: $bank)),
+            fn(PayfurlClient $c) => $c->charges->createWithBankAccount(new NewChargeBankPayment(amount: 10.0, providerId: 'p1', bankPaymentInformation: $bank)),
             'POST', '/charge/bank_account', [], ['amount' => 10.0, 'providerId' => 'p1', 'bankPaymentInformation' => self::BANK], ChargeData::class,
         ];
         yield 'charges createWithNetworkToken' => [
-            fn(PayfurlClient $c) => $c->charges()->createWithNetworkToken(new NewChargeNetworkToken(amount: 10.0, providerId: 'p1', networkTokenId: 'nt1')),
+            fn(PayfurlClient $c) => $c->charges->createWithNetworkToken(new NewChargeNetworkToken(amount: 10.0, providerId: 'p1', networkTokenId: 'nt1')),
             'POST', '/charge/network_token', [], ['amount' => 10.0, 'providerId' => 'p1', 'networkTokenId' => 'nt1'], ChargeData::class,
         ];
-        yield 'charges get' => [fn(PayfurlClient $c) => $c->charges()->get('ch/1'), 'GET', '/charge/ch%2F1', [], null, ChargeData::class];
+        yield 'charges get' => [fn(PayfurlClient $c) => $c->charges->get('ch/1'), 'GET', '/charge/ch%2F1', [], null, ChargeData::class];
         yield 'charges search' => [
-            fn(PayfurlClient $c) => $c->charges()->search(new ChargeSearch(
+            fn(PayfurlClient $c) => $c->charges->search(new ChargeSearch(
                 status: TransactionStatus::Success,
                 paymentType: PaymentType::Card,
                 amountGreaterThan: 5.5,
@@ -230,19 +230,19 @@ final class EndpointsTest extends TestCase
             'GET', '/charge', ['amountGreaterThan' => '5.5', 'status' => 'SUCCESS', 'addedAfter' => '2026-11-01T10:00:00+00:00',
                 'paymentType' => 'CARD', 'limit' => '10'], null, ChargeList::class,
         ];
-        yield 'charges search without filters' => [fn(PayfurlClient $c) => $c->charges()->search(), 'GET', '/charge', [], null, ChargeList::class];
+        yield 'charges search without filters' => [fn(PayfurlClient $c) => $c->charges->search(), 'GET', '/charge', [], null, ChargeList::class];
         yield 'charges refund in part' => [
-            fn(PayfurlClient $c) => $c->charges()->refund('ch1', 5.0, 'damaged'),
+            fn(PayfurlClient $c) => $c->charges->refund('ch1', 5.0, 'damaged'),
             'DELETE', '/charge/ch1', ['amount' => '5', 'comment' => 'damaged'], null, ChargeData::class,
         ];
-        yield 'charges refund in full' => [fn(PayfurlClient $c) => $c->charges()->refund('ch1'), 'DELETE', '/charge/ch1', [], null, ChargeData::class];
-        yield 'charges capture' => [fn(PayfurlClient $c) => $c->charges()->capture('ch1', 7.25), 'POST', '/charge/ch1/capture', [], ['amount' => 7.25], ChargeData::class];
-        yield 'charges capture in full' => [fn(PayfurlClient $c) => $c->charges()->capture('ch1'), 'POST', '/charge/ch1/capture', [], [], ChargeData::class];
-        yield 'charges void' => [fn(PayfurlClient $c) => $c->charges()->void('ch1'), 'DELETE', '/charge/ch1/void', [], null, ChargeData::class];
+        yield 'charges refund in full' => [fn(PayfurlClient $c) => $c->charges->refund('ch1'), 'DELETE', '/charge/ch1', [], null, ChargeData::class];
+        yield 'charges capture' => [fn(PayfurlClient $c) => $c->charges->capture('ch1', 7.25), 'POST', '/charge/ch1/capture', [], ['amount' => 7.25], ChargeData::class];
+        yield 'charges capture in full' => [fn(PayfurlClient $c) => $c->charges->capture('ch1'), 'POST', '/charge/ch1/capture', [], [], ChargeData::class];
+        yield 'charges void' => [fn(PayfurlClient $c) => $c->charges->void('ch1'), 'DELETE', '/charge/ch1/void', [], null, ChargeData::class];
 
         // Customers
         yield 'customers createWithCard' => [
-            fn(PayfurlClient $c) => $c->customers()->createWithCard(new NewCustomerCard(
+            fn(PayfurlClient $c) => $c->customers->createWithCard(new NewCustomerCard(
                 providerId: 'p1',
                 paymentInformation: $card,
                 email: 'jo@example.com',
@@ -255,103 +255,103 @@ final class EndpointsTest extends TestCase
             CustomerData::class,
         ];
         yield 'customers createWithToken' => [
-            fn(PayfurlClient $c) => $c->customers()->createWithToken(new NewCustomerToken(token: 't1', firstName: 'Jo')),
+            fn(PayfurlClient $c) => $c->customers->createWithToken(new NewCustomerToken(token: 't1', firstName: 'Jo')),
             'POST', '/customer/token', [], ['token' => 't1', 'firstName' => 'Jo'], CustomerData::class,
         ];
         yield 'customers createWithPayTo' => [
-            fn(PayfurlClient $c) => $c->customers()->createWithPayTo(new NewCustomerPayTo(payToAgreement: $payTo)),
+            fn(PayfurlClient $c) => $c->customers->createWithPayTo(new NewCustomerPayTo(payToAgreement: $payTo)),
             'POST', '/customer/payto', [], ['payToAgreement' => self::PAYTO], CustomerData::class,
         ];
         yield 'customers createWithProviderToken' => [
-            fn(PayfurlClient $c) => $c->customers()->createWithProviderToken(new NewCustomerProviderToken(providerId: 'p1', providerToken: 'cus_1', type: PaymentType::Card)),
+            fn(PayfurlClient $c) => $c->customers->createWithProviderToken(new NewCustomerProviderToken(providerId: 'p1', providerToken: 'cus_1', type: PaymentType::Card)),
             'POST', '/customer/provider_token', [], ['providerId' => 'p1', 'providerToken' => 'cus_1', 'type' => 'CARD'], CustomerData::class,
         ];
         yield 'customers createWithSingleUseToken' => [
-            fn(PayfurlClient $c) => $c->customers()->createWithSingleUseToken(new SingleUseToken(providerId: 'p1', providerToken: 'tok_1')),
+            fn(PayfurlClient $c) => $c->customers->createWithSingleUseToken(new SingleUseToken(providerId: 'p1', providerToken: 'tok_1')),
             'POST', '/customer/provider_single_use_token', [], ['providerId' => 'p1', 'providerToken' => 'tok_1'], CustomerData::class,
         ];
         yield 'customers createWithBankAccount' => [
-            fn(PayfurlClient $c) => $c->customers()->createWithBankAccount(new NewCustomerBankPayment(providerId: 'p1', bankPaymentInformation: $bank)),
+            fn(PayfurlClient $c) => $c->customers->createWithBankAccount(new NewCustomerBankPayment(providerId: 'p1', bankPaymentInformation: $bank)),
             'POST', '/customer/bank_account', [], ['providerId' => 'p1', 'bankPaymentInformation' => self::BANK], CustomerData::class,
         ];
-        yield 'customers get' => [fn(PayfurlClient $c) => $c->customers()->get('cu1'), 'GET', '/customer/cu1', [], null, CustomerData::class];
+        yield 'customers get' => [fn(PayfurlClient $c) => $c->customers->get('cu1'), 'GET', '/customer/cu1', [], null, CustomerData::class];
         yield 'customers search' => [
-            fn(PayfurlClient $c) => $c->customers()->search(new CustomerSearch(email: 'jo@example.com', includeRemoved: false, skip: 0)),
+            fn(PayfurlClient $c) => $c->customers->search(new CustomerSearch(email: 'jo@example.com', includeRemoved: false, skip: 0)),
             'GET', '/customer', ['email' => 'jo@example.com', 'includeRemoved' => 'false', 'skip' => '0'], null, CustomerList::class,
         ];
         yield 'customers update' => [
-            fn(PayfurlClient $c) => $c->customers()->update('cu1', new UpdateCustomer(phone: '+61400000000', defaultPaymentMethodId: 'pm1')),
+            fn(PayfurlClient $c) => $c->customers->update('cu1', new UpdateCustomer(phone: '+61400000000', defaultPaymentMethodId: 'pm1')),
             'PUT', '/customer/cu1', [], ['phone' => '+61400000000', 'defaultPaymentMethodId' => 'pm1'], CustomerData::class,
         ];
-        yield 'customers delete' => [fn(PayfurlClient $c) => $c->customers()->delete('cu1'), 'DELETE', '/customer/cu1', [], null, CustomerData::class];
+        yield 'customers delete' => [fn(PayfurlClient $c) => $c->customers->delete('cu1'), 'DELETE', '/customer/cu1', [], null, CustomerData::class];
         yield 'customers delete at the gateway' => [
-            fn(PayfurlClient $c) => $c->customers()->delete('cu1', gatewayDelete: true), 'DELETE', '/customer/cu1', ['gatewayDelete' => 'true'], null, CustomerData::class,
+            fn(PayfurlClient $c) => $c->customers->delete('cu1', gatewayDelete: true), 'DELETE', '/customer/cu1', ['gatewayDelete' => 'true'], null, CustomerData::class,
         ];
         yield 'customers paymentMethods' => [
-            fn(PayfurlClient $c) => $c->customers()->paymentMethods('cu1'), 'GET', '/customer/cu1/payment_method', [], null, 'list',
+            fn(PayfurlClient $c) => $c->customers->paymentMethods('cu1'), 'GET', '/customer/cu1/payment_method', [], null, 'list',
             [['paymentMethodId' => 'pm1'], ['paymentMethodId' => 'pm2']],
         ];
         yield 'customers addPaymentMethodWithCard' => [
-            fn(PayfurlClient $c) => $c->customers()->addPaymentMethodWithCard('cu1', new NewPaymentMethodCard(providerId: 'p1', paymentInformation: $card, setDefault: true)),
+            fn(PayfurlClient $c) => $c->customers->addPaymentMethodWithCard('cu1', new NewPaymentMethodCard(providerId: 'p1', paymentInformation: $card, setDefault: true)),
             'POST', '/customer/cu1/payment_method/card', [], ['providerId' => 'p1', 'paymentInformation' => self::CARD, 'setDefault' => true], PaymentMethodData::class,
         ];
         yield 'customers addPaymentMethodWithToken' => [
-            fn(PayfurlClient $c) => $c->customers()->addPaymentMethodWithToken('cu1', new NewPaymentMethodToken(token: 't1')),
+            fn(PayfurlClient $c) => $c->customers->addPaymentMethodWithToken('cu1', new NewPaymentMethodToken(token: 't1')),
             'POST', '/customer/cu1/payment_method/token', [], ['token' => 't1'], PaymentMethodData::class,
         ];
         yield 'customers addPaymentMethodWithPayTo' => [
-            fn(PayfurlClient $c) => $c->customers()->addPaymentMethodWithPayTo('cu1', $payTo),
+            fn(PayfurlClient $c) => $c->customers->addPaymentMethodWithPayTo('cu1', $payTo),
             'POST', '/customer/cu1/payment_method/payto', [], self::PAYTO, PaymentMethodData::class,
         ];
         yield 'customers addPaymentMethodWithBankAccount' => [
-            fn(PayfurlClient $c) => $c->customers()->addPaymentMethodWithBankAccount('cu1', new NewPaymentMethodBankPayment(providerId: 'p1', bankPaymentInformation: $bank)),
+            fn(PayfurlClient $c) => $c->customers->addPaymentMethodWithBankAccount('cu1', new NewPaymentMethodBankPayment(providerId: 'p1', bankPaymentInformation: $bank)),
             'POST', '/customer/cu1/bank_account', [], ['providerId' => 'p1', 'bankPaymentInformation' => self::BANK], PaymentMethodData::class,
         ];
 
         // Payment methods
         yield 'paymentMethods createWithCard' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->createWithCard(new NewPaymentMethodCard(providerId: 'p1', paymentInformation: $card)),
+            fn(PayfurlClient $c) => $c->paymentMethods->createWithCard(new NewPaymentMethodCard(providerId: 'p1', paymentInformation: $card)),
             'POST', '/payment_method/card', [], ['providerId' => 'p1', 'paymentInformation' => self::CARD], PaymentMethodData::class,
         ];
         yield 'paymentMethods createWithVault' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->createWithVault(new NewPaymentMethodVault(providerId: 'p2', paymentMethodId: 'pm1')),
+            fn(PayfurlClient $c) => $c->paymentMethods->createWithVault(new NewPaymentMethodVault(providerId: 'p2', paymentMethodId: 'pm1')),
             'POST', '/payment_method/vault', [], ['providerId' => 'p2', 'paymentMethodId' => 'pm1'], PaymentMethodData::class,
         ];
         yield 'paymentMethods createWithPayTo' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->createWithPayTo($payTo), 'POST', '/payment_method/payto', [], self::PAYTO, PaymentMethodData::class,
+            fn(PayfurlClient $c) => $c->paymentMethods->createWithPayTo($payTo), 'POST', '/payment_method/payto', [], self::PAYTO, PaymentMethodData::class,
         ];
         yield 'paymentMethods createWithToken' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->createWithToken(new NewPaymentMethodToken(token: 't1', metadata: [])),
+            fn(PayfurlClient $c) => $c->paymentMethods->createWithToken(new NewPaymentMethodToken(token: 't1', metadata: [])),
             'POST', '/payment_method/token', [], ['token' => 't1', 'metadata' => []], PaymentMethodData::class,
         ];
         yield 'paymentMethods createWithSingleUseToken' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->createWithSingleUseToken(new SingleUseToken(providerId: 'p1', providerToken: 'tok_1')),
+            fn(PayfurlClient $c) => $c->paymentMethods->createWithSingleUseToken(new SingleUseToken(providerId: 'p1', providerToken: 'tok_1')),
             'POST', '/payment_method/provider_single_use_token', [], ['providerId' => 'p1', 'providerToken' => 'tok_1'], PaymentMethodData::class,
         ];
         yield 'paymentMethods createWithProviderToken' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->createWithProviderToken(new NewProviderToken(providerId: 'p1', providerToken: 'pm_1', verify: false)),
+            fn(PayfurlClient $c) => $c->paymentMethods->createWithProviderToken(new NewProviderToken(providerId: 'p1', providerToken: 'pm_1', verify: false)),
             'POST', '/payment_method/provider_token', [], ['providerId' => 'p1', 'providerToken' => 'pm_1', 'verify' => false], PaymentMethodData::class,
         ];
         yield 'paymentMethods createWithBankAccount' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->createWithBankAccount(new NewPaymentMethodBankPayment(providerId: 'p1', bankPaymentInformation: $bank)),
+            fn(PayfurlClient $c) => $c->paymentMethods->createWithBankAccount(new NewPaymentMethodBankPayment(providerId: 'p1', bankPaymentInformation: $bank)),
             'POST', '/payment_method/bank_account', [], ['providerId' => 'p1', 'bankPaymentInformation' => self::BANK], PaymentMethodData::class,
         ];
-        yield 'paymentMethods get' => [fn(PayfurlClient $c) => $c->paymentMethods()->get('pm1'), 'GET', '/payment_method/pm1', [], null, PaymentMethodData::class];
+        yield 'paymentMethods get' => [fn(PayfurlClient $c) => $c->paymentMethods->get('pm1'), 'GET', '/payment_method/pm1', [], null, PaymentMethodData::class];
         yield 'paymentMethods search' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->search(new PaymentMethodSearch(customerId: 'cu1', paymentType: PaymentType::PayTo)),
+            fn(PayfurlClient $c) => $c->paymentMethods->search(new PaymentMethodSearch(customerId: 'cu1', paymentType: PaymentType::PayTo)),
             'GET', '/payment_method', ['customerId' => 'cu1', 'paymentType' => 'PAYTO'], null, PaymentMethodList::class,
         ];
         yield 'paymentMethods update' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->update('pm1', new UpdatePaymentMethod(card: new UpdatePaymentMethodCardRequestInformation(expiryDate: '01/31'))),
+            fn(PayfurlClient $c) => $c->paymentMethods->update('pm1', new UpdatePaymentMethod(card: new UpdatePaymentMethodCardRequestInformation(expiryDate: '01/31'))),
             'PUT', '/payment_method/pm1', [], ['card' => ['expiryDate' => '01/31']], PaymentMethodData::class,
         ];
         yield 'paymentMethods delete' => [
-            fn(PayfurlClient $c) => $c->paymentMethods()->delete('pm1', gatewayDelete: false), 'DELETE', '/payment_method/pm1', ['gatewayDelete' => 'false'], null, PaymentMethodData::class,
+            fn(PayfurlClient $c) => $c->paymentMethods->delete('pm1', gatewayDelete: false), 'DELETE', '/payment_method/pm1', ['gatewayDelete' => 'false'], null, PaymentMethodData::class,
         ];
 
         // Providers
         yield 'providers create' => [
-            fn(PayfurlClient $c) => $c->providers()->create(new NewProvider(
+            fn(PayfurlClient $c) => $c->providers->create(new NewProvider(
                 type: 'dummy',
                 name: 'Dummy',
                 environment: 'SANDBOX',
@@ -363,13 +363,13 @@ final class EndpointsTest extends TestCase
             Provider::class,
         ];
         yield 'providers update' => [
-            fn(PayfurlClient $c) => $c->providers()->update('p1', new UpdateProvider(name: 'Renamed')), 'PUT', '/provider/p1', [], ['name' => 'Renamed'], Provider::class,
+            fn(PayfurlClient $c) => $c->providers->update('p1', new UpdateProvider(name: 'Renamed')), 'PUT', '/provider/p1', [], ['name' => 'Renamed'], Provider::class,
         ];
-        yield 'providers delete' => [fn(PayfurlClient $c) => $c->providers()->delete('p1'), 'DELETE', '/provider/p1', [], null, Provider::class];
+        yield 'providers delete' => [fn(PayfurlClient $c) => $c->providers->delete('p1'), 'DELETE', '/provider/p1', [], null, Provider::class];
 
         // Subscriptions
         yield 'subscriptions create' => [
-            fn(PayfurlClient $c) => $c->subscriptions()->create(new SubscriptionCreate(
+            fn(PayfurlClient $c) => $c->subscriptions->create(new SubscriptionCreate(
                 amount: 9.95,
                 paymentMethodId: 'pm1',
                 currency: 'AUD',
@@ -383,51 +383,51 @@ final class EndpointsTest extends TestCase
                 'startDate' => '2026-11-01T10:00:00.000+00:00', 'endAfter' => ['count' => 12]],
             Subscription::class,
         ];
-        yield 'subscriptions get' => [fn(PayfurlClient $c) => $c->subscriptions()->get('s1'), 'GET', '/subscription/s1', [], null, Subscription::class];
+        yield 'subscriptions get' => [fn(PayfurlClient $c) => $c->subscriptions->get('s1'), 'GET', '/subscription/s1', [], null, Subscription::class];
         yield 'subscriptions search' => [
-            fn(PayfurlClient $c) => $c->subscriptions()->search(new SubscriptionSearch(status: SubscriptionStatus::Active)),
+            fn(PayfurlClient $c) => $c->subscriptions->search(new SubscriptionSearch(status: SubscriptionStatus::Active)),
             'GET', '/subscription', ['status' => 'Active'], null, SubscriptionList::class,
         ];
         yield 'subscriptions update' => [
-            fn(PayfurlClient $c) => $c->subscriptions()->update('s1', new SubscriptionUpdate(amount: 12.0, currency: 'AUD', interval: SubscriptionInterval::Week, frequency: 2)),
+            fn(PayfurlClient $c) => $c->subscriptions->update('s1', new SubscriptionUpdate(amount: 12.0, currency: 'AUD', interval: SubscriptionInterval::Week, frequency: 2)),
             'PUT', '/subscription/s1', [], ['amount' => 12.0, 'currency' => 'AUD', 'interval' => 'Week', 'frequency' => 2], Subscription::class,
         ];
         yield 'subscriptions updateStatus' => [
-            fn(PayfurlClient $c) => $c->subscriptions()->updateStatus('s1', SubscriptionStatus::Suspended),
+            fn(PayfurlClient $c) => $c->subscriptions->updateStatus('s1', SubscriptionStatus::Suspended),
             'PUT', '/subscription/s1/status', [], ['status' => 'Suspended'], Subscription::class,
         ];
-        yield 'subscriptions delete' => [fn(PayfurlClient $c) => $c->subscriptions()->delete('s1'), 'DELETE', '/subscription/s1', [], null, Subscription::class];
+        yield 'subscriptions delete' => [fn(PayfurlClient $c) => $c->subscriptions->delete('s1'), 'DELETE', '/subscription/s1', [], null, Subscription::class];
 
         // Batches
         yield 'batches createWithPaymentMethods' => [
-            fn(PayfurlClient $c) => $c->batches()->createWithPaymentMethods(new NewTransactionPaymentMethod(count: 1, description: 'Nov', batch: "PaymentMethodId,Amount\npm1,10")),
+            fn(PayfurlClient $c) => $c->batches->createWithPaymentMethods(new NewTransactionPaymentMethod(count: 1, description: 'Nov', batch: "PaymentMethodId,Amount\npm1,10")),
             'POST', '/batch/transaction/payment_method', [], ['count' => 1, 'description' => 'Nov', 'batch' => "PaymentMethodId,Amount\npm1,10"], BatchStatus::class,
         ];
-        yield 'batches get' => [fn(PayfurlClient $c) => $c->batches()->get('b1'), 'GET', '/batch/b1', [], null, BatchData::class];
-        yield 'batches status' => [fn(PayfurlClient $c) => $c->batches()->status('b1'), 'GET', '/batch/b1/status', [], null, BatchStatus::class];
+        yield 'batches get' => [fn(PayfurlClient $c) => $c->batches->get('b1'), 'GET', '/batch/b1', [], null, BatchData::class];
+        yield 'batches status' => [fn(PayfurlClient $c) => $c->batches->status('b1'), 'GET', '/batch/b1/status', [], null, BatchStatus::class];
         yield 'batches search' => [
-            fn(PayfurlClient $c) => $c->batches()->search(new BatchSearch(description: 'Nov')), 'GET', '/batch', ['description' => 'Nov'], null, BatchList::class,
+            fn(PayfurlClient $c) => $c->batches->search(new BatchSearch(description: 'Nov')), 'GET', '/batch', ['description' => 'Nov'], null, BatchList::class,
         ];
 
         // Payment links
         yield 'paymentLinks create' => [
-            fn(PayfurlClient $c) => $c->paymentLinks()->create(new CreatePaymentLink(title: 'Donate', amount: 5.0, allowedPaymentTypes: [PaymentType::Card, PaymentType::PayPal])),
+            fn(PayfurlClient $c) => $c->paymentLinks->create(new CreatePaymentLink(title: 'Donate', amount: 5.0, allowedPaymentTypes: [PaymentType::Card, PaymentType::PayPal])),
             'POST', '/payment_link', [], ['title' => 'Donate', 'amount' => 5.0, 'allowedPaymentTypes' => ['CARD', 'PAYPAL']], PaymentLink::class,
         ];
-        yield 'paymentLinks get' => [fn(PayfurlClient $c) => $c->paymentLinks()->get('pl1'), 'GET', '/payment_link/pl1', [], null, PaymentLink::class];
+        yield 'paymentLinks get' => [fn(PayfurlClient $c) => $c->paymentLinks->get('pl1'), 'GET', '/payment_link/pl1', [], null, PaymentLink::class];
         yield 'paymentLinks search' => [
-            fn(PayfurlClient $c) => $c->paymentLinks()->search(new PaymentLinkSearch(limit: 5)), 'GET', '/payment_link', ['limit' => '5'], null, PaymentLinkList::class,
+            fn(PayfurlClient $c) => $c->paymentLinks->search(new PaymentLinkSearch(limit: 5)), 'GET', '/payment_link', ['limit' => '5'], null, PaymentLinkList::class,
         ];
 
         // Tokens
-        yield 'tokens get' => [fn(PayfurlClient $c) => $c->tokens()->get('t1'), 'GET', '/token/t1', [], null, TokenData::class];
+        yield 'tokens get' => [fn(PayfurlClient $c) => $c->tokens->get('t1'), 'GET', '/token/t1', [], null, TokenData::class];
         yield 'tokens search' => [
-            fn(PayfurlClient $c) => $c->tokens()->search(new TokenSearch(providerId: 'p1')), 'GET', '/token', ['providerId' => 'p1'], null, TokenList::class,
+            fn(PayfurlClient $c) => $c->tokens->search(new TokenSearch(providerId: 'p1')), 'GET', '/token', ['providerId' => 'p1'], null, TokenList::class,
         ];
 
         // Transfers
         yield 'transfers create without a charge' => [
-            fn(PayfurlClient $c) => $c->transfers()->create(new NewTransferGroup(
+            fn(PayfurlClient $c) => $c->transfers->create(new NewTransferGroup(
                 providerId: 'p1',
                 groupReference: 'g1',
                 transfers: [new NewTransfer(account: 'acc1', amount: 3.0, currency: 'AUD')],
@@ -435,43 +435,43 @@ final class EndpointsTest extends TestCase
             'POST', '/transfer', [], ['providerId' => 'p1', 'groupReference' => 'g1', 'transfers' => [['account' => 'acc1', 'amount' => 3.0, 'currency' => 'AUD']]],
             'list', [['transferId' => 'tr1']],
         ];
-        yield 'transfers get' => [fn(PayfurlClient $c) => $c->transfers()->get('tr1'), 'GET', '/transfer/tr1', [], null, TransferData::class];
+        yield 'transfers get' => [fn(PayfurlClient $c) => $c->transfers->get('tr1'), 'GET', '/transfer/tr1', [], null, TransferData::class];
         yield 'transfers search' => [
-            fn(PayfurlClient $c) => $c->transfers()->search(new TransferSearch(reference: 'g1')), 'GET', '/transfer', ['reference' => 'g1'], null, TransferList::class,
+            fn(PayfurlClient $c) => $c->transfers->search(new TransferSearch(reference: 'g1')), 'GET', '/transfer', ['reference' => 'g1'], null, TransferList::class,
         ];
 
         // Vaults
         yield 'vaults create' => [
-            fn(PayfurlClient $c) => $c->vaults()->create(new NewVault(cardNumber: '4111111111111111', expireSeconds: 3600)),
+            fn(PayfurlClient $c) => $c->vaults->create(new NewVault(cardNumber: '4111111111111111', expireSeconds: 3600)),
             'POST', '/vault', [], ['cardNumber' => '4111111111111111', 'expireSeconds' => 3600], VaultData::class,
         ];
-        yield 'vaults get' => [fn(PayfurlClient $c) => $c->vaults()->get('v1'), 'GET', '/vault/v1', [], null, VaultDataWithPCI::class];
-        yield 'vaults delete' => [fn(PayfurlClient $c) => $c->vaults()->delete('v1'), 'DELETE', '/vault/v1', [], null, VaultData::class];
+        yield 'vaults get' => [fn(PayfurlClient $c) => $c->vaults->get('v1'), 'GET', '/vault/v1', [], null, VaultDataWithPCI::class];
+        yield 'vaults delete' => [fn(PayfurlClient $c) => $c->vaults->delete('v1'), 'DELETE', '/vault/v1', [], null, VaultData::class];
 
         // Webhook subscriptions
         yield 'webhookSubscriptions create' => [
-            fn(PayfurlClient $c) => $c->webhookSubscriptions()->create(new NewWebhookSubscription(url: 'https://shop.example/hook', types: [WebhookType::Transaction, WebhookType::Dispute])),
+            fn(PayfurlClient $c) => $c->webhookSubscriptions->create(new NewWebhookSubscription(url: 'https://shop.example/hook', types: [WebhookType::Transaction, WebhookType::Dispute])),
             'POST', '/webhook/subscription', [], ['url' => 'https://shop.example/hook', 'types' => ['Transaction', 'Dispute']], WebhookSubscription::class,
         ];
-        yield 'webhookSubscriptions get' => [fn(PayfurlClient $c) => $c->webhookSubscriptions()->get('w1'), 'GET', '/webhook/subscription/w1', [], null, WebhookSubscription::class];
+        yield 'webhookSubscriptions get' => [fn(PayfurlClient $c) => $c->webhookSubscriptions->get('w1'), 'GET', '/webhook/subscription/w1', [], null, WebhookSubscription::class];
         yield 'webhookSubscriptions search' => [
-            fn(PayfurlClient $c) => $c->webhookSubscriptions()->search(new WebhookSubscriptionSearch(type: WebhookType::Batch)),
+            fn(PayfurlClient $c) => $c->webhookSubscriptions->search(new WebhookSubscriptionSearch(type: WebhookType::Batch)),
             'GET', '/webhook/subscription', ['type' => 'Batch'], null, WebhookSubscriptionList::class,
         ];
-        yield 'webhookSubscriptions delete' => [fn(PayfurlClient $c) => $c->webhookSubscriptions()->delete('w1'), 'DELETE', '/webhook/subscription/w1', [], null, WebhookSubscription::class];
+        yield 'webhookSubscriptions delete' => [fn(PayfurlClient $c) => $c->webhookSubscriptions->delete('w1'), 'DELETE', '/webhook/subscription/w1', [], null, WebhookSubscription::class];
 
         // Settlements, disputes, info, root, version
         yield 'settlements search' => [
-            fn(PayfurlClient $c) => $c->settlements()->search($date, new \DateTimeImmutable('2026-11-30')),
+            fn(PayfurlClient $c) => $c->settlements->search($date, new \DateTimeImmutable('2026-11-30')),
             'GET', '/settlements', ['startDate' => '2026-11-01', 'endDate' => '2026-11-30'], null, 'list', [['settlementId' => 's1']],
         ];
-        yield 'disputes get' => [fn(PayfurlClient $c) => $c->disputes()->get('d1'), 'GET', '/dispute/d1', [], null, Dispute::class];
+        yield 'disputes get' => [fn(PayfurlClient $c) => $c->disputes->get('d1'), 'GET', '/dispute/d1', [], null, Dispute::class];
         yield 'disputes search' => [
-            fn(PayfurlClient $c) => $c->disputes()->search(new DisputeSearch(transactionId: 'ch1', dueBefore: $date)),
+            fn(PayfurlClient $c) => $c->disputes->search(new DisputeSearch(transactionId: 'ch1', dueBefore: $date)),
             'GET', '/dispute', ['transactionId' => 'ch1', 'dueBefore' => '2026-11-01T10:00:00+00:00'], null, DisputeList::class,
         ];
         yield 'info providers' => [
-            fn(PayfurlClient $c) => $c->info()->providers(amount: 25.0, currency: 'AUD', cardProviderId: 'p1'),
+            fn(PayfurlClient $c) => $c->info->providers(amount: 25.0, currency: 'AUD', cardProviderId: 'p1'),
             'GET', '/info/providers', ['amount' => '25', 'currency' => 'AUD', 'cardProviderId' => 'p1'], null, InfoProviders::class,
         ];
         yield 'root' => [fn(PayfurlClient $c) => $c->root(), 'GET', '/', [], null, RootStatus::class];
