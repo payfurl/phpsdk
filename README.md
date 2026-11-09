@@ -199,35 +199,15 @@ such as one that logs each request before handing it to `CurlTransport`.
 
 ## Development
 
-[`just`](https://just.systems) runs everything:
+[`just`](https://just.systems) runs the checks:
 
 ```bash
 just test   # PHPUnit, PHPStan (max level), PHP CS Fixer (PER-CS), composer validate and audit
 just fix    # apply the code style
-just e2e    # the integration tests, against an API built from source (below)
 ```
 
-The unit tests (`tests/Unit`) never call an API: each request goes through `FakeTransport`. The integration tests
-live in payFURL's platform repository (`e2e/api-tests/phpsdk`, internal): `just e2e` runs them from a platform
-checkout at `../platform` or `../../platform` (or `PLATFORM_DIR`) against this checkout, in Docker, on a fresh
-merchant account each run.
-
-The models in `src/Model` mirror the API's C# models (`services/api/src/api/Models` and `services/_shared/src`
-in the platform repository), with the same names. When the API changes a model, change the SDK's to match.
-
-## Releasing
-
-1. Add the version's section to [CHANGELOG.md](CHANGELOG.md) and set `PayfurlClient::VERSION` to it; merge to
-   `master`.
-2. Tag the merge `vX.Y.Z` and push the tag.
-
-The **Release** workflow (`.github/workflows/release.yml`) then runs CI, checks the tag against
-`PayfurlClient::VERSION`, and creates the GitHub release from the changelog section. Packagist publishes the tag
-by itself, through its GitHub hook on this repository: it reads the version from the tag, and `composer.json` has
-no `version`.
-
-Versions follow semver strictly: plugins resolve `^3.0` when a merchant installs them, so every 3.x release
-reaches stores without a plugin release.
+The unit tests (`tests/Unit`) never call an API: each request goes through `FakeTransport`, so they need no payFURL
+account. payFURL runs integration tests against its API before each release.
 
 ## License
 

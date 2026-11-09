@@ -12,7 +12,7 @@ test: vendor
 fix: vendor
     vendor/bin/php-cs-fixer fix
 
-# The integration tests, in payfurl/platform, against this checkout and an API built from source (Docker); args go to PHPUnit
+# payFURL maintainers only: integration tests in payfurl/platform (internal) against this checkout; args go to PHPUnit
 e2e *args:
     #!/usr/bin/env bash
     set -euo pipefail
