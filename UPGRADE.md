@@ -69,7 +69,7 @@ Keys in 2.x arrays could be PascalCase or camelCase. In 3.0 they are named argum
 | none | `$gatewayCode`, `$gatewayMessage`, `$chargeId`, `$traceId` |
 | HTTP code 408 for a timeout | `NetworkException` with `$timedOut` |
 | `ErrorCode::Timeout` and the other constants | `ErrorCode` is an enum: `ErrorCode::Timeout->value` |
-| `ErrorCode::urlFor($code)` | `ErrorCode::from($code)->url()` |
+| `ErrorCode::urlFor($code)` | `ErrorCode::tryFrom($code)?->url()` (null for a code the enum does not have yet) |
 
 Catch the subclass for the case: `AuthenticationException` (401, 403), `InvalidRequestException` (a validation
 error, or an empty id before sending), `NotFoundException` (404), `ApiException` (a declined charge, a server

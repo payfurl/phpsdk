@@ -154,7 +154,8 @@ final class Read
     }
 
     /**
-     * An enum case, or null for a value this SDK version does not know (the raw value stays in `toArray()`).
+     * A string-backed enum's case, or null for a value this SDK version does not know (the raw value stays in
+     * `toArray()`).
      *
      * @template T of \BackedEnum
      *
@@ -167,7 +168,8 @@ final class Read
     {
         $value = $data[$key] ?? null;
 
-        return is_string($value) || is_int($value) ? $enum::tryFrom($value) : null;
+        // Strings only: tryFrom() on a string-backed enum throws a TypeError for an int under strict_types.
+        return is_string($value) ? $enum::tryFrom($value) : null;
     }
 
     /**
@@ -186,7 +188,7 @@ final class Read
         }
         $cases = [];
         foreach ($value as $item) {
-            $case = is_string($item) || is_int($item) ? $enum::tryFrom($item) : null;
+            $case = is_string($item) ? $enum::tryFrom($item) : null;
             if ($case !== null) {
                 $cases[] = $case;
             }

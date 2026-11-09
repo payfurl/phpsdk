@@ -65,11 +65,13 @@ final class ModelsTest extends TestCase
 
     public function testValueThisSdkDoesNotKnowReadsAsNullButStaysInTheArray(): void
     {
-        $charge = ChargeData::fromArray(['status' => 'SOMETHING_NEW', 'amount' => 'not a number', 'dateAdded' => 'not a date']);
+        $charge = ChargeData::fromArray(['status' => 'SOMETHING_NEW', 'amount' => 'not a number', 'dateAdded' => 'not a date',
+            'paymentInformation' => ['type' => 3]]);
 
         self::assertNull($charge->status);
         self::assertNull($charge->amount);
         self::assertNull($charge->dateAdded);
+        self::assertNull($charge->paymentInformation?->type);
         self::assertSame('SOMETHING_NEW', $charge->toArray()['status']);
     }
 

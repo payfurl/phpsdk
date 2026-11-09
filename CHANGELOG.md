@@ -44,7 +44,6 @@ code that has not moved.
   charges).
 - Request bodies and query strings use the API's camelCase names; the API reads either case.
 - `transfers()->create()` no longer requires a charge id: a transfer group can stand alone (PAY-4879).
-- `customers()->addPaymentMethodWith*()` return the new `PaymentMethodData`, as the API does, not a customer.
 - A webhook with a missing or wrong signature throws `InvalidRequestException` (was `InvalidArgumentException`).
 
 ### Removed
