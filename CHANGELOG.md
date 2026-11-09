@@ -6,6 +6,16 @@ back from the tags and merged pull requests.
 
 ## [Unreleased]
 
+### Fixed
+
+- `PaymentLink::$allowedPaymentTypes` keeps the payment types as the API sends them, as strings: the browser SDK's
+  names (`card`, `paypal`, `azupay`, ...), which the dashboard saves and no `PaymentType` case matched, so they were
+  dropped and a link made in the dashboard read back with an empty list. Code that compared its items with
+  `PaymentType` cases compares with strings now.
+- `CreatePaymentLink`'s `allowedPaymentTypes` takes those names as strings, so every type the payment link's checkout
+  offers can be sent (`azupay` is no `PaymentType`). A `PaymentType` case is still accepted and sent as its value.
+- `NewTransferGroup`'s `groupReference` takes `null`, which leaves it out: the API doesn't require one.
+
 ## [3.0.0] - 2026-11-09
 
 **Breaking release:** code that uses 2.x must change to upgrade. A new SDK on the same package: typed, with a

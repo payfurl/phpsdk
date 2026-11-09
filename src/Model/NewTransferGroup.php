@@ -12,11 +12,13 @@ use payFURL\Sdk\Internal\Write;
 final readonly class NewTransferGroup
 {
     /**
+     * @param string|null $groupReference a reference for the group, unique on the account; null leaves it out, as the
+     *                                    API allows (it is only checked for duplicates when set)
      * @param list<NewTransfer> $transfers
      */
     public function __construct(
         public string $providerId,
-        public string $groupReference,
+        public ?string $groupReference,
         public array $transfers,
         public ?string $chargeId = null,
     ) {}

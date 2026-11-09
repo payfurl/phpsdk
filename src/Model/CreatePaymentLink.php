@@ -12,7 +12,10 @@ use payFURL\Sdk\Internal\Write;
 final readonly class CreatePaymentLink
 {
     /**
-     * @param list<PaymentType>|null $allowedPaymentTypes
+     * @param list<string|PaymentType>|null $allowedPaymentTypes the payment methods the link's checkout offers, as
+     *                                                       the browser SDK names them: `card`, `paypal`, `googlepay`,
+     *                                                       `applepay`, `azupay`, ... A `PaymentType` is sent as its
+     *                                                       value (`CARD`), which the browser SDK also reads
      * @param array<string, string>|null $metadata
      */
     public function __construct(
@@ -39,7 +42,10 @@ final readonly class CreatePaymentLink
             'title' => $this->title,
             'amount' => $this->amount,
             'currency' => $this->currency,
-            'allowedPaymentTypes' => Write::enums($this->allowedPaymentTypes),
+            'allowedPaymentTypes' => $this->allowedPaymentTypes === null ? null : array_map(
+                static fn(string|PaymentType $type): string => $type instanceof PaymentType ? $type->value : $type,
+                $this->allowedPaymentTypes,
+            ),
             'description' => $this->description,
             'image' => $this->image,
             'confirmationMessage' => $this->confirmationMessage,
