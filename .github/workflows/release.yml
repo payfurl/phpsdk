@@ -1,5 +1,5 @@
 # Push a tag vX.Y.Z to release: CI runs, the tag must match PayfurlClient::VERSION, the GitHub release gets that
-# version's CHANGELOG.md section, and Packagist is told to update (it reads versions from tags).
+# version's CHANGELOG.md section. Packagist picks up the tag itself, through its GitHub hook on this repo.
 name: Release
 
 on:
@@ -42,13 +42,3 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --notes-file notes.md
-
-      # Packagist's API token: the maintainer account's, under Profile > Show API Token on packagist.org.
-      - name: Update Packagist
-        env:
-          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
-          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
-        run: |
-          curl --fail-with-body -sS -X POST -H 'Content-Type: application/json' \
-            "https://packagist.org/api/update-package?username=$PACKAGIST_USERNAME&apiToken=$PACKAGIST_TOKEN" \
-            -d '{"repository":{"url":"https://github.com/payfurl/phpsdk"}}'
