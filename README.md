@@ -6,7 +6,7 @@ batches, payment links, transfers, vaults, providers, webhook subscriptions, set
 reference: [docs.payfurl.com](https://docs.payfurl.com).
 
 > **3.0 is a breaking release.** It is typed, needs PHP 8.2, and replaces 2.x's static classes with a client.
-> [UPGRADE.md](UPGRADE.md) maps every 2.x method to its replacement. 2.x stays installable with `^2.3`.
+> [UPGRADE.md](UPGRADE.md) maps every 2.x method to its replacement. 2.x stays installable with `^2.2`.
 
 ## Install
 

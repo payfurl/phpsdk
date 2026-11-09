@@ -10,7 +10,7 @@ back from the tags and merged pull requests.
 
 **Breaking release:** code that uses 2.x must change to upgrade. A new SDK on the same package: typed, with a
 client object instead of static configuration, and PHP 8.2 or later. Nothing of 2.x's API is left.
-[UPGRADE.md](UPGRADE.md) maps every 2.x method to its replacement; 2.x stays on Packagist (`^2.3`) for code that
+[UPGRADE.md](UPGRADE.md) maps every 2.x method to its replacement; 2.x stays on Packagist (`^2.2`) for code that
 has not moved.
 
 ### Added

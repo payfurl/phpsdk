@@ -1,7 +1,7 @@
 # Upgrading from 2.x to 3.0
 
 3.0 is a new SDK on the same Composer package. It needs PHP 8.2 or later. Every 2.x class is gone, so code that
-uses the SDK changes, but each 2.x call has a direct replacement (below). 2.x stays on Packagist: `^2.3` keeps
+uses the SDK changes, but each 2.x call has a direct replacement (below). 2.x stays on Packagist: `^2.2` keeps
 installing it until you move.
 
 ```bash
