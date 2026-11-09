@@ -16,9 +16,9 @@ final readonly class SubscriptionUpdate
      */
     public function __construct(
         public float $amount,
+        public string $currency,
         public SubscriptionInterval $interval,
         public int $frequency,
-        public ?string $currency = null,
         public ?SubscriptionEnd $endAfter = null,
         public ?SubscriptionRetryPolicy $retry = null,
         public ?SubscriptionWebhookUpdate $webhook = null,
@@ -32,9 +32,9 @@ final readonly class SubscriptionUpdate
     {
         return Write::clean([
             'amount' => $this->amount,
+            'currency' => $this->currency,
             'interval' => $this->interval->value,
             'frequency' => $this->frequency,
-            'currency' => $this->currency,
             'endAfter' => $this->endAfter?->toArray(),
             'retry' => $this->retry?->toArray(),
             'webhook' => $this->webhook?->toArray(),

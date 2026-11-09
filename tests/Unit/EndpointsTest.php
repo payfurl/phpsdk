@@ -389,8 +389,8 @@ final class EndpointsTest extends TestCase
             'GET', '/subscription', ['status' => 'Active'], null, SubscriptionList::class,
         ];
         yield 'subscriptions update' => [
-            fn(PayfurlClient $c) => $c->subscriptions()->update('s1', new SubscriptionUpdate(amount: 12.0, interval: SubscriptionInterval::Week, frequency: 2)),
-            'PUT', '/subscription/s1', [], ['amount' => 12.0, 'interval' => 'Week', 'frequency' => 2], Subscription::class,
+            fn(PayfurlClient $c) => $c->subscriptions()->update('s1', new SubscriptionUpdate(amount: 12.0, currency: 'AUD', interval: SubscriptionInterval::Week, frequency: 2)),
+            'PUT', '/subscription/s1', [], ['amount' => 12.0, 'currency' => 'AUD', 'interval' => 'Week', 'frequency' => 2], Subscription::class,
         ];
         yield 'subscriptions updateStatus' => [
             fn(PayfurlClient $c) => $c->subscriptions()->updateStatus('s1', SubscriptionStatus::Suspended),
