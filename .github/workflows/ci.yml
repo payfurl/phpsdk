@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  checks:
     name: PHP ${{ matrix.php }}, ${{ matrix.dependencies }} dependencies
     runs-on: ubuntu-latest
     strategy:
@@ -50,3 +50,12 @@ jobs:
 
       - name: composer audit
         run: composer audit
+
+  # The check branch protection requires on master (`test`, the name 2.x's auto-tests job had): it passes only when
+  # every PHP version and dependency set above passed.
+  test:
+    needs: checks
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: test "${{ needs.checks.result }}" = success
