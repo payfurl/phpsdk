@@ -6,6 +6,61 @@ back from the tags and merged pull requests.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-11-09
+
+A new SDK on the same package: typed, with a client object instead of static configuration. Nothing of 2.x's
+API is left. [UPGRADE.md](UPGRADE.md) maps every 2.x method to its replacement; 2.x stays on Packagist for
+code that has not moved.
+
+### Added
+
+- `PayfurlClient`: one client per key and environment, with a resource per part of the API (`charges()`,
+  `customers()`, `paymentMethods()`, ...). `ClientOptions` sets the base URL, timeout, retries and transport.
+- Typed requests and responses: a readonly model per API request and response (`NewChargeToken`, `ChargeData`,
+  ...) under `payFURL\Sdk\Model`, with the API's own names. Responses keep the API's array in `toArray()`.
+- Enums: `TransactionStatus`, `PaymentType`, `Initiator`, `SubscriptionInterval`, `SubscriptionRetryInterval`,
+  `SubscriptionStatus`, `CallToAction`, `WebhookType`, and `ErrorCode` (int-backed).
+- Exceptions under `PayfurlException`: `AuthenticationException`, `InvalidRequestException`,
+  `NotFoundException`, `ApiException`, `NetworkException`, with the API error's code, type, details, gateway
+  code and message, charge id and trace id.
+- Retries: a GET is retried, with backoff, after a network error, a timeout or a retryable API error. Nothing
+  else is retried, since the API has no idempotency keys.
+- `Transport`, the HTTP seam: `CurlTransport` by default, `FakeTransport` for tests.
+- Disputes: `disputes()->search()` and `get()` (`GET /dispute`, `GET /dispute/{disputeId}`).
+- `info()->providers()` takes a public key too (sent as `x-publickey`), the card provider (`cardProviderId`)
+  and the browser SDK version the checkout runs (`sdk-version`, which decides whether PayPal is listed).
+- `gatewayDelete` on `customers()->delete()` and `paymentMethods()->delete()`.
+- `Webhook::verify()` and `Webhook::parse()`.
+- Every request sends `User-Agent: payfurl-php/<version> PHP/<version>`.
+
+### Changed
+
+- PHP 8.2 or later, with `declare(strict_types=1)` and types everywhere.
+- Autoloading is PSR-4 only: the `require_once` calls are gone.
+- Method names are camelCase, and each takes its model instead of an array (`Charge::CreateWithToken($params)`
+  is `charges()->createWithToken(new NewChargeToken(...))`).
+- Requests send the fields each endpoint's API model has, and only those. 2.x shared one builder for every
+  charge, so it sent fields some endpoints ignore (`UserAgent` everywhere; `Recurring` and `Transfer` on card
+  charges).
+- Request bodies and query strings use the API's camelCase names; the API reads either case.
+- `transfers()->create()` no longer requires a charge id: a transfer group can stand alone (PAY-4879).
+- `customers()->addPaymentMethodWith*()` return the new `PaymentMethodData`, as the API does, not a customer.
+- A webhook with a missing or wrong signature throws `InvalidRequestException` (was `InvalidArgumentException`).
+
+### Removed
+
+- `Config`: pass the key and environment to `PayfurlClient`. `Config::$EnableDebug` is gone: wrap the transport
+  to log requests.
+- `ResponseException`: see the exceptions above.
+- Methods that always failed, because their endpoints take only a public key: `Token::TokeniseCard()`,
+  `Token::TokeniseCardLeastCost()`, `Token::TokenisePayTo()` and `Charge::CreateWithApplePay()`. Tokens are made
+  in the browser, by the browser SDK.
+- Methods on endpoints that are not public: `Info::Info()` (`/info`) and `Info::DefaultFallback()`
+  (`/info/default_fallback_provider`).
+- The internals: `HttpWrapper`, `UrlTools`, `ArrayTools`, `CaseConverter`, `Region` and `WebhookTools`.
+- The `sdk-version: 4.5.7` header on every `/info/providers` call: the caller passes its browser SDK version.
+- The integration tests: they run in payfurl/platform now (`just e2e phpsdk`), against an API built from source.
+
 ## [2.3.0] - 2026-11-09
 
 ### Added
@@ -111,7 +166,8 @@ back from the tags and merged pull requests.
 - `PaymentMethod::CreateWithProviderToken()` (`POST /payment_method/provider_token`, PAY-2909).
 - camelCase parameter names, converted to the API's PascalCase (PAY-2933).
 
-[Unreleased]: https://github.com/payfurl/phpsdk/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/payfurl/phpsdk/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/payfurl/phpsdk/compare/v2.3.0...v3.0.0
 [2.3.0]: https://github.com/payfurl/phpsdk/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/payfurl/phpsdk/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/payfurl/phpsdk/compare/v2.2.1...v2.2.2

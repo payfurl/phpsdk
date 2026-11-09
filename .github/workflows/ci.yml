@@ -1,0 +1,52 @@
+# Unit tests and static checks on every push and pull request, on each supported PHP with the lowest and the
+# highest dependencies Composer resolves. The release workflow runs it before it publishes.
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}, ${{ matrix.dependencies }} dependencies
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+        dependencies: [lowest, highest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json
+          coverage: none
+          tools: composer:v2
+
+      - name: composer validate
+        run: composer validate --strict
+
+      - name: Install
+        run: composer update --no-progress --prefer-dist ${{ matrix.dependencies == 'lowest' && '--prefer-lowest --prefer-stable' || '' }}
+
+      - name: PHPUnit
+        run: vendor/bin/phpunit
+
+      - name: PHPStan
+        if: matrix.dependencies == 'highest'
+        run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
+
+      # Once: the style does not depend on the PHP version, and PHP CS Fixer lags behind new ones.
+      - name: PHP CS Fixer
+        if: matrix.dependencies == 'highest' && matrix.php == '8.4'
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: composer audit
+        run: composer audit

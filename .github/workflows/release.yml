@@ -1,0 +1,54 @@
+# Push a tag vX.Y.Z to release: CI runs, the tag must match PayfurlClient::VERSION, the GitHub release gets that
+# version's CHANGELOG.md section, and Packagist is told to update (it reads versions from tags).
+name: Release
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The tag matches PayfurlClient::VERSION
+        run: |
+          version=$(sed -nE "s/.*const VERSION = '([^']+)';.*/\1/p" src/PayfurlClient.php)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::The tag is $GITHUB_REF_NAME but PayfurlClient::VERSION is $version"
+            exit 1
+          fi
+
+      - name: Release notes from CHANGELOG.md
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          awk -v heading="## [$version]" 'index($0, heading) == 1 {found = 1; next} /^## \[/ {found = 0} found' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::CHANGELOG.md has no '## [$version]' section"
+            exit 1
+          fi
+
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --notes-file notes.md
+
+      # Packagist's API token: the maintainer account's, under Profile > Show API Token on packagist.org.
+      - name: Update Packagist
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+        run: |
+          curl --fail-with-body -sS -X POST -H 'Content-Type: application/json' \
+            "https://packagist.org/api/update-package?username=$PACKAGIST_USERNAME&apiToken=$PACKAGIST_TOKEN" \
+            -d '{"repository":{"url":"https://github.com/payfurl/phpsdk"}}'
