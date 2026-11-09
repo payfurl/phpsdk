@@ -8,9 +8,10 @@ back from the tags and merged pull requests.
 
 ## [3.0.0] - 2026-11-09
 
-A new SDK on the same package: typed, with a client object instead of static configuration. Nothing of 2.x's
-API is left. [UPGRADE.md](UPGRADE.md) maps every 2.x method to its replacement; 2.x stays on Packagist for
-code that has not moved.
+**Breaking release:** code that uses 2.x must change to upgrade. A new SDK on the same package: typed, with a
+client object instead of static configuration, and PHP 8.2 or later. Nothing of 2.x's API is left.
+[UPGRADE.md](UPGRADE.md) maps every 2.x method to its replacement; 2.x stays on Packagist (`^2.3`) for code that
+has not moved.
 
 ### Added
 
@@ -58,7 +59,8 @@ code that has not moved.
   (`/info/default_fallback_provider`).
 - The internals: `HttpWrapper`, `UrlTools`, `ArrayTools`, `CaseConverter`, `Region` and `WebhookTools`.
 - The `sdk-version: 4.5.7` header on every `/info/providers` call: the caller passes its browser SDK version.
-- The integration tests: they run in payfurl/platform now (`just e2e phpsdk`), against an API built from source.
+- The integration tests, which called payFURL's development environment: payFURL runs them against its API before
+  each release.
 
 ## [2.3.0] - 2026-11-09
 
