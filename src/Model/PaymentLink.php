@@ -14,7 +14,7 @@ use payFURL\Sdk\Internal\Read;
 final readonly class PaymentLink
 {
     /**
-     * @param list<PaymentType>|null $allowedPaymentTypes
+     * @param list<string>|null $allowedPaymentTypes as the API sent them: the browser SDK's names (`card`, ...)
      * @param array<string, string>|null $metadata
      * @param array<array-key, mixed> $raw
      */
@@ -54,7 +54,7 @@ final readonly class PaymentLink
             title: Read::string($data, 'title'),
             amount: Read::float($data, 'amount'),
             currency: Read::string($data, 'currency'),
-            allowedPaymentTypes: Read::enums($data, 'allowedPaymentTypes', PaymentType::class),
+            allowedPaymentTypes: Read::strings($data, 'allowedPaymentTypes'),
             description: Read::string($data, 'description'),
             image: Read::string($data, 'image'),
             confirmationMessage: Read::string($data, 'confirmationMessage'),

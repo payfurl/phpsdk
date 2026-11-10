@@ -11,6 +11,7 @@ use payFURL\Sdk\Http\FakeTransport;
 use payFURL\Sdk\Model\ChargeData;
 use payFURL\Sdk\Model\NewChargeToken;
 use payFURL\Sdk\Model\NewPaymentMethodToken;
+use payFURL\Sdk\Model\PaymentLink;
 use payFURL\Sdk\Model\PaymentType;
 use payFURL\Sdk\Model\Subscription;
 use payFURL\Sdk\Model\SubscriptionInterval;
@@ -84,6 +85,14 @@ final class ModelsTest extends TestCase
         self::assertSame(SubscriptionStatus::Suspended, $subscription->status);
         self::assertSame(3, $subscription->retry?->maximum);
         self::assertSame([WebhookType::Transaction, WebhookType::Dispute], $webhook->types);
+    }
+
+    public function testPaymentLinkKeepsThePaymentTypesAsSent(): void
+    {
+        // As the dashboard saves them: the browser SDK's names, which no PaymentType case matches.
+        $link = PaymentLink::fromArray(['allowedPaymentTypes' => ['card', 'azupay', 'PAYPAL']]);
+
+        self::assertSame(['card', 'azupay', 'PAYPAL'], $link->allowedPaymentTypes);
     }
 
     public function testRequestLeavesOutNullsButSendsFalseAndZero(): void

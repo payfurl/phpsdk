@@ -414,6 +414,11 @@ final class EndpointsTest extends TestCase
             fn(PayfurlClient $c) => $c->paymentLinks->create(new CreatePaymentLink(title: 'Donate', amount: 5.0, allowedPaymentTypes: [PaymentType::Card, PaymentType::PayPal])),
             'POST', '/payment_link', [], ['title' => 'Donate', 'amount' => 5.0, 'allowedPaymentTypes' => ['CARD', 'PAYPAL']], PaymentLink::class,
         ];
+        // The browser SDK's names, which the payment link passes to its drop-in; azupay is no PaymentType.
+        yield 'paymentLinks create with the browser SDK\'s names' => [
+            fn(PayfurlClient $c) => $c->paymentLinks->create(new CreatePaymentLink(title: 'Donate', allowedPaymentTypes: ['card', 'azupay', PaymentType::PayPal])),
+            'POST', '/payment_link', [], ['title' => 'Donate', 'allowedPaymentTypes' => ['card', 'azupay', 'PAYPAL']], PaymentLink::class,
+        ];
         yield 'paymentLinks get' => [fn(PayfurlClient $c) => $c->paymentLinks->get('pl1'), 'GET', '/payment_link/pl1', [], null, PaymentLink::class];
         yield 'paymentLinks search' => [
             fn(PayfurlClient $c) => $c->paymentLinks->search(new PaymentLinkSearch(limit: 5)), 'GET', '/payment_link', ['limit' => '5'], null, PaymentLinkList::class,
@@ -433,6 +438,17 @@ final class EndpointsTest extends TestCase
                 transfers: [new NewTransfer(account: 'acc1', amount: 3.0, currency: 'AUD')],
             )),
             'POST', '/transfer', [], ['providerId' => 'p1', 'groupReference' => 'g1', 'transfers' => [['account' => 'acc1', 'amount' => 3.0, 'currency' => 'AUD']]],
+            'list', [['transferId' => 'tr1']],
+        ];
+        // The API doesn't require a group reference: null leaves it out of the request.
+        yield 'transfers create without a group reference' => [
+            fn(PayfurlClient $c) => $c->transfers->create(new NewTransferGroup(
+                providerId: 'p1',
+                groupReference: null,
+                transfers: [new NewTransfer(account: 'acc1', amount: 3.0, currency: 'AUD')],
+                chargeId: 'ch1',
+            )),
+            'POST', '/transfer', [], ['providerId' => 'p1', 'transfers' => [['account' => 'acc1', 'amount' => 3.0, 'currency' => 'AUD']], 'chargeId' => 'ch1'],
             'list', [['transferId' => 'tr1']],
         ];
         yield 'transfers get' => [fn(PayfurlClient $c) => $c->transfers->get('tr1'), 'GET', '/transfer/tr1', [], null, TransferData::class];
